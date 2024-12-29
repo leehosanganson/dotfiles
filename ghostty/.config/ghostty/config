@@ -8,4 +8,7 @@ cursor-style-blink = false
 shell-integration = zsh
 macos-titlebar-style = hidden
 
+window-padding-x = 10
+window-padding-y = 10
+
 theme = catppuccin-mocha
