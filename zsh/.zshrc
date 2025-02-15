@@ -119,8 +119,7 @@ export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:$HOME/.cargo/bin
 
 # Python
-export PATH=$PATH:$HOME/.local/bin
-export PATH=$PATH:$HOME/Library/Python/3.8/bin
+eval "$(pyenv init --path)"
+export PATH="$PATH:/usr/bin/python"
 export PATH=$PATH:$HOME/Library/Python/3.9/bin
-export PATH=$PATH:$HOME/Library/Python/3.10/bin
 export PATH=$PATH:$HOME/Library/Python/3.11/bin
