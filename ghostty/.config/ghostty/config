@@ -1,5 +1,5 @@
 font-family = "0xProto Mono"
-font-size = 14 
+font-size = 15 
 font-thicken = true
 
 cursor-style = block
@@ -9,6 +9,7 @@ shell-integration = zsh
 macos-titlebar-style = hidden
 
 window-padding-x = 10
-window-padding-y = 10
+window-padding-y = 10,1
+window-padding-balance = true
 
 theme = catppuccin-mocha
