@@ -72,7 +72,7 @@ source $ZSH/oh-my-zsh.sh
 # FZF
 export FZF_BASE=/path/to/fzf/install/dir
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
-export FZF_DEFAULT_COMMAND='fd --hidden --strip-cwd-prefix --exclude .git --exclude node_modules'
+# export FZF_DEFAULT_COMMAND='fd --hidden --strip-cwd-prefix --exclude .git --exclude node_modules'
 export FZF_TMUX_OPTS=" -p90%,70% "
 
 # Zoxide
