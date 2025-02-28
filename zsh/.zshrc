@@ -124,6 +124,4 @@ export PATH="$PATH:/usr/bin/python"
 export PATH=$PATH:$HOME/Library/Python/3.9/bin
 export PATH=$PATH:$HOME/Library/Python/3.11/bin
 
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/ansonlee/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+export PATH="$HOME/.rd/bin:$PATH"
