@@ -69,6 +69,21 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+# Theme - Start Command Prompt on a new line
+prompt_end() {
+  if [[ -n $CURRENT_BG ]]; then
+      print -n "%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
+  else
+      print -n "%{%k%}"
+  fi
+
+  print -n "%{%f%}"
+  CURRENT_BG='' 
+
+  #Adds the new line and ➜ as the start character.
+  printf "\n ➜";
+}
+
 # FZF
 export FZF_BASE=/path/to/fzf/install/dir
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
