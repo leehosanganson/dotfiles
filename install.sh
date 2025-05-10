@@ -2,8 +2,8 @@ if [[ -z $DOTFILES ]]; then
     DOTFILES=$HOME/.dotfiles
 fi
 
-if [[ -z $STOW_FILES ]]; then
-    STOW_FILES="ghostty,nvim,tmux,wezterm,zsh"
+if [[ -z $STOW_FOLDERS ]]; then
+    STOW_FOLDERS="ghostty,nvim,tmux,wezterm,zsh,aerospace"
 fi
 
 pushd $DOTFILES
