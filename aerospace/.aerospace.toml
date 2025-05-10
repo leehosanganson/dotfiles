@@ -69,7 +69,7 @@ exec-on-workspace-change = ['/bin/bash', '-c',
     inner.horizontal = 10
     inner.vertical =   10
     outer.left =       20
-    outer.bottom =     20
+    outer.bottom =     10
     outer.top =        14
     outer.right =      20
 
