@@ -98,6 +98,7 @@ eval "$(zoxide init zsh)"
 alias vim="nvim"
 alias zshconfig="nvim ~/.zshrc"
 alias ip="ipconfig getifaddr en1"
+alias k="kubectl"
 
 # fcd - find directory
 fcd() {
@@ -139,3 +140,6 @@ export PATH=$PATH:$HOME/Library/Python/3.9/bin
 export PATH=$PATH:$HOME/Library/Python/3.11/bin
 
 export PATH="$HOME/.rd/bin:$PATH"
+
+# Kubernetes
+source <(kubectl completion zsh)
