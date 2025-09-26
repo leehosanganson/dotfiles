@@ -101,13 +101,7 @@ alias ip="ipconfig getifaddr en1"
 alias k="kubectl"
 
 # fcd - find directory
-fcd() {
-    local dir
-    dir=$(fd -t d -i "${1:-.}" | fzf --select-1 --exit-0)
-    if [ -n "$dir" ]; then
-        cd "$dir" || return
-    fi
-}
+alias fcd='cd "$(find . -type d | fzf)"'
 
 # fh - search in your command history and execute selected command
 fh() {
