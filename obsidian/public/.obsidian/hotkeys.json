@@ -1,0 +1,19 @@
+{
+  "app:toggle-left-sidebar": [
+    {
+      "modifiers": [
+        "Ctrl"
+      ],
+      "key": "B"
+    }
+  ],
+  "app:toggle-right-sidebar": [
+    {
+      "modifiers": [
+        "Ctrl",
+        "Shift"
+      ],
+      "key": "B"
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "main": {
+    "id": "fc40a742c79f4585",
+    "type": "split",
+    "children": [
+      {
+        "id": "7a11ebc42225c7bb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e54b98904b9158f0",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "00697204d34808ee",
+    "type": "split",
+    "children": [
+      {
+        "id": "08aa22442f130e16",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3b53ff9ba048dcc6",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "2ec32705e2eade07",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "excalidraw/homelab-v2.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of homelab-v2"
+            }
+          },
+          {
+            "id": "99f812fbb42178a2",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "7A",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "ec4e36ac203ef05c",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "b14af95d0de27cdd",
+    "type": "split",
+    "children": [
+      {
+        "id": "a5d16f6be4dc8484",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "902318df7a9a9257",
+            "type": "leaf",
+            "state": {
+              "type": "copilot-chat-view",
+              "state": {},
+              "icon": "message-square",
+              "title": "Copilot"
+            }
+          },
+          {
+            "id": "2e4ccf8faa9de40b",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "40252e212f948a8b",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "56a4f65d7fe46e32",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 588.5,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "bases:Create new base": false,
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "obsidian-excalidraw-plugin:New drawing": false,
+      "templater-obsidian:Templater": false,
+      "copilot:Open Copilot Chat": false
+    }
+  },
+  "active": "e54b98904b9158f0",
+  "lastOpenFiles": [
+    "notes/Untitled 1.base",
+    "notes/k3s DNS Migration.md",
+    "notes/Journey to Kubestronaut in 2025.md",
+    "notes/Creating K3S control plane nodes with Proxmox.md",
+    "notes/Kubestronaut.md",
+    "notes/Journey to Kubestronaut in 2025 - Becoming a Kubestronaut.md",
+    "attachments/Screenshot 2025-10-01 at 16.48.24.jpg",
+    "attachments/Pasted image 20251001164847.png",
+    "entry.md",
+    "notes/KCSA LinkedIn Post.md",
+    "notes/Journey to Kubestronaut in 2025 - CKA.md",
+    "notes/Journey to Kubestronaut in 2025 - CKS.md",
+    "notes/CKA LinkedIn Post.md",
+    "notes/CKS LinkedIn Post.md",
+    "excalidraw/homelab-v2.md",
+    "notes/Road to my First Kubernetes (2).md",
+    "notes/Homelab Kubernetes Cluster.md",
+    "notes/Proxmox Cloud-init.md",
+    "excalidraw/homelab.md",
+    "excalidraw/homelab-upgrade-plan.md",
+    "excalidraw/to-do-list-app-idea-wireframe.md",
+    "notes/Road to my First Kubernetes (3).md",
+    "attachments/Pasted image 20250927215436.png",
+    "notes/Setting up Pihole.md",
+    "notes/Blogs.md",
+    "exports",
+    "notes/CloudNativePG Backup.md",
+    "attachments/Pasted image 20250927150337.png",
+    "notes/failed to create fsnotify watcher too many open files.md",
+    "notes/Road to my First Kubernetes (1).md",
+    "notes/CKAD.md",
+    "copilot/copilot-custom-prompts",
+    "copilot",
+    "File Permission ",
+    "attachments/Pasted image 20250831191437.png",
+    "notes/Untitled.base",
+    "attachments/Pasted image 20250614223431.png",
+    "attachments",
+    "Pasted image 20250614223415.png",
+    "Pasted image 20250305232801.png",
+    "templates",
+    "entry",
+    "excalidraw"
+  ]
+}

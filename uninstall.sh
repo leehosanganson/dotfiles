@@ -3,7 +3,7 @@ if [[ -z $DOTFILES ]]; then
 fi
 
 if [[ -z $STOW_FOLDERS ]]; then
-    STOW_FOLDERS="ghostty,nvim,tmux,wezterm,zsh,aerospace,sketchybar"
+    STOW_FOLDERS="ghostty,nvim,tmux,wezterm,zsh,aerospace,sketchybar,obsidian"
 fi
 
 pushd $DOTFILES
