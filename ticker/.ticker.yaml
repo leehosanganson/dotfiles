@@ -1,0 +1,16 @@
+# ~/.ticker.yaml
+show-summary: false
+show-tags: true
+show-fundamentals: true
+show-separator: true
+show-holdings: false
+interval: 5
+currency: GBP
+currency-summary-only: true
+currency-disable-unit-cost-conversion: true
+sort: user
+watchlist:
+  - VUSA.L
+  - VJPA.L
+  - GBPHKD=X
+  - GBPTWD=X
