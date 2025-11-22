@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "7a11ebc42225c7bb",
+        "id": "005ad7ab6d7c50a8",
         "type": "tabs",
         "children": [
           {
-            "id": "e54b98904b9158f0",
+            "id": "2a70d9cc681a2941",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -49,13 +49,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "excalidraw/homelab-v2.md",
+                "file": "excalidraw/Drawing 2025-11-17 15.38.23.excalidraw.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of homelab-v2"
+              "title": "Outline of Drawing 2025-11-17 15.38.23.excalidraw"
             }
           },
           {
@@ -100,17 +100,27 @@
         "type": "tabs",
         "children": [
           {
-            "id": "902318df7a9a9257",
+            "id": "f509b4131356f469",
             "type": "leaf",
             "state": {
               "type": "copilot-chat-view",
               "state": {},
-              "icon": "message-square",
-              "title": "Copilot"
+              "icon": "lucide-ghost",
+              "title": "copilot-chat-view"
             }
           },
           {
-            "id": "2e4ccf8faa9de40b",
+            "id": "a98120c9112051fb",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
+          },
+          {
+            "id": "07aada77418997f1",
             "type": "leaf",
             "state": {
               "type": "backlink",
@@ -128,7 +138,7 @@
             }
           },
           {
-            "id": "40252e212f948a8b",
+            "id": "4584cda96c638453",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
@@ -141,7 +151,7 @@
             }
           },
           {
-            "id": "56a4f65d7fe46e32",
+            "id": "110740671d036816",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -155,12 +165,12 @@
               "title": "Tags"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
-    "width": 588.5,
-    "collapsed": true
+    "width": 588.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -171,53 +181,57 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "obsidian-excalidraw-plugin:New drawing": false,
       "templater-obsidian:Templater": false,
-      "copilot:Open Copilot Chat": false
+      "obsidian-excalidraw-plugin:New drawing": false,
+      "copilot:Open Copilot Chat": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e54b98904b9158f0",
+  "active": "2a70d9cc681a2941",
   "lastOpenFiles": [
-    "notes/Untitled 1.base",
-    "notes/k3s DNS Migration.md",
-    "notes/Journey to Kubestronaut in 2025.md",
-    "notes/Creating K3S control plane nodes with Proxmox.md",
-    "notes/Kubestronaut.md",
-    "notes/Journey to Kubestronaut in 2025 - Becoming a Kubestronaut.md",
-    "attachments/Screenshot 2025-10-01 at 16.48.24.jpg",
-    "attachments/Pasted image 20251001164847.png",
-    "entry.md",
-    "notes/KCSA LinkedIn Post.md",
+    "templates/template-note.md",
+    "notes/Blog - Deploy your own LLM with vLLM, LiteLLM and OpenWebUI.md",
+    "notes/Deploy your own LLM with vLLM, LiteLLM and OpenWebUI.md",
+    "excalidraw/Drawing 2025-11-17 15.38.23.excalidraw.md",
+    "notes/Blogs.md",
+    "Untitled.md",
     "notes/Journey to Kubestronaut in 2025 - CKA.md",
-    "notes/Journey to Kubestronaut in 2025 - CKS.md",
-    "notes/CKA LinkedIn Post.md",
-    "notes/CKS LinkedIn Post.md",
-    "excalidraw/homelab-v2.md",
-    "notes/Road to my First Kubernetes (2).md",
+    "notes/Journey to Kubestronaut in 2025 - Becoming a Kubestronaut.md",
+    "entry.md",
+    "notes/Kubestronaut.md",
+    "notes/Journey to Kubestronaut in 2025.md",
     "notes/Homelab Kubernetes Cluster.md",
-    "notes/Proxmox Cloud-init.md",
-    "excalidraw/homelab.md",
+    "notes/Road to my First Kubernetes Cluster (3).md",
+    "notes/CloudNativePG Backup.md",
+    "notes/Side Projects.md",
+    "attachments/Pasted image 20251115003009.png",
+    "attachments/Pasted image 20251115003003.png",
+    "attachments/Pasted image 20251115002958.png",
+    "attachments/Pasted image 20251115002459.png",
+    "attachments/Pasted image 20251115002427.png",
+    "attachments/Pasted image 20251115002350.png",
+    "notes/Migrating To FluxCD.md",
+    "notes/Road to my First Kubernetes Cluster (2).md",
+    "notes/Road to my First Kubernetes Cluster (1).md",
+    "notes/Problem Statement Worksheet.md",
+    "notes/Provisioning more storage to VM in PVE.md",
+    "excalidraw/homelab-v2.md",
     "excalidraw/homelab-upgrade-plan.md",
     "excalidraw/to-do-list-app-idea-wireframe.md",
-    "notes/Road to my First Kubernetes (3).md",
+    "notes/Untitled 1.base",
+    "notes/k3s DNS Migration.md",
+    "notes/Creating K3S control plane nodes with Proxmox.md",
+    "attachments/Screenshot 2025-10-01 at 16.48.24.jpg",
+    "attachments/Pasted image 20251001164847.png",
+    "notes/KCSA LinkedIn Post.md",
     "attachments/Pasted image 20250927215436.png",
-    "notes/Setting up Pihole.md",
-    "notes/Blogs.md",
     "exports",
-    "notes/CloudNativePG Backup.md",
     "attachments/Pasted image 20250927150337.png",
-    "notes/failed to create fsnotify watcher too many open files.md",
-    "notes/Road to my First Kubernetes (1).md",
-    "notes/CKAD.md",
     "copilot/copilot-custom-prompts",
     "copilot",
     "File Permission ",
-    "attachments/Pasted image 20250831191437.png",
     "notes/Untitled.base",
-    "attachments/Pasted image 20250614223431.png",
     "attachments",
-    "Pasted image 20250614223415.png",
-    "Pasted image 20250305232801.png",
     "templates",
     "entry",
     "excalidraw"
