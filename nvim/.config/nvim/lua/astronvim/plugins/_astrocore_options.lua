@@ -39,7 +39,7 @@ return {
     opt.smartcase = true -- case sensitive searching
     opt.splitbelow = true -- splitting a new window below the current one
     opt.splitright = true -- splitting a new window at the right of the current one
-    opt.tabstop = 2 -- number of space in a tab
+    opt.tabstop = 4 -- number of space in a tab
     opt.termguicolors = true -- enable 24-bit RGB color in the TUI
     opt.timeoutlen = 500 -- shorten key timeout length a little bit for which-key
     opt.title = true -- set terminal title to the filename and path
