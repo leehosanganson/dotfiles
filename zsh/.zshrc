@@ -138,8 +138,5 @@ export PATH="$HOME/.rd/bin:$PATH"
 # Kubernetes
 source <(kubectl completion zsh)
 
-# Velero
-source <(velero completion zsh)
-
 # Orbstack / Docker
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
