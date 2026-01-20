@@ -1,0 +1,9 @@
+// Copy this file to 
+// OSX/Linux: `~/.local/share/opencode/auth.json`
+// Windows: `%APPDATA%\opencode\auth.json` (likely under `AppData\Roaming`)
+{
+  "litellm": {
+    "type": "api",
+    "key": "sk-..."
+  }
+}
