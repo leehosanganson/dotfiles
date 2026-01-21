@@ -31,7 +31,7 @@ When this skill is active, strictly follow these steps in order:
 ## Critical Constraints (The "Guardrails")
 -   **NEVER** instruct the user to use `pip` or `pipenv` for dependency management if `uv` is available and specified.
 -   **ALWAYS** ensure that `uv` is installed before attempting to use it.
--   ⚠️ **CHECK** that the specified Python script or test command is valid before executing.
+-   **CHECK** that the specified Python script or test command is valid before executing.
 
 ## Examples
 
