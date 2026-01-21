@@ -1,5 +1,6 @@
 ---
 description: Reviews code for quality and best practices
+mode: subagent
 temperature: 0.1
 tools:
   write: false
