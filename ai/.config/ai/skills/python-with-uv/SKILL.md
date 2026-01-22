@@ -1,9 +1,9 @@
 ---
-name: python-run-with-uv
+name: python-with-uv
 description: Run Python projects and tests using uv.
 ---
 
-# Python Run with uv
+# Python with uv
 
 This skill provides instructions for using `uv` to run Python projects and tests.
 
