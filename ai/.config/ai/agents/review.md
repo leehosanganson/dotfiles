@@ -6,6 +6,14 @@ tools:
   write: false
   edit: false
   bash: false
+permission:
+    edit: deny
+    bash:
+      "*": ask
+      "git diff": allow
+      "git log*": allow
+    skill:
+        "python-with-uv": allow
 ---
 
 You are in code review mode. Focus on:

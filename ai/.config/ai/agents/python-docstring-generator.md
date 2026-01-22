@@ -8,6 +8,15 @@ tools:
   edit: true
   glob: true
   grep: true
+permission:
+    bash:
+        "*": ask
+        "grep *": allow
+        "find *": allow
+        "ls *": allow
+    edit: allow
+    skill:
+        "python-with-uv": allow
 ---
 
 # Python Docstring Generator

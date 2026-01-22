@@ -1,5 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "model": "litellm/gemini/gemini-2.5-flash-lite",
   "permission": {
     "skill": {
       "*": "allow"

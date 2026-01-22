@@ -3,4 +3,5 @@ agent: journalist
 description: Quickly log a task to today's daily note
 ---
 
-Log this work entry: $1
+Obsidian Vault Path: $1
+Log this work entry: $2
