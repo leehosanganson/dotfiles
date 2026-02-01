@@ -31,6 +31,7 @@ return {
         signcolumn = "yes", -- sets vim.opt.signcolumn to yes
         wrap = false, -- sets vim.opt.wrap
         scrolloff = 8, -- sets vim.opt.scrolloff
+        autoread = true, -- sets vim.opt.autoread
       },
       g = { -- vim.g.<key>
         -- configure global vim variables (vim.g)
