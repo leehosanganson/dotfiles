@@ -2,8 +2,11 @@
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Path to your Oh My Zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-
+if [ -d "$HOME/.oh-my-zsh" ]; then
+  export ZSH="$HOME/.oh-my-zsh"
+else
+  export ZSH="$HOME/.nix-profile/share/oh-my-zsh"
+fi
 ZSH_THEME="agnoster"
 
 # Uncomment the following line to use case-sensitive completion.
@@ -85,7 +88,11 @@ prompt_end() {
 }
 
 # FZF
-export FZF_BASE=/path/to/fzf/install/dir
+if [ -e /etc/nixos ]; then
+  export FZF_BASE="$(which fzf)"
+else
+  export FZF_BASE=/path/to/fzf/install/dir
+fi
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 # export FZF_DEFAULT_COMMAND='fd --hidden --strip-cwd-prefix --exclude .git --exclude node_modules'
 export FZF_TMUX_OPTS=" -p90%,70% "
@@ -95,10 +102,12 @@ eval "$(zoxide init zsh)"
 
 # Alias 
 # For a full list of active aliases, run `alias`.
+alias ls="ls --color=auto"
 alias vim="nvim"
 alias zshconfig="nvim ~/.zshrc"
 alias ip="ipconfig getifaddr en1"
 alias k="kubectl"
+alias rebuild="bash ~/nix-config/rebuild.sh"
 
 # fcd - find directory
 alias fcd='cd "$(find . -type d | fzf)"'
@@ -121,22 +130,6 @@ lg()
     fi
 }
 
-# Go
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin
-
-# Rust
-export PATH=$PATH:$HOME/.cargo/bin
-
-# Python
-export PATH="$PATH:/usr/bin/python"
-export PATH=$PATH:$HOME/Library/Python/3.9/bin
-export PATH=$PATH:$HOME/Library/Python/3.11/bin
-
-export PATH="$HOME/.rd/bin:$PATH"
-
 # Kubernetes
 source <(kubectl completion zsh)
 
-# Orbstack / Docker
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
