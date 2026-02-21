@@ -54,7 +54,7 @@ alias vim="nvim"
 alias zshconfig="nvim ~/.zshrc"
 alias ip="ipconfig getifaddr en1"
 alias k="kubectl"
-alias rebuild="bash ~/nix-config/rebuild.sh"
+alias rebuild="bash ~/nixos-config/rebuild.sh"
 
 # fcd - find directory
 alias fcd='cd "$(find . -type d | fzf)"'
