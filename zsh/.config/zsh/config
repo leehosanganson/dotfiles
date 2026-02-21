@@ -1,10 +1,11 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-if [ ! -f /etc/nixos ]; then
+if [ ! -f /etc/NIXOS ]; then
   export ZSH="$HOME/.oh-my-zsh"
 
   fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+
   # Plugins
   plugins=(
     git
@@ -14,9 +15,10 @@ if [ ! -f /etc/nixos ]; then
     zsh-syntax-highlighting
   )
 
-ZSH_THEME="agnoster"
+  source $ZSH/oh-my-zsh.sh
+fi
 
-source $ZSH/oh-my-zsh.sh
+ZSH_THEME="agnoster"
 
 # Theme - Start Command Prompt on a new line
 prompt_end() {
@@ -40,7 +42,6 @@ else
   export FZF_BASE=/path/to/fzf/install/dir
 fi
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
-# export FZF_DEFAULT_COMMAND='fd --hidden --strip-cwd-prefix --exclude .git --exclude node_modules'
 export FZF_TMUX_OPTS=" -p90%,70% "
 
 # Zoxide
@@ -78,4 +79,3 @@ lg()
 
 # Kubernetes
 source <(kubectl completion zsh)
-

@@ -1,11 +1,15 @@
 -- Customize Mason plugins
 
+local is_nixos = vim.fn.executable("nixos-rebuild") == 1
+
+
 ---@type LazySpec
 return {
   -- use mason-lspconfig to configure LSP installations
   {
     "williamboman/mason-lspconfig.nvim",
     -- overrides `require("mason-lspconfig").setup(...)`
+    enabled = not is_nixos,
     opts = {
       ensure_installed = {
         "lua_ls",
@@ -23,6 +27,7 @@ return {
   {
     "jay-babu/mason-null-ls.nvim",
     -- overrides `require("mason-null-ls").setup(...)`
+    enabled = not is_nixos,
     opts = {
       ensure_installed = {
         "stylua",
@@ -38,6 +43,7 @@ return {
   {
     "jay-babu/mason-nvim-dap.nvim",
     -- overrides `require("mason-nvim-dap").setup(...)`
+    enabled = not is_nixos,
     opts = {
       ensure_installed = {
         "python",
