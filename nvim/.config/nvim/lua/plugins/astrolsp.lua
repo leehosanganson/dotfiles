@@ -37,7 +37,10 @@ return {
     },
     -- enable servers that you already have installed without mason
     servers = {
-      "nil_ls",
+      "nixd",
+      "yamlls",
+      "helm_ls",
+      "lua_ls",
     },
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields
