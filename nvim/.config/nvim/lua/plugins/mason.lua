@@ -21,6 +21,7 @@ return {
         --        "bashls",
         -- add more arguments for adding more language servers
       },
+      automatic_installation = false,
     },
   },
   -- use mason-null-ls to configure Formatters/Linter installation for null-ls sources
@@ -38,6 +39,7 @@ return {
         --        "black",
         -- add more arguments for adding more null-ls sources
       },
+      automatic_installation = false,
     },
   },
   {
@@ -51,6 +53,7 @@ return {
         -- "delve",
         -- add more arguments for adding more debuggers
       },
+      automatic_installation = false,
     },
   },
 }
