@@ -62,6 +62,12 @@ alias fcd='cd "$(find . -type d | fzf)"'
 fh() {
   eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
 }
+fh-widget() {
+  fh
+  zle reset-prompt
+}
+zle -N fh-widget
+bindkey '^R' fh-widget
 
 # Lazygit - 'q' to quit at selected directory, 'shift-q' to quit normally
 lg()
