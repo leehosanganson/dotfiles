@@ -17,17 +17,16 @@
 
     "modules-right": [
         "custom/sep",
+        "tray",
+        "custom/sep",
+        "audio",
         "network",
         "custom/sep",
         "cpu",
         "custom/sep",
         "memory",
         "custom/sep",
-        "disk",
-        "custom/sep",
-        "clock",
-        "custom/sep",
-        "tray"
+        "clock"
     ],
 
     // Modules configuration
@@ -62,11 +61,6 @@
     "memory": {
         "format": "Mem: {used}GiB"
     },
-    "disk": {
-        "interval": 60,
-        "path": "/",
-        "format": "Disk: {free}"
-    },
     "battery": {
         "states": {
             "good": 95,
@@ -78,6 +72,10 @@
         "format-alt": "Bat {capacity}%",
         "format-time": "{H}:{M}",
         "format-icons": ["", "", "", "", ""]
+    },
+    "audio": {
+        "format": "{volume}% {icon}",
+        "on-click-right": "pavucontrol",
     },
     "network": {
         "format": "Online",
