@@ -1,0 +1,13 @@
+term=ghostty
+icon-theme=Papirus-Dark
+allow_images=true
+show=drun
+prompt= 
+lines=7
+columns=2
+width=700
+location=center
+layer=top
+layer-shell=true
+disable_history=false
+
