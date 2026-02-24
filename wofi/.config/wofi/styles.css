@@ -1,54 +1,82 @@
-* {
-    all: unset;
-    font-family: Monospace, 11;
-    background: #24283b;
-    color: #7aa2f7;
-    text-color: #7aa2f7;
-}
-
-#window {
+window {
     margin: 0px;
-    border-radius: 6px;
-    border: 3px solid #444b6a;
-    background-color: #24283b;
-    animation: slideIn 0.1s ease-out;
+    border: 10px solid #1e1e2e;
+    background-color: #cdd6f4;
+    border-radius: 20px;
 }
 
 #input {
-    margin: 8px 12px 8px 12px;
-    padding: 11px;
-    border-radius: 6px 6px 0 0;
+    padding: 4px;
+    margin: 4px;
+    padding-left: 20px;
     border: none;
-    background-color: #444b6a;
-    color: #7aa2f7;
+    color: #cdd6f4;
+    font-weight: bold;
+    background-color: #1e1e2e;
+    /* background: ; */
+   	outline: none;
+    border-radius: 20px;
+    margin: 10px 13px;
+    margin-bottom: 2px;
+}
+#input:focus {
+    border: 0px solid #1e1e2e;
+    margin-bottom: 0px;
+}
+
+#inner-box {
+    margin: 4px;
+    border: 20px solid #1e1e2e;
+    color: #cdd6f4;
+    font-weight: bold;
+    background-color: #242446;
+    /* background-color: red; */
+    border-radius: 20px;
+}
+
+#outer-box {
+    margin: 0px;
+    border: 3px solid #6cbdff;
+    border-radius: 20px;
+    background-color: #1e1e2e;
 }
 
 #scroll {
-    margin: 0px 12px 12px 12px;
-    border-radius: 0 0 6px 6px;
-    border: 3px solid #444b6a;
+    margin-top: 5px;
+    border: none;
+    border-radius: 15px;
+    margin-bottom: 5px;
+}
+
+#img{
+    margin-right: 10px;
+}
+
+#img:selected {
+    background-color: #89b4fa;
+    margin-right: 10px;
+    border-radius: 10px;
+}
+
+#text:selected {
+    color: #cdd6f4;
+    color: black;
+    margin: 0px 0px;
+    border: none;
+    border-radius: 10px;
+    background-color: #89b4fa;
 }
 
 #entry {
-    padding: 8px;
-    margin: 2px;
-    border-radius: 2px;
-    color: #7aa2f7;
+    margin: 0px 0px;
+    border: none;
+    border-radius: 15px;
+    background-color: transparent;
 }
 
 #entry:selected {
-    background-color: #9274ca;
-    color: #000000;
-    outline: none;
+    margin: 0px 0px;
+    border: none;
+    border-radius: 5px;
+    background-color: #89b4fa;
 }
-
-#img {
-    margin-right: 8px;
-    background-color: transparent;
-}
-
-#text {
-    margin-left: 8px;
-    background-color: transparent;
-}
-
