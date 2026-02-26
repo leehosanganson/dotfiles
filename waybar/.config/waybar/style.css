@@ -93,22 +93,13 @@
   background-color: @accent-muted;
 }
 
-#custom-cava_left,
-#custom-cava_right {
-  background: transparent;
-  color: @accent-faint;
-  font-size: 10px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  min-width: 100px;
-}
-
-#custom-cava_left {
-  margin-right: 8px;
-}
-
-#custom-cava_right {
-  margin-left: 8px;
+#custom-cava {
+    background-color: @bg-transparent;
+    color: @accent;
+    margin: 5px 0px;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+    min-width: 120px;
 }
 
 /* --- Right Modules (Single, Seamless Bar ) --- */
