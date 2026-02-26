@@ -1,4 +1,4 @@
-style = ~/.config/wofi/styles.css
+style=$HOME/.config/wofi/styles.css
 
 width=600
 height=500

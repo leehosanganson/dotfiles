@@ -1,82 +1,66 @@
+/* Define theme colors using @define-color (Wofi/GTK CSS standard) */
+@define-color bg #1e1e2e;
+@define-color bg-alt #242446;
+@define-color fg #cdd6f4;
+@define-color accent #89b4fa;
+@define-color surface #313244;
+
 window {
     margin: 0px;
-    border: 10px solid #1e1e2e;
-    background-color: #cdd6f4;
+    border: 2px solid @accent;
+    background-color: transparent;
     border-radius: 20px;
 }
 
 #input {
-    padding: 4px;
-    margin: 4px;
-    padding-left: 20px;
-    border: none;
-    color: #cdd6f4;
+    padding: 8px 12px;
+    margin: 8px;
+    color: @fg;
     font-weight: bold;
-    background-color: #1e1e2e;
-    /* background: ; */
-   	outline: none;
-    border-radius: 20px;
-    margin: 10px 13px;
-    margin-bottom: 2px;
+    background-color: @bg-alt;
+    outline: none;
+    border-radius: 12px;
 }
+
 #input:focus {
-    border: 0px solid #1e1e2e;
-    margin-bottom: 0px;
+    background-color: @surface;
+    border: 1px solid @accent;
 }
 
 #inner-box {
     margin: 4px;
-    border: 20px solid #1e1e2e;
-    color: #cdd6f4;
-    font-weight: bold;
-    background-color: #242446;
-    /* background-color: red; */
-    border-radius: 20px;
+    color: @fg;
+    background-color: @surface;
+    border-radius: 16px;
 }
 
 #outer-box {
     margin: 0px;
-    border: 3px solid #6cbdff;
+    border: 2px solid @accent;
+    background-color: @bg;
     border-radius: 20px;
-    background-color: #1e1e2e;
 }
 
 #scroll {
-    margin-top: 5px;
-    border: none;
-    border-radius: 15px;
-    margin-bottom: 5px;
+    margin: 4px;
+    border-radius: 12px;
 }
 
-#img{
-    margin-right: 10px;
+#img {
+    margin-right: 12px;
+    padding: 4px;
+    border-radius: 8px;
 }
 
-#img:selected {
-    background-color: #89b4fa;
-    margin-right: 10px;
-    border-radius: 10px;
-}
-
-#text:selected {
-    color: #cdd6f4;
-    color: black;
-    margin: 0px 0px;
-    border: none;
-    border-radius: 10px;
-    background-color: #89b4fa;
+#img:selected, #text:selected, #entry:selected {
+    background-color: @accent;
+    color: @bg;
+    border-radius: 12px;
 }
 
 #entry {
-    margin: 0px 0px;
-    border: none;
-    border-radius: 15px;
+    padding: 4px 8px;
+    border-radius: 12px;
     background-color: transparent;
 }
 
-#entry:selected {
-    margin: 0px 0px;
-    border: none;
-    border-radius: 5px;
-    background-color: #89b4fa;
-}
