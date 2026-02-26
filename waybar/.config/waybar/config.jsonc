@@ -13,21 +13,14 @@
 
     "modules-center": [
       "clock",
-      "custom/cava",
     ],
 
     "modules-right": [
+      "custom/cava",
       "bluetooth",
       "network",
       "pulseaudio", 
     ],
-
-    "custom/cava": {
-        "format": "",
-        "tooltip": false,
-        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-        "exec": "$HOME/.config/waybar/scripts/cava-waybar.sh",
-    },
   },
   {
       "name": "overlay",

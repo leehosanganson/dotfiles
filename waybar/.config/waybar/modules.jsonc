@@ -59,4 +59,11 @@
         },
         "on-click": "pavucontrol"
     },
+
+    "custom/cava": {
+        "format": "{}",
+        "tooltip": false,
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "exec": "$HOME/.config/waybar/scripts/cava.sh",
+    },
 }

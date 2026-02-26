@@ -47,7 +47,6 @@
 #workspaces {
   padding: 2px;
   margin-left: 7px;
-  margin-right: 5px;
 }
 
 /* Simple Hover effects for individual left modules - BRIGHTER COLOR */
@@ -58,8 +57,8 @@
 
 #workspaces button {
   color: @text-secondary;
-  border-radius: 5px;
-  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
   background: transparent;
   border: none;
   outline: none;
@@ -78,10 +77,10 @@
 }
 
 #clock {
-  background-color: @bg-transparent;
+  background-color: @bg;
   color: @accent;
   padding: 0.3rem 0.7rem;
-  margin: 5px 0px;
+  margin: 5px 0px 0px 5px;
   font-weight: 500;
   border-radius: 6px;
   box-shadow: 0 1px 3px @accent-border;
@@ -94,12 +93,16 @@
 }
 
 #custom-cava {
-    background-color: @bg-transparent;
+    background-color: @bg;
     color: @accent;
-    margin: 5px 0px;
+    margin: 5px 5px 0px 5px;
     padding: 0.2rem 0.4rem;
     border-radius: 6px;
-    min-width: 120px;
+    /* min-width: 120px; */
+}
+
+#custom-cava:hover {
+    background-color: @hover-bg;
 }
 
 /* --- Right Modules (Single, Seamless Bar ) --- */
@@ -108,7 +111,7 @@
 #network {
   background-color: @bg;
   padding: 0.3rem 0.7rem;
-  margin: 5px 0px; 
+  margin: 5px 0px 0px; 
   border: none;
   border-radius: 0;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
