@@ -1,6 +1,6 @@
 [general]
 mode = normal
-framerate = 30
+framerate = 15
 bars = 18
 
 [input]

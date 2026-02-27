@@ -36,7 +36,7 @@
 #memory {
   background-color: @bg;
   padding: 0.3rem 0.7rem;
-  margin: 5px 0px 0px 5px;
+  margin: 5px 0px 5px 5px;
   border-radius: 6px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   min-width: 0;
@@ -80,7 +80,7 @@
   background-color: @bg;
   color: @accent;
   padding: 0.3rem 0.7rem;
-  margin: 5px 0px 0px 5px;
+  margin: 5px 0px 5px 5px;
   font-weight: 500;
   border-radius: 6px;
   box-shadow: 0 1px 3px @accent-border;
@@ -95,7 +95,7 @@
 #custom-cava {
     background-color: @bg;
     color: @accent;
-    margin: 5px 5px 0px 5px;
+    margin: 5px 5px 5px 5px;
     padding: 0.2rem 0.4rem;
     border-radius: 6px;
     /* min-width: 120px; */
@@ -111,7 +111,7 @@
 #network {
   background-color: @bg;
   padding: 0.3rem 0.7rem;
-  margin: 5px 0px 0px; 
+  margin: 5px 0px 5px; 
   border: none;
   border-radius: 0;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
@@ -147,11 +147,11 @@
   font-size: 16px;
 }
 
-#bluetooth.on {
-  color: #2196f3;
+#bluetooth.connected {
+  color: @accent-muted;
 }
 
-#bluetooth.connected {
+#bluetooth.on {
   color: @accent;
 }
 

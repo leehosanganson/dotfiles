@@ -1,6 +1,7 @@
 [
   {
     "layer": "top",
+    "height": 30,
     "position": "top",
     "spacing" : 0, 
     "include": ["$HOME/.config/waybar/modules.jsonc"],
@@ -21,15 +22,5 @@
       "network",
       "pulseaudio", 
     ],
-  },
-  {
-      "name": "overlay",
-      "height": 30,
-      "width": 1000,
-      "layer": "bottom",
-      "position": "top", 
-      "margin-top": -30,
-      "exclusive": false,
-      "passtrough": true,
-  },
+  }
 ]
