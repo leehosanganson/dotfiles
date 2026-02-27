@@ -51,7 +51,6 @@ eval "$(zoxide init zsh)"
 alias ls="ls --color=auto"
 alias vim="nvim"
 alias zshconfig="nvim ~/.zshrc"
-alias ip="ipconfig getifaddr en1"
 alias k="kubectl"
 alias rebuild="bash ~/nixos-config/rebuild.sh"
 
