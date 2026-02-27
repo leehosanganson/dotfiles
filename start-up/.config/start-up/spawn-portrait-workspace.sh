@@ -14,7 +14,7 @@ hyprctl dispatch exec "[workspace $WS silent] pear-desktop"
 hyprctl dispatch exec "[workspace $WS silent] ghostty -e btop"
 
 # MIDDLE: Chrome
-hyprctl dispatch exec "[workspace $WS silent] google-chrome-stable --user-data-dir='$HOME/.config/google-chrome/Profile\ 5'"
+hyprctl dispatch exec "[workspace $WS silent] google-chrome-stable"
 
 # BOTTOM: Discord
 hyprctl dispatch exec "[workspace $WS silent] discord"
