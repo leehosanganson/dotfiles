@@ -148,7 +148,7 @@
 }
 
 #bluetooth.connected {
-  color: @accent-muted;
+  color: @accent;
 }
 
 #bluetooth.on {
