@@ -17,7 +17,6 @@
     ],
 
     "modules-right": [
-      "custom/cava",
       "bluetooth",
       "network",
       "pulseaudio", 
