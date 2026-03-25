@@ -2,7 +2,7 @@
 # Difference between Agents, Skills and Workflows
 | Feature   | Purpose                  | When to Use                     | Directory                        |
 |-----------|--------------------------|---------------------------------|----------------------------------|
-| Rules     | North Star Context       | Applicable to all contexts      | ~/rules/
+| Rules     | AGENTS.md                | Applicable to all contexts      | ~/rules/
 | Agent     | Parallel worker          | Concurrent multi-task execution | ~/agents/                        |
 | Command   | Specified prompt         | Executing specific operations   | ~/commands/                      |
 | Skill     | Domain container         | Load On-demand Capabilities     | ~/skills/{Domain}/               |

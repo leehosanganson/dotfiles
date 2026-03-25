@@ -1,5 +1,5 @@
 ---
-name: python-with-uv
+name: manage-python-projects-with-uv
 description: Run Python projects and tests using uv.
 ---
 
