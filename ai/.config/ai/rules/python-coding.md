@@ -1,3 +1,6 @@
+---
+description: General Python Coding Rules
+---
 # Python Coding Rules
 
 ## Core Workflow
