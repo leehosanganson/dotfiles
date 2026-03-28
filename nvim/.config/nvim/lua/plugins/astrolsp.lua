@@ -41,6 +41,7 @@ return {
       "yamlls",
       "helm_ls",
       "lua_ls",
+      "jsonls",
     },
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields

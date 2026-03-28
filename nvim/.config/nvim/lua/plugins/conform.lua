@@ -6,9 +6,7 @@ return {
     opts = function(_, opts)
         opts.formatters_by_ft = opts.formatters_by_ft or {}
 
-        -- nix
         opts.formatters_by_ft = {
-            -- Map the filetype to the executable name
             nix = { "statix", "nixpkgs_fmt" },
             yaml = { "prettierd" },
             yml = { "prettierd" },
@@ -16,8 +14,7 @@ return {
             jsonc = { "prettierd" },
         }
 
-        opts.formatters       = {
-            -- Tell conform how to talk to the 'statix' command you installed via NixOS
+        opts.formatters = {
             statix = {
                 command = "statix",
                 args = { "fix", "--stdin" },
@@ -30,10 +27,11 @@ return {
                 command = "prettierd",
                 args = { "$FILENAME" },
                 stdin = true,
+                ignore_exitcode = true,
             },
         }
 
-        opts.format_on_save   = {
+        opts.format_on_save = {
             lsp_fallback = true,
             timeout_ms = 500,
         }
