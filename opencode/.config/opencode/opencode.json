@@ -27,7 +27,7 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "LiteLLM",
       "options": {
-        "baseURL": "https://litellm.homelab.leehosanganson.dev",
+        "baseURL": "https://litellm.homelab.leehosanganson.dev"
       },
       "models": {
         "unsloth/Qwen3-8B-unsloth-bnb-4bit": {},
@@ -38,7 +38,16 @@
       }
     },
     "github-copilot": {
-      "name": "GitHub Copilot",
-    },
+      "name": "GitHub Copilot"
+    }
+  },
+  "mcp": {
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer {file:/home/anson/.config/sops-nix/secrets/opencode-github-pat}"
+      }
+    }
   }
 }
