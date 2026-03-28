@@ -1,6 +1,6 @@
 ---
 name: generate-agent
-description: Generates a new OpenCode agent .md configuration file based on user requirements.
+description: Generates a new agent .md configuration file based on user requirements.
 ---
 
 # Generate Agent
@@ -20,7 +20,6 @@ When this skill is active, strictly follow these steps in order:
 1.  **Requirement Analysis**: Identify the agent's name, description, mode (primary or subagent), preferred model, and tool permissions.
 2.  **Destination Selection**: Determine the directory for the new agent.
     - Global: `~/.config/ai/agents/`
-    - Per-project: `.opencode/agents/` (or current working directory's `agents/` folder)
 3.  **Draft Frontmatter**: Construct the YAML frontmatter. Use the following fields:
     - `description`: A clear summary of the agent's role.
     - `mode`: `primary` (direct interaction) or `subagent` (invokable via @).

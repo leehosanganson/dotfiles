@@ -16,7 +16,7 @@ permission:
         "ls *": allow
     edit: allow
     skill:
-        "python-with-uv": allow
+        "manage-python-projects-with-uv": allow
 ---
 
 # Python Docstring Generator
