@@ -36,6 +36,9 @@
         "gemini/gemini-2.5-pro": {},
         "gemini/gemini-3-flash-preview": {}
       }
-    }
+    },
+    "github-copilot": {
+      "name": "GitHub Copilot",
+    },
   }
 }
