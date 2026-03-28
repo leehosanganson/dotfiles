@@ -27,7 +27,8 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "LiteLLM",
       "options": {
-        "baseURL": "https://litellm.homelab.leehosanganson.dev"
+        "baseURL": "https://litellm.homelab.leehosanganson.dev",
+        "apiKey": "{file:/home/ansonlee/.config/sops-nix/secrets/litellm-api-key}"
       },
       "models": {
         "unsloth/Qwen3-8B-unsloth-bnb-4bit": {},
