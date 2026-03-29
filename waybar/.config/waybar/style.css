@@ -16,7 +16,7 @@
 
 /* --- Global Styles --- */
 * {
-  font-family: "JetBrainsMono Nerd Font", monospace; 
+  font-family: "JetBrainsMono Nerd Font", monospace;
   font-size: 13px;
   min-height: 0;
   padding: 0;
@@ -41,7 +41,9 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   min-width: 0;
   border: none;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
 }
 
 #workspaces {
@@ -85,7 +87,9 @@
   border-radius: 6px;
   box-shadow: 0 1px 3px @accent-border;
   border: none;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
 }
 
 #clock:hover {
@@ -93,16 +97,16 @@
 }
 
 #custom-cava {
-    background-color: @bg;
-    color: @accent;
-    margin: 5px 5px 5px 5px;
-    padding: 0.2rem 0.4rem;
-    border-radius: 6px;
-    /* min-width: 120px; */
+  background-color: @bg;
+  color: @accent;
+  margin: 5px 5px 5px 5px;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  /* min-width: 120px; */
 }
 
 #custom-cava:hover {
-    background-color: @hover-bg;
+  background-color: @hover-bg;
 }
 
 /* --- Right Modules (Single, Seamless Bar ) --- */
@@ -111,10 +115,12 @@
 #network {
   background-color: @bg;
   padding: 0.3rem 0.7rem;
-  margin: 5px 0px 5px; 
+  margin: 5px 0px 5px;
   border: none;
   border-radius: 0;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
 }
 
 #bluetooth:hover,
@@ -124,7 +130,7 @@
 }
 
 #bluetooth {
-  margin-left: 0px; 
+  margin-left: 0px;
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
 }
@@ -166,5 +172,3 @@ tooltip {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   font-size: 12px;
 }
-
-
