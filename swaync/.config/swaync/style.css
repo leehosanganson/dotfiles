@@ -1,96 +1,247 @@
-/* --- Variables matching your Waybar theme --- */
+/* --- Global Color Variables --- */
 @define-color bg               #1a1b26;
-@define-color bg-transparent   rgba(26, 27, 38, 0.6);
 @define-color hover-bg         rgb(41, 42, 53);
 @define-color accent           #99d1db;
 @define-color accent-muted     rgba(153, 209, 219, 0.1);
-@define-color accent-border    rgba(153, 209, 219, 0.2);
+@define-color accent-border    rgba(153, 209, 219, 0.3);
+@define-color accent-glow      rgba(153, 209, 219, 0.2); 
 @define-color text-primary     #c6d0f5;
 @define-color text-secondary   #babbf1;
 @define-color text-muted       #888888;
+@define-color text-error       #e78284;
 @define-color border-soft      rgba(255, 255, 255, 0.1);
 
-/* --- Font and global spacing --- */
+/* --- Global Styles --- */
 * {
   font-family: "JetBrainsMono Nerd Font", monospace;
-  font-size: 13px;
-  background-color: @bg;
-  color: @text-primary;
-  padding: 0;
-  margin: 0;
+  font-weight: 500;
+  font-size: 14px; 
+  background-clip: padding-box;
 }
 
-/* --- Notification window (popups) --- */
-.notification {
-  padding: 0.6rem 0.9rem;
+/* --- Control Center Panel (OUTER GLOW APPLIED HERE) --- */
+.control-center {
+  background: @bg;
+  color: @text-primary;
   border-radius: 6px;
   border: 1px solid @accent-border;
-  background-color: @bg-transparent;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  margin-bottom: 4px;
+  box-shadow: 0 0 20px 0 @accent-glow; 
 }
 
-.notification-title {
-  font-weight: 500;
+/* --- Blank State --- */
+.blank-window {
+  background: transparent;
+}
+
+/* --- Floating Notifications (Standalone Popups) --- */
+.floating-notifications {
+  background: transparent;
+}
+
+.floating-notifications .notification {
+  border: 1px solid @accent-border;
+  box-shadow: 0 0 20px 0 @accent-glow;
+}
+
+/* --- Notification Rows & Cards (INNER GLOWS REMOVED) --- */
+.notification-row {
+  outline: none;
+  margin: 5px 10px;
+}
+
+.notification-row:focus,
+.notification-row:hover {
+  background: transparent;
+}
+
+.notification {
+  background: @bg;
+  border: 1px solid @border-soft;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+.notification:hover {
+  background: @hover-bg;
+  border: 1px solid @accent-border;
+}
+
+/* --- Notification Content --- */
+.widget-title {
   color: @text-primary;
-  margin-bottom: 0.2rem;
+  font-size: 15px; 
+  margin: 10px 10px 5px 10px;
 }
 
-.notification-body {
+.widget-title > button {
+  background: transparent;
   color: @text-secondary;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+.widget-title > button:hover {
+  background: @hover-bg;
+  color: @text-primary;
+}
+
+.notification-content {
+  background: transparent;
+  padding: 5px;
+}
+
+.summary {
+  color: @text-primary;
+  font-size: 16px; 
+  font-weight: bold;
+}
+
+.body {
+  color: @text-secondary;
+  font-size: 14px; 
+  margin-top: 4px;
+}
+
+.time {
+  color: @text-muted;
   font-size: 12px;
 }
 
-/* --- Notification panel / control center --- */
-#panel {
-  background-color: @bg;
-  border-radius: 0;
-  border: none;
+.icon {
+  border-radius: 6px;
 }
 
-/* --- Title bar in control center --- */
-.title {
-  padding: 0.6rem 0.9rem;
-  color: @text-primary;
-  font-weight: 500;
-  border-bottom: 1px solid @accent-border;
+/* --- Notification Actions (Buttons) --- */
+.notification-action {
+  border-top: 1px solid @border-soft;
+  margin-top: 5px;
 }
 
-/* --- Clear‑all button in control center --- */
-button {
+.notification-action > button {
+  background: transparent;
   color: @accent;
-  background-color: @accent-muted;
-  border: 1px solid @accent-border;
+  border: none;
   border-radius: 6px;
-  padding: 0.4rem 0.8rem;
-  margin: 0.4rem 0.9rem;
-  font-size: 13px;
-  box-shadow: none;
+  margin: 2px;
+  transition: all 0.2s ease-in-out;
 }
 
-button:hover {
-  background-color: @hover-bg;
+.notification-action > button:hover {
+  background: @accent-muted;
 }
 
-/* --- Individual notification items in control center --- */
-.notification-item {
-  padding: 0.5rem 0.9rem;
-  border-bottom: 1px solid @accent-muted;
-}
-
-.notification-item:hover {
-  background-color: @hover-bg;
-}
-
-.notification-item:last-child {
-  border-bottom: none;
-}
-
-/* --- MPRIS / media section (if shown) --- */
-.mpris {
-  padding: 0.4rem 0.8rem;
-  background-color: @accent-muted;
+/* --- Close Button --- */
+.close-button {
+  background: transparent;
+  color: @text-muted;
   border-radius: 6px;
-  margin: 0.4rem 0.8rem;
+  padding: 2px;
+}
+
+.close-button:hover {
+  background: @hover-bg;
+  color: @text-error;
+}
+
+/* --- Do Not Disturb Widget --- */
+.widget-dnd {
+  margin: 5px 10px;
+  background: transparent;
+  font-size: 15px; 
+}
+
+.widget-dnd > switch {
+  border-radius: 6px;
+  background: @hover-bg;
+  border: 1px solid @border-soft;
+}
+
+.widget-dnd > switch:checked {
+  background: @accent-muted;
   border: 1px solid @accent-border;
+}
+
+.widget-dnd > switch slider {
+  background: @text-secondary;
+  border-radius: 4px;
+}
+
+.widget-dnd > switch:checked slider {
+  background: @accent;
+}
+
+/* --- Sliders (Volume, Backlight) --- */
+.widget-volume,
+.widget-backlight {
+  background: @bg;
+  padding: 5px 10px;
+  margin: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid @border-soft;
+  transition: all 0.2s ease;
+}
+
+.widget-volume:hover,
+.widget-backlight:hover {
+  border: 1px solid @accent-border;
+}
+
+scale trough {
+  background: @hover-bg;
+  border-radius: 6px;
+  min-height: 8px;
+}
+
+scale highlight {
+  background: @accent;
+  border-radius: 6px;
+}
+
+scale slider {
+  background: @text-primary;
+  border-radius: 6px;
+  min-width: 12px;
+  min-height: 12px;
+}
+
+/* --- MPRIS Player --- */
+.widget-mpris {
+  background: @bg;
+  border-radius: 6px;
+  border: 1px solid @border-soft;
+  margin: 5px 10px;
+  padding: 10px;
+  transition: all 0.2s ease;
+}
+
+.widget-mpris:hover {
+  border: 1px solid @accent-border;
+}
+
+.widget-mpris-title {
+  font-weight: bold;
+  font-size: 15px; 
+  color: @text-primary;
+}
+
+.widget-mpris-subtitle {
+  color: @text-secondary;
+  font-size: 13px; 
+}
+
+.widget-mpris > box > button {
+  background: transparent;
+  color: @text-primary;
+  border-radius: 6px;
+  padding: 5px;
+  transition: all 0.2s ease;
+}
+
+.widget-mpris > box > button:hover {
+  background: @hover-bg;
+  color: @accent;
 }
