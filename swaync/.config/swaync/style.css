@@ -1,0 +1,96 @@
+/* --- Variables matching your Waybar theme --- */
+@define-color bg               #1a1b26;
+@define-color bg-transparent   rgba(26, 27, 38, 0.6);
+@define-color hover-bg         rgb(41, 42, 53);
+@define-color accent           #99d1db;
+@define-color accent-muted     rgba(153, 209, 219, 0.1);
+@define-color accent-border    rgba(153, 209, 219, 0.2);
+@define-color text-primary     #c6d0f5;
+@define-color text-secondary   #babbf1;
+@define-color text-muted       #888888;
+@define-color border-soft      rgba(255, 255, 255, 0.1);
+
+/* --- Font and global spacing --- */
+* {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 13px;
+  background-color: @bg;
+  color: @text-primary;
+  padding: 0;
+  margin: 0;
+}
+
+/* --- Notification window (popups) --- */
+.notification {
+  padding: 0.6rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid @accent-border;
+  background-color: @bg-transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  margin-bottom: 4px;
+}
+
+.notification-title {
+  font-weight: 500;
+  color: @text-primary;
+  margin-bottom: 0.2rem;
+}
+
+.notification-body {
+  color: @text-secondary;
+  font-size: 12px;
+}
+
+/* --- Notification panel / control center --- */
+#panel {
+  background-color: @bg;
+  border-radius: 0;
+  border: none;
+}
+
+/* --- Title bar in control center --- */
+.title {
+  padding: 0.6rem 0.9rem;
+  color: @text-primary;
+  font-weight: 500;
+  border-bottom: 1px solid @accent-border;
+}
+
+/* --- Clear‑all button in control center --- */
+button {
+  color: @accent;
+  background-color: @accent-muted;
+  border: 1px solid @accent-border;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  margin: 0.4rem 0.9rem;
+  font-size: 13px;
+  box-shadow: none;
+}
+
+button:hover {
+  background-color: @hover-bg;
+}
+
+/* --- Individual notification items in control center --- */
+.notification-item {
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid @accent-muted;
+}
+
+.notification-item:hover {
+  background-color: @hover-bg;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+/* --- MPRIS / media section (if shown) --- */
+.mpris {
+  padding: 0.4rem 0.8rem;
+  background-color: @accent-muted;
+  border-radius: 6px;
+  margin: 0.4rem 0.8rem;
+  border: 1px solid @accent-border;
+}
