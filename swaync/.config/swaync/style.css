@@ -7,7 +7,6 @@
 @define-color text-color #c6d0f5;
 @define-color text-color-disabled #888888;
 @define-color bg-selected #99d1db;
-
 @define-color border-color rgba(255, 255, 255, 0.1);
 @define-color accent-color #99d1db;
 @define-color text-color-alt #babbf1;
@@ -18,10 +17,9 @@
 * {
     font-family: JetBrainsMono NFP;
     font-weight: bold;
-    font-size: 14px
+    font-size: 14px;
 }
 
-/* Apply hover effects directly to the notification, not the transparent row */
 .control-center .notification-row:focus .notification,
 .control-center .notification-row:hover .notification {
     opacity: 1;
@@ -34,30 +32,24 @@
 }
 
 .notification-row {
-    outline: none;
     margin: 10px 10px; 
     padding: 0;
     background: transparent; 
 }
 
-/* Prevent grouped notifications from generating an outer gray box */
 .notification-group,
 .notification-group > box {
     background: transparent;
 }
 
-/* Kill the shadow bleeding out of the center, but KEEP the notification background */
 .notification-background {
-    box-shadow: none;
     background: transparent;
 }
 
 .notification {
-    background: @noti-bg-darker; /* Restored: Main card background */
+    background: @noti-bg-darker; 
     border-radius: 5px;
     border: 1px solid @border-color;
-    margin: 0px;
-    box-shadow: none; 
 }
 
 .notification-content {
@@ -65,8 +57,6 @@
     padding: 10px;
     border-radius: 0px;
     border: none;
-    margin: 0;
-    box-shadow: none;
 }
 
 .close-button {
@@ -120,7 +110,7 @@
 .control-center {
     background: @cc-bg;
     border: 2px solid @border-color;
-    border-radius: 0px;
+    border-radius: 12px; 
 }
 
 .control-center-list {
@@ -128,7 +118,7 @@
 }
 
 .control-center-list-placeholder {
-    opacity: .5
+    opacity: 0 
 }
 
 .floating-notifications {
