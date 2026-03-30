@@ -11,7 +11,7 @@ if ! command -v stow &> /dev/null; then
 fi
 
 if [[ -z $DOTFILES ]]; then
-    DOTFILES=$HOME/.dotfiles
+    DOTFILES=$HOME/dotfiles
 fi
 
 if [[ -z $STOW_FOLDERS ]]; then
