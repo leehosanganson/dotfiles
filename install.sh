@@ -1,3 +1,15 @@
+#!/usr/bin/env bash
+if ! command -v stow &> /dev/null; then
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        sudo apt update && sudo apt install -y stow
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        brew install stow
+    else
+        echo "Please install stow manually (apt/brew/etc.)" >&2
+        exit 1
+    fi
+fi
+
 if [[ -z $DOTFILES ]]; then
     DOTFILES=$HOME/.dotfiles
 fi
