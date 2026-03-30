@@ -12,6 +12,8 @@ return {
             yml = { "prettierd" },
             json = { "prettierd" },
             jsonc = { "prettierd" },
+            css = { "prettierd" },
+            markdown = { "prettierd" },
         }
 
         opts.formatters = {
