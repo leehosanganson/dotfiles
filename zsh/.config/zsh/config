@@ -89,6 +89,19 @@ lg()
     fi
 }
 
+# Devpod - up
+dpup() {
+  local devcontainer_path="${1:-./.devcontainer/.devcontainer.json}"
+  local workspace_dir="${2:-.}"
+
+  devpod up \
+    --dotfiles "https://github.com/leehosanganson/nix-config" \
+    --dotfiles-script=scripts/setup-devcontainer.sh \
+    --workspace-env-file=.devcontainer/.env \
+    --open-ide=0 \
+    --devcontainer-path "$devcontainer_path" \
+    "$workspace_dir"
+}
 # Kubernetes
 if [ -x "$(command -v kubectl)" ]; then
   source <(kubectl completion zsh)
