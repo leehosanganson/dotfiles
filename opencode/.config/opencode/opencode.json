@@ -27,7 +27,7 @@
       "name": "LiteLLM",
       "options": {
         "baseURL": "https://litellm.homelab.leehosanganson.dev",
-        "apiKey": "{file:/home/ansonlee/.config/sops-nix/secrets/litellm-api-key}"
+        "apiKey": "{file:~/.config/sops-nix/secrets/litellm-api-key}"
       },
       "models": {
         "unsloth/Qwen3-8B-unsloth-bnb-4bit": {},
@@ -46,7 +46,7 @@
       "type": "remote",
       "url": "https://api.githubcopilot.com/mcp/",
       "headers": {
-        "Authorization": "Bearer {file:/home/ansonlee/.config/sops-nix/secrets/opencode-github-pat}"
+        "Authorization": "Bearer {file:~/.config/sops-nix/secrets/opencode-github-pat}"
       }
     }
   }
