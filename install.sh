@@ -14,15 +14,25 @@ if [[ -z $DOTFILES ]]; then
     DOTFILES=$HOME/dotfiles
 fi
 
-if [[ -z $STOW_FOLDERS ]]; then
-    STOW_FOLDERS="ghostty,nvim,tmux,wezterm,zsh,aerospace,sketchybar,obsidian,ai,opencode"
+pushd "$DOTFILES" >/dev/null
+
+# Dynamically find all directories (excluding common non-stow files/scripts)
+STOW_FOLDERS=$(find . -maxdepth 1 -type d ! -name '.' \
+    | sed 's|^\./||' \
+    | grep -E -v '^(install\.sh|uninstall\.sh|secrets|\.git)$' \
+    | tr '\n' ' ')
+
+if [[ -z "$STOW_FOLDERS" ]]; then
+    echo "No stowable directories found!" >&2
+    exit 1
 fi
 
-pushd $DOTFILES
-for folder in $(echo $STOW_FOLDERS | sed "s/,/ /g")
-do
+echo "Found stow folders: $STOW_FOLDERS"
+for folder in $STOW_FOLDERS; do
     echo "stow $folder"
-    stow -D $folder
+    stow -D "$folder" 2>/dev/null || true
     stow $folder
 done
-popd
+
+popd >/dev/null
+echo "Done! All directories stowed."
