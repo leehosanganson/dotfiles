@@ -1,5 +1,13 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+
+# Add Home Manager user profile to PATH
+export PATH="$HOME/.nix-profile/bin:$PATH"
+
+if [[ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]]; then
+  source "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
+
 ZSH_THEME="agnoster"
 LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -37,7 +45,7 @@ prompt_end() {
 }
 
 # FZF
-if [ -e /etc/nixos ]; then
+if [ -f /etc/NIXOS ]; then
   export FZF_BASE="$(which fzf)"
 else
   export FZF_BASE=/path/to/fzf/install/dir
@@ -102,6 +110,7 @@ dpup() {
     --devcontainer-path "$devcontainer_path" \
     "$workspace_dir"
 }
+
 # Kubernetes
 if [ -x "$(command -v kubectl)" ]; then
   source <(kubectl completion zsh)
