@@ -1,59 +1,28 @@
--- Customize Mason plugins
+if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
 
-local is_nixos = vim.fn.executable("nixos-rebuild") == 1
-
+-- Customize Mason
 
 ---@type LazySpec
 return {
-  -- use mason-lspconfig to configure LSP installations
+  -- use mason-tool-installer for automatically installing Mason packages
   {
-    "williamboman/mason-lspconfig.nvim",
-    -- overrides `require("mason-lspconfig").setup(...)`
-    enabled = not is_nixos,
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    -- overrides `require("mason-tool-installer").setup(...)`
     opts = {
+      -- Make sure to use the names found in `:Mason`
       ensure_installed = {
-        "lua_ls",
-        --        "pyright",
-        --        "tsserver",
-        --        "gopls",
-        --        "dockerls",
-        --        "jsonls",
-        --        "bashls",
-        -- add more arguments for adding more language servers
-      },
-      automatic_installation = false,
-    },
-  },
-  -- use mason-null-ls to configure Formatters/Linter installation for null-ls sources
-  {
-    "jay-babu/mason-null-ls.nvim",
-    -- overrides `require("mason-null-ls").setup(...)`
-    enabled = not is_nixos,
-    opts = {
-      ensure_installed = {
+        -- install language servers
+        "lua-language-server",
+
+        -- install formatters
         "stylua",
-        -- "ruff",
-        --        "prettier",
-        --        "gofmt",
-        --        "golangci_lint",
-        --        "black",
-        -- add more arguments for adding more null-ls sources
+
+        -- install debuggers
+        "debugpy",
+
+        -- install any other package
+        "tree-sitter-cli",
       },
-      automatic_installation = false,
-    },
-  },
-  {
-    "jay-babu/mason-nvim-dap.nvim",
-    -- overrides `require("mason-nvim-dap").setup(...)`
-    enabled = not is_nixos,
-    opts = {
-      ensure_installed = {
-        "python",
-        "js",
-        -- "delve",
-        -- add more arguments for adding more debuggers
-      },
-      automatic_installation = false,
     },
   },
 }
