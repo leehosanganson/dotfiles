@@ -103,8 +103,8 @@ dpup() {
   local workspace_dir="${2:-.}"
 
   devpod up \
-    --dotfiles "https://github.com/leehosanganson/nix-config" \
-    --dotfiles-script=scripts/setup-devcontainer.sh \
+    --dotfiles "https://github.com/leehosanganson/dotfiles" \
+    --dotfiles-script=setup.sh \
     --workspace-env-file=.devcontainer/.env \
     --open-ide=0 \
     --devcontainer-path "$devcontainer_path" \
