@@ -29,3 +29,5 @@ if ! command -v nix &> /dev/null; then
 fi
 
 nix run home-manager/master -- switch -b backup --flake 'github:leehosanganson/nix-config#vscode@devcontainer'
+
+source ~/.zshrc
