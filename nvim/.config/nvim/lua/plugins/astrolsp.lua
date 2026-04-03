@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- AstroLSP allows you to customize the features in AstroNvim's LSP configuration engine
 -- Configuration documentation can be found with `:h astrolsp`
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
@@ -39,12 +37,19 @@ return {
     },
     -- enable servers that you already have installed without mason
     servers = {
-      -- "pyright"
+      "nixd",
+      "yamlls",
+      "helm_ls",
+      "lua_ls",
+      "jsonls",
     },
-    -- customize language server configuration passed to `vim.lsp.config`
-    -- client specific configuration can also go in `lsp/` in your configuration root (see `:h lsp-config`)
+    -- customize language server configuration options passed to `lspconfig`
+    ---@diagnostic disable: missing-fields
     config = {
-      -- ["*"] = { capabilities = {} }, -- modify default LSP client settings such as capabilities
+      nixd = { capabilities = { offsetEncoding = "utf-8" } },
+      lua_ls = { capabilities = { offsetEncoding = "utf-8" } },
+      yamlls = { capabilities = { offsetEncoding = "utf-8" } },
+      helm_ls = { capabilities = { offsetEncoding = "utf-8" } },
     },
     -- customize how language servers are attached
     handlers = {
@@ -71,7 +76,7 @@ return {
           -- the rest of the autocmd options (:h nvim_create_autocmd)
           desc = "Refresh codelens (buffer)",
           callback = function(args)
-            if require("astrolsp").config.features.codelens then vim.lsp.codelens.enable(true, { bufnr = args.buf }) end
+            if require("astrolsp").config.features.codelens then vim.lsp.codelens.refresh{ bufnr = args.buf } end
           end,
         },
       },
