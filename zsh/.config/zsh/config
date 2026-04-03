@@ -76,6 +76,9 @@ lg()
     fi
 }
 
+# direnv
+eval "$(direnv hook zsh)"
+
 # Devpod - up
 dpup() {
   local devcontainer_path="${1:-./.devcontainer/.devcontainer.json}"
