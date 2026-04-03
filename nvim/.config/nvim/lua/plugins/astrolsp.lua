@@ -42,6 +42,7 @@ return {
       "helm_ls",
       "lua_ls",
       "jsonls",
+      "gopls",
     },
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields
@@ -72,11 +73,11 @@ return {
         -- list of auto commands to set
         {
           -- events to trigger
-          event = { "InsertLeave", "BufEnter" },
+          event = { "InsertLeave", "BufEnter", "BufRead", "BufNewFile" },
           -- the rest of the autocmd options (:h nvim_create_autocmd)
           desc = "Refresh codelens (buffer)",
           callback = function(args)
-            if require("astrolsp").config.features.codelens then vim.lsp.codelens.refresh{ bufnr = args.buf } end
+            if require("astrolsp").config.features.codelens then vim.lsp.codelens.refresh { bufnr = args.buf } end
           end,
         },
       },
