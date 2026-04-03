@@ -30,4 +30,4 @@ fi
 
 nix run home-manager/master -- switch -b backup --flake 'github:leehosanganson/nix-config#vscode@devcontainer'
 
-source ~/.zshrc
+zsh -i -c 'exit'
