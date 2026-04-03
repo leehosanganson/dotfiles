@@ -30,4 +30,7 @@ fi
 
 nix run home-manager/master -- switch -b backup --flake 'github:leehosanganson/nix-config#vscode@devcontainer'
 
+# Stow dotfiles
+./install.sh 
+
 zsh -i -c 'exit'
