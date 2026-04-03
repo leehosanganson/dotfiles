@@ -1,6 +1,6 @@
 ---
 description: Orchestrates the Planner, Generator, and Evaluator sub-agents to complete a user task end-to-end.
-mode: agent
+mode: all
 temperature: 0.3
 tools:
   write: false
