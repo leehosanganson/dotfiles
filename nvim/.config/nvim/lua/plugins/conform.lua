@@ -15,7 +15,7 @@ return {
       jsonc = { "prettierd" },
       css = { "prettierd" },
       markdown = { "prettierd" },
-      go = { "gofmt", "golangci_lint" },
+      go = { "gofmt", "golangci-lint" },
       typescript = { "prettierd", "eslint_d" },
       typescriptreact = { "prettierd", "eslint_d" },
       javascript = { "prettierd", "eslint_d" },
@@ -23,16 +23,6 @@ return {
     }
 
     opts.formatters = {
-      gofmt = {
-        command = "gofmt",
-        stdin = true,
-      },
-      golangci_lint = {
-        command = "golangci-lint",
-        args = { "run", "--fix", "--out-format", "json" },
-        stdin = true,
-        ignore_exitcode = true,
-      },
       stylua = {
         command = "stylua",
         stdin = true,
@@ -53,7 +43,7 @@ return {
       },
       eslint_d = {
         command = "eslint_d",
-        args = { "--fix-to-stdout", "--stdin", "--stdin-filename", "$FILENAME" },
+        args = { "--stdin", "--stdin-filename", "$FILENAME" },
         stdin = true,
         ignore_exitcode = true,
       },
