@@ -11,6 +11,10 @@ permission:
   edit: deny
   bash:
     "*": ask
+    "find": allow
+    "sort": allow
+    "cat": allow
+    "grep": allow
   agent:
     "planner": allow
     "generator": allow
