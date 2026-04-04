@@ -50,5 +50,8 @@
         "Authorization": "Bearer {file:~/.config/sops-nix/secrets/opencode-github-pat}"
       }
     }
-  }
+  },
+  "plugin": [
+    "@slkiser/opencode-quota"
+  ]
 }
