@@ -43,15 +43,11 @@ return {
       "lua_ls",
       "jsonls",
       "gopls",
+      "vtsls",
     },
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields
-    config = {
-      nixd = { capabilities = { offsetEncoding = "utf-8" } },
-      lua_ls = { capabilities = { offsetEncoding = "utf-8" } },
-      yamlls = { capabilities = { offsetEncoding = "utf-8" } },
-      helm_ls = { capabilities = { offsetEncoding = "utf-8" } },
-    },
+    config = {},
     -- customize how language servers are attached
     handlers = {
       -- a function with the key `*` modifies the default handler, functions takes the server name as the parameter
