@@ -22,6 +22,11 @@
       }
     }
   },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 8192
+  },
   "provider": {
     "litellm": {
       "npm": "@ai-sdk/openai-compatible",
@@ -33,8 +38,7 @@
       "models": {
         "openai/gemma-4": {
           "limit": {
-            "context": 32768,
-            "input": 32768,
+            "context": 131072,
             "output": 8192
           }
         },
