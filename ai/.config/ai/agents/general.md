@@ -15,6 +15,8 @@ permission:
     "sort": allow
     "cat": allow
     "grep": allow
+    "xargs": allow
+    "head": allow
   agent:
     "planner": allow
     "generator": allow
