@@ -1,34 +1,41 @@
-# AstroNvim Template
+# Neovim Configuration
 
-**NOTE:** This is for AstroNvim v6+
+Minimal neovim 0.12 configuration using [lazy.nvim](https://github.com/folke/lazy.nvim) for plugin management.
 
-A template for getting started with [AstroNvim](https://github.com/AstroNvim/AstroNvim)
+## Plugins
 
-## 🛠️ Installation
+- **Theme**: [catppuccin](https://github.com/catppuccin/nvim) (mocha)
+- **LSP**: Native neovim 0.12 LSP (`vim.lsp.config` / `vim.lsp.enable`) — no mason
+- **Completion**: [blink.cmp](https://github.com/saghen/blink.cmp)
+- **Formatter**: [conform.nvim](https://github.com/stevearc/conform.nvim)
+- **Linter**: [nvim-lint](https://github.com/mfussenegger/nvim-lint)
+- **Treesitter**: [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+- **Tmux**: [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator)
+- **Git**: [lazygit.nvim](https://github.com/kdheepak/lazygit.nvim)
+- **Search**: [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) with ripgrep
+- **File browser**: [oil.nvim](https://github.com/stevearc/oil.nvim)
 
-#### Make a backup of your current nvim and shared folder
+## Requirements
 
-```shell
-mv ~/.config/nvim ~/.config/nvim.bak
-mv ~/.local/share/nvim ~/.local/share/nvim.bak
-mv ~/.local/state/nvim ~/.local/state/nvim.bak
-mv ~/.cache/nvim ~/.cache/nvim.bak
-```
+- Neovim >= 0.12
+- Language servers installed externally (e.g. via nix): `lua_ls`, `nixd`, `yamlls`, `helm_ls`, `jsonls`, `gopls`, `vtsls`
+- [ripgrep](https://github.com/BurntSushi/ripgrep) for telescope live grep
+- [lazygit](https://github.com/jesseduffield/lazygit) for git UI
 
-#### Create a new user repository from this template
+## Key Mappings
 
-Press the "Use this template" button above to create a new repository to store your user configuration.
-
-You can also just clone this repository directly if you do not want to track your user configuration in GitHub.
-
-#### Clone the repository
-
-```shell
-git clone https://github.com/<your_user>/<your_repository> ~/.config/nvim
-```
-
-#### Start Neovim
-
-```shell
-nvim
-```
+| Key | Description |
+|---|---|
+| `<leader>ff` | Find files |
+| `<leader>fg` | Live grep (ripgrep) |
+| `<leader>fw` | Grep word under cursor |
+| `<leader>fb` | Find buffers |
+| `<leader>fr` | Recent files |
+| `<leader>gg` | LazyGit |
+| `-` | Oil file browser |
+| `<leader>cf` | Format buffer |
+| `<leader>ca` | Code action |
+| `<leader>cr` | Rename symbol |
+| `gd` | Go to definition |
+| `gr` | References |
+| `K` | Hover docs |
