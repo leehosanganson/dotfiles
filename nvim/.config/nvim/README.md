@@ -1,34 +1,46 @@
-# AstroNvim Template
+# Neovim Configuration
 
-**NOTE:** This is for AstroNvim v6+
+A minimal neovim 0.12+ configuration using [lazy.nvim](https://github.com/folke/lazy.nvim).
 
-A template for getting started with [AstroNvim](https://github.com/AstroNvim/AstroNvim)
+## Features
 
-## 🛠️ Installation
+- **Colorscheme**: [catppuccin](https://github.com/catppuccin/nvim)
+- **Syntax**: [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+- **LSP**: [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
+- **Completion**: [blink.cmp](https://github.com/saghen/blink.cmp)
+- **Formatting**: [conform.nvim](https://github.com/stevearc/conform.nvim)
+- **Picker / Dashboard**: [snacks.nvim](https://github.com/folke/snacks.nvim)
+- **Tmux integration**: [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator)
 
-#### Make a backup of your current nvim and shared folder
+## Installation
 
 ```shell
+# Back up existing config
 mv ~/.config/nvim ~/.config/nvim.bak
-mv ~/.local/share/nvim ~/.local/share/nvim.bak
-mv ~/.local/state/nvim ~/.local/state/nvim.bak
-mv ~/.cache/nvim ~/.cache/nvim.bak
+
+# Clone
+git clone https://github.com/leehosanganson/dotfiles ~/.config/nvim --sparse
+cd ~/.config/nvim
+git sparse-checkout set nvim/.config/nvim
+
+# Or stow directly
+cd dotfiles && stow nvim
 ```
 
-#### Create a new user repository from this template
+## Structure
 
-Press the "Use this template" button above to create a new repository to store your user configuration.
-
-You can also just clone this repository directly if you do not want to track your user configuration in GitHub.
-
-#### Clone the repository
-
-```shell
-git clone https://github.com/<your_user>/<your_repository> ~/.config/nvim
 ```
-
-#### Start Neovim
-
-```shell
-nvim
+nvim/.config/nvim/
+├── init.lua               # Entry point: options, keymaps, lazy bootstrap
+└── lua/
+    ├── config/
+    │   ├── options.lua    # Vim options
+    │   └── keymaps.lua    # Global key mappings
+    └── plugins/
+        ├── colorscheme.lua
+        ├── treesitter.lua
+        ├── lsp.lua
+        ├── completion.lua
+        ├── conform.lua
+        └── editor.lua     # snacks.nvim, vim-tmux-navigator
 ```
