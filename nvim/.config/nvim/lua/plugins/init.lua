@@ -53,7 +53,7 @@ require("pack").setup {
   {
     packadd = { "oil.nvim", "nvim-web-devicons" },
     config = function()
-      require("oil").setup { default_file_explorer = true, view_options = { show_hidden = true } }
+      require("oil").setup { view_options = { show_hidden = true } }
       vim.keymap.set("n", "-", "<cmd>Oil<CR>", { desc = "Open parent directory", silent = true })
       vim.keymap.set("n", "<leader>o", "<cmd>Oil<CR>", { desc = "Oil file browser", silent = true })
     end,
