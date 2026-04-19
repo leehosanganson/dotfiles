@@ -24,8 +24,8 @@ return function()
     options = {
       theme = "catppuccin-mocha",
       globalstatus = true,
-      section_separators = "",
-      component_separators = "",
+      section_separators   = { left = "", right = "" },
+      component_separators = { left = "", right = "" },
     },
     sections = {
       lualine_a = { "mode" },
@@ -35,9 +35,9 @@ return function()
         { "diagnostics", sources = { "nvim_diagnostic" } },
       },
       lualine_x = {
-        { lsp_names, icon = "󰒋" },
-        { formatters, icon = "󰉿" },
-        { linters, icon = "󰦕" },
+        { lsp_names, icon = "󰒋" }, ---@type any
+        { formatters, icon = "󰉿" }, ---@type any
+        { linters, icon = "󰦕" }, ---@type any
       },
       lualine_y = { "filetype" },
       lualine_z = { "location" },

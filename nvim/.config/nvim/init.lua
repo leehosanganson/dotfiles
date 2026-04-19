@@ -24,6 +24,8 @@ vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.timeoutlen = 300
 
+vim.g.copilot_no_tab_map = true
+
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
   group = vim.api.nvim_create_augroup("autoread", { clear = true }),
   callback = function() vim.cmd.checktime() end,
@@ -36,6 +38,9 @@ vim.keymap.set("n", "<leader>w", "<cmd>w<CR>", { desc = "Save" })
 vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, { desc = "Previous diagnostic" })
 vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, { desc = "Next diagnostic" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+vim.keymap.set("n", "<leader>tw", function() vim.opt.wrap = not vim.opt.wrap:get() end, { desc = "Toggle wrap" })
+vim.keymap.set("v", "<Tab>", ">gv", { desc = "Indent selection" })
+vim.keymap.set("v", "<S-Tab>", "<gv", { desc = "Unindent selection" })
 
 -- LSP (native neovim 0.12)
 require "plugins.lsp"

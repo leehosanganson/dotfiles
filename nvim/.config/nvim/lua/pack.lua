@@ -20,7 +20,7 @@ local function load_entry(entry)
   end
 
   -- Deduplicate by mod name (shared across entries) or entry reference (unique)
-  local key = entry.mod or entry
+  local key = entry.mod or tostring(entry)
   if not loaded[key] then
     loaded[key] = true
     if entry.config then

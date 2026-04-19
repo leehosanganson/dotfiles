@@ -1,5 +1,6 @@
 -- Plugin declarations + loading registry
 
+---@diagnostic disable-next-line: undefined-field
 vim.pack.add({
   { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
   "https://github.com/nvim-lua/plenary.nvim",
@@ -14,6 +15,8 @@ vim.pack.add({
   "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
   "https://github.com/stevearc/oil.nvim",
   "https://github.com/nvim-lualine/lualine.nvim",
+  "https://github.com/github/copilot.vim",
+  "https://github.com/lukas-reineke/indent-blankline.nvim",
 }, { confirm = false, load = function() end })
 
 require("pack").setup {
@@ -32,10 +35,33 @@ require("pack").setup {
   -- Immediate: statusline
   { packadd = { "lualine.nvim", "nvim-web-devicons" }, mod = "statusline" },
 
-  -- Event: treesitter, linting, completion, formatting
+  -- Immediate: copilot
+  {
+    packadd = { "copilot.vim" },
+    config = function()
+      vim.keymap.set("i", "<C-y>", 'copilot#Accept("")', {
+        expr = true,
+        replace_keycodes = false,
+        silent = true,
+        desc = "Accept Copilot suggestion",
+      })
+    end,
+  },
+
+  -- Event: treesitter, linting, completion, formatting, indent guides
   { mod = "treesitter", event = { "BufReadPre", "BufNewFile" }, packadd = { "nvim-treesitter" } },
   { mod = "lint", event = { "BufReadPre", "BufNewFile" }, packadd = { "nvim-lint" } },
   { mod = "conform", event = { "BufReadPost", "BufNewFile" }, packadd = { "conform.nvim" } },
+  {
+    packadd = { "indent-blankline.nvim" },
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("ibl").setup {
+        indent = { char = "│" },
+        scope = { enabled = true },
+      }
+    end,
+  },
   {
     packadd = { "blink.cmp" },
     event = { "InsertEnter", "CmdlineEnter" },

@@ -11,9 +11,9 @@ vim.lsp.config("lua_ls", {
       workspace = {
         checkThirdParty = false,
         library = {
-          vim.env.VIMRUNTIME,
-          vim.fn.stdpath("config") .. "/lua",
-          vim.fn.stdpath("data") .. "/site/pack/core/opt",
+          vim.env.VIMRUNTIME or "",
+          (vim.fn.stdpath("config") --[[@as string]]) .. "/lua",
+          (vim.fn.stdpath("data") --[[@as string]]) .. "/site/pack/core/opt",
         },
       },
     },
@@ -58,19 +58,23 @@ vim.lsp.enable({ "lua_ls", "nixd", "yamlls", "helm_ls", "jsonls" })
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-keymaps", { clear = true }),
   callback = function(ev)
+    ---@param keys string
+    ---@param func function
+    ---@param desc string
+    ---@param mode string|string[]|nil
     local map = function(keys, func, desc, mode)
       mode = mode or "n"
       vim.keymap.set(mode, keys, func, { buffer = ev.buf, desc = "LSP: " .. desc })
     end
 
-    map("gd", vim.lsp.buf.definition, "Go to definition")
-    map("gD", vim.lsp.buf.declaration, "Go to declaration")
-    map("gr", vim.lsp.buf.references, "References")
-    map("gi", vim.lsp.buf.implementation, "Go to implementation")
-    map("K", vim.lsp.buf.hover, "Hover documentation")
-    map("<leader>ca", vim.lsp.buf.code_action, "Code action", { "n", "v" })
-    map("<leader>cr", vim.lsp.buf.rename, "Rename symbol")
-    map("<leader>cd", vim.lsp.buf.type_definition, "Type definition")
+    map("gd", function() vim.lsp.buf.definition() end, "Go to definition")
+    map("gD", function() vim.lsp.buf.declaration() end, "Go to declaration")
+    map("gr", function() vim.lsp.buf.references() end, "References")
+    map("gi", function() vim.lsp.buf.implementation() end, "Go to implementation")
+    map("K", function() vim.lsp.buf.hover() end, "Hover documentation")
+    map("<leader>ca", function() vim.lsp.buf.code_action() end, "Code action", { "n", "v" })
+    map("<leader>cr", function() vim.lsp.buf.rename() end, "Rename symbol")
+    map("<leader>cd", function() vim.lsp.buf.type_definition() end, "Type definition")
   end,
 })
 
