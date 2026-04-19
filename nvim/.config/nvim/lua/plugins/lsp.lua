@@ -10,7 +10,11 @@ vim.lsp.config("lua_ls", {
       runtime = { version = "LuaJIT" },
       workspace = {
         checkThirdParty = false,
-        library = { vim.env.VIMRUNTIME, vim.fn.stdpath("config") .. "/lua" },
+        library = {
+          vim.env.VIMRUNTIME,
+          vim.fn.stdpath("config") .. "/lua",
+          vim.fn.stdpath("data") .. "/site/pack/core/opt",
+        },
       },
     },
   },
