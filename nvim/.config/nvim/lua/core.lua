@@ -45,6 +45,8 @@ vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagn
 vim.keymap.set("n", "<leader>tw", function() vim.opt.wrap = not vim.opt.wrap:get() end, { desc = "Toggle wrap" })
 vim.keymap.set("v", "<Tab>", ">gv", { desc = "Indent selection" })
 vim.keymap.set("v", "<S-Tab>", "<gv", { desc = "Unindent selection" })
+vim.keymap.set("n", "<leader>/", "gcc", { remap = true, desc = "Toggle Comment" })
+vim.keymap.set("v", "<leader>/", "gc", { remap = true, desc = "Toggle Comment" })
 
 -- Cmdline completion popup navigation
 vim.opt.autocomplete = true

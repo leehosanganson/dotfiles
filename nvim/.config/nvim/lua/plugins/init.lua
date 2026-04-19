@@ -56,6 +56,12 @@ require("pack").setup {
       require("oil").setup { view_options = { show_hidden = true } }
       vim.keymap.set("n", "-", "<cmd>Oil<CR>", { desc = "Open parent directory", silent = true })
       vim.keymap.set("n", "<leader>o", "<cmd>Oil<CR>", { desc = "Oil file browser", silent = true })
+      vim.api.nvim_create_autocmd("VimEnter", {
+        once = true,
+        callback = function()
+          if vim.fn.argc() == 0 then vim.schedule(function() require("oil").open() end) end
+        end,
+      })
     end,
   },
 
