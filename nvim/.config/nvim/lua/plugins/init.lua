@@ -35,7 +35,7 @@ require("pack").setup {
   -- Event: treesitter, linting, completion, formatting
   { mod = "treesitter", event = { "BufReadPre", "BufNewFile" }, packadd = { "nvim-treesitter" } },
   { mod = "lint", event = { "BufReadPre", "BufNewFile" }, packadd = { "nvim-lint" } },
-  { mod = "conform", event = "BufWritePre", packadd = { "conform.nvim" } },
+  { mod = "conform", event = { "BufReadPost", "BufNewFile" }, packadd = { "conform.nvim" } },
   {
     packadd = { "blink.cmp" },
     event = { "InsertEnter", "CmdlineEnter" },

@@ -9,8 +9,10 @@ return function()
     javascriptreact = { "eslint_d" },
     typescriptreact = { "eslint_d" },
   }
-  vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+  vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
     group = vim.api.nvim_create_augroup("lint", { clear = true }),
-    callback = function() lint.try_lint() end,
+    callback = function()
+      if vim.bo.buftype == "" then lint.try_lint() end
+    end,
   })
 end

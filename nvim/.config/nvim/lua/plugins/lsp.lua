@@ -10,7 +10,7 @@ vim.lsp.config("lua_ls", {
       runtime = { version = "LuaJIT" },
       workspace = {
         checkThirdParty = false,
-        library = { vim.env.VIMRUNTIME },
+        library = { vim.env.VIMRUNTIME, vim.fn.stdpath("config") .. "/lua" },
       },
     },
   },
@@ -31,7 +31,7 @@ vim.lsp.config("yamlls", {
 vim.filetype.add({
   pattern = {
     [".*/templates/.*%.ya?ml"] = "helm",
-    ["helmfile.*%.ya?ml"] = "helm",
+    [".*/helmfile.*%.ya?ml"] = "helm",
   },
 })
 
@@ -76,5 +76,3 @@ vim.diagnostic.config {
   underline = true,
   signs = true,
 }
-
-return {}

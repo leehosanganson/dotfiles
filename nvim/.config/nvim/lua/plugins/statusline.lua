@@ -2,21 +2,22 @@ return function()
   local function lsp_names()
     local clients = vim.lsp.get_clients { bufnr = 0 }
     local names = vim.tbl_map(function(c) return c.name end, clients)
-    return table.concat(names, " ")
+    return table.concat(names, ", ")
   end
 
   local function formatters()
     if not package.loaded["conform"] then return "" end
     local available = vim.tbl_filter(function(f) return f.available end, require("conform").list_formatters(0))
     local names = vim.tbl_map(function(f) return f.name end, available)
-    return table.concat(names, " ")
+    return table.concat(names, ", ")
   end
 
   local function linters()
     if not package.loaded["lint"] then return "" end
     local ft_linters = require("lint").linters_by_ft[vim.bo.filetype]
     if not ft_linters then return "" end
-    return table.concat(ft_linters, " ")
+    local installed = vim.tbl_filter(function(name) return vim.fn.executable(name) == 1 end, ft_linters)
+    return table.concat(installed, ", ")
   end
 
   require("lualine").setup {
@@ -43,7 +44,7 @@ return function()
     },
   }
 
-  vim.api.nvim_create_autocmd("LspAttach", {
+  vim.api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
     group = vim.api.nvim_create_augroup("lualine-lsp-refresh", { clear = true }),
     callback = function() require("lualine").refresh() end,
   })
