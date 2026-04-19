@@ -15,8 +15,11 @@ vim.pack.add({
   "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
   "https://github.com/stevearc/oil.nvim",
   "https://github.com/nvim-lualine/lualine.nvim",
-  "https://github.com/github/copilot.vim",
+  { src = "https://github.com/zbirenbaum/copilot.lua", name = "copilot.lua" },
+  { src = "https://github.com/giuxtaposition/blink-cmp-copilot", name = "blink-cmp-copilot" },
   "https://github.com/lukas-reineke/indent-blankline.nvim",
+  "https://github.com/lewis6991/gitsigns.nvim",
+  "https://github.com/windwp/nvim-autopairs",
 }, { confirm = false, load = function() end })
 
 require("pack").setup {
@@ -35,16 +38,24 @@ require("pack").setup {
   -- Immediate: statusline
   { packadd = { "lualine.nvim", "nvim-web-devicons" }, mod = "statusline" },
 
-  -- Immediate: copilot
+  -- Immediate: copilot.lua
   {
-    packadd = { "copilot.vim" },
+    packadd = { "copilot.lua" },
     config = function()
-      vim.keymap.set("i", "<C-y>", 'copilot#Accept("")', {
-        expr = true,
-        replace_keycodes = false,
-        silent = true,
-        desc = "Accept Copilot suggestion",
-      })
+      require("copilot").setup {
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+      }
+    end,
+  },
+
+  -- Immediate: oil
+  {
+    packadd = { "oil.nvim", "nvim-web-devicons" },
+    config = function()
+      require("oil").setup { default_file_explorer = true, view_options = { show_hidden = true } }
+      vim.keymap.set("n", "-", "<cmd>Oil<CR>", { desc = "Open parent directory", silent = true })
+      vim.keymap.set("n", "<leader>o", "<cmd>Oil<CR>", { desc = "Oil file browser", silent = true })
     end,
   },
 
@@ -62,15 +73,69 @@ require("pack").setup {
       }
     end,
   },
+  -- Event: autopairs
   {
-    packadd = { "blink.cmp" },
+    packadd = { "nvim-autopairs" },
+    event = { "InsertEnter" },
+    config = function()
+      require("nvim-autopairs").setup { check_ts = true }
+    end,
+  },
+  -- Event: gitsigns
+  {
+    packadd = { "gitsigns.nvim" },
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("gitsigns").setup {
+        signs = {
+          add          = { text = "▎" },
+          change       = { text = "▎" },
+          delete       = { text = "" },
+          topdelete    = { text = "" },
+          changedelete = { text = "▎" },
+          untracked    = { text = "▎" },
+        },
+        on_attach = function(bufnr)
+          local gs = require("gitsigns")
+          local map = function(keys, func, desc)
+            vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "Git: " .. desc })
+          end
+          map("]c", function() gs.nav_hunk("next") end, "Next hunk")
+          map("[c", function() gs.nav_hunk("prev") end, "Prev hunk")
+          map("<leader>gp", function() gs.preview_hunk() end, "Preview hunk")
+          map("<leader>gs", function() gs.stage_hunk() end, "Stage hunk")
+          map("<leader>gr", function() gs.reset_hunk() end, "Reset hunk")
+          map("<leader>gb", function() gs.blame_line() end, "Blame line")
+        end,
+      }
+    end,
+  },
+  {
+    packadd = { "blink.cmp", "blink-cmp-copilot" },
     event = { "InsertEnter", "CmdlineEnter" },
     config = function()
       require("blink.cmp").setup {
-        keymap = { preset = "default" },
+        keymap = {
+          preset = "default",
+          ["<Tab>"] = { "accept", "fallback" },
+        },
         appearance = { nerd_font_variant = "mono" },
-        completion = { documentation = { auto_show = true } },
-        sources = { default = { "lsp", "path", "snippets", "buffer" } },
+        completion = {
+          documentation = { auto_show = true },
+          ghost_text = { enabled = true },
+          accept = { auto_brackets = { enabled = true } },
+        },
+        sources = {
+          default = { "lsp", "path", "snippets", "buffer", "copilot" },
+          providers = {
+            copilot = {
+              name = "copilot",
+              module = "blink-cmp-copilot",
+              score_offset = 100,
+              async = true,
+            },
+          },
+        },
       }
     end,
   },
@@ -91,16 +156,6 @@ require("pack").setup {
       { "<leader>fw", cmd = "<cmd>Telescope grep_string<CR>", desc = "Grep word under cursor" },
       { "<leader>fd", cmd = "<cmd>Telescope diagnostics<CR>", desc = "Find diagnostics" },
       { "<leader>fr", cmd = "<cmd>Telescope oldfiles<CR>", desc = "Recent files" },
-    },
-  },
-
-  -- Keymap: oil
-  {
-    packadd = { "oil.nvim", "nvim-web-devicons" },
-    config = function() require("oil").setup { default_file_explorer = true, view_options = { show_hidden = true } } end,
-    keys = {
-      { "-", cmd = "<cmd>Oil<CR>", desc = "Open parent directory" },
-      { "<leader>o", cmd = "<cmd>Oil<CR>", desc = "Oil file browser" },
     },
   },
 
