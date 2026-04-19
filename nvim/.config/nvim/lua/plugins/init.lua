@@ -77,9 +77,7 @@ require("pack").setup {
   {
     packadd = { "nvim-autopairs" },
     event = { "InsertEnter" },
-    config = function()
-      require("nvim-autopairs").setup { check_ts = true }
-    end,
+    config = function() require("nvim-autopairs").setup { check_ts = true } end,
   },
   -- Event: gitsigns
   {
@@ -88,20 +86,20 @@ require("pack").setup {
     config = function()
       require("gitsigns").setup {
         signs = {
-          add          = { text = "▎" },
-          change       = { text = "▎" },
-          delete       = { text = "" },
-          topdelete    = { text = "" },
+          add = { text = "▎" },
+          change = { text = "▎" },
+          delete = { text = "" },
+          topdelete = { text = "" },
           changedelete = { text = "▎" },
-          untracked    = { text = "▎" },
+          untracked = { text = "▎" },
         },
         on_attach = function(bufnr)
-          local gs = require("gitsigns")
+          local gs = require "gitsigns"
           local map = function(keys, func, desc)
             vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "Git: " .. desc })
           end
-          map("]c", function() gs.nav_hunk("next") end, "Next hunk")
-          map("[c", function() gs.nav_hunk("prev") end, "Prev hunk")
+          map("]c", function() gs.nav_hunk "next" end, "Next hunk")
+          map("[c", function() gs.nav_hunk "prev" end, "Prev hunk")
           map("<leader>gp", function() gs.preview_hunk() end, "Preview hunk")
           map("<leader>gs", function() gs.stage_hunk() end, "Stage hunk")
           map("<leader>gr", function() gs.reset_hunk() end, "Reset hunk")
