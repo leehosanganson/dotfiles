@@ -1,6 +1,4 @@
-local M = {}
-
-function M.setup()
+return function()
   local lint = require "lint"
   lint.linters_by_ft = {
     nix = { "statix" },
@@ -15,9 +13,3 @@ function M.setup()
     callback = function() lint.try_lint() end,
   })
 end
-
-setmetatable(M, {
-  __call = function() M.setup() end,
-})
-
-return M

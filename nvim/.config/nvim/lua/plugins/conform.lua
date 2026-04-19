@@ -1,6 +1,4 @@
-local M = {}
-
-function M.setup()
+return function()
   require("conform").setup {
     formatters_by_ft = {
       lua = { "stylua" },
@@ -23,13 +21,3 @@ function M.setup()
     },
   }
 end
-
-function M.keymap()
-  vim.keymap.set("n", "<leader>cf", function() require("conform").format { async = true } end, { desc = "Format buffer" })
-end
-
-setmetatable(M, {
-  __call = function() M.setup() end,
-})
-
-return M

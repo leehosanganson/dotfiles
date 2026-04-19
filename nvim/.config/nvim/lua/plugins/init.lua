@@ -1,89 +1,82 @@
--- Plugin declarations (vim.pack.add) + loading registry
+-- Plugin declarations + loading registry
 
 vim.pack.add({
-  -- Theme
   { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
-
-  -- Core utilities
   "https://github.com/nvim-lua/plenary.nvim",
   "https://github.com/nvim-tree/nvim-web-devicons",
-
-  -- Completion
   "https://github.com/saghen/blink.cmp",
-
-  -- Formatting
   "https://github.com/stevearc/conform.nvim",
-
-  -- Linting
   "https://github.com/mfussenegger/nvim-lint",
-
-  -- Treesitter
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
-
-  -- Tmux navigation
   "https://github.com/christoomey/vim-tmux-navigator",
-
-  -- Git
   "https://github.com/kdheepak/lazygit.nvim",
-
-  -- Fuzzy finder
   "https://github.com/nvim-telescope/telescope.nvim",
   "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
-
-  -- File browser
   "https://github.com/stevearc/oil.nvim",
 }, { confirm = false, load = function() end })
 
--- Loading registry
-local pack = require "pack"
-
-pack.setup {
+require("pack").setup {
   -- Immediate: colorscheme
-  { mod = "catppuccin", packadd = { "catppuccin" } },
+  { packadd = { "catppuccin" }, config = function()
+    require("catppuccin").setup {
+      flavour = "mocha",
+      integrations = { treesitter = true, native_lsp = { enabled = true } },
+    }
+    vim.cmd.colorscheme "catppuccin"
+  end },
 
-  -- BufReadPre: treesitter, linting
+  -- Event: treesitter, linting, completion, formatting
   { mod = "treesitter", event = { "BufReadPre", "BufNewFile" }, packadd = { "nvim-treesitter" } },
   { mod = "lint", event = { "BufReadPre", "BufNewFile" }, packadd = { "nvim-lint" } },
-
-  -- InsertEnter: completion
-  { mod = "completion", event = { "InsertEnter", "CmdlineEnter" }, packadd = { "blink.cmp" } },
-
-  -- BufWritePre: formatting
-  { mod = "conform", event = "BufWritePre", once = false, packadd = { "conform.nvim" } },
+  { mod = "conform", event = "BufWritePre", packadd = { "conform.nvim" } },
+  { packadd = { "blink.cmp" }, event = { "InsertEnter", "CmdlineEnter" }, config = function()
+    require("blink.cmp").setup {
+      keymap = { preset = "default" },
+      appearance = { nerd_font_variant = "mono" },
+      completion = { documentation = { auto_show = true } },
+      sources = { default = { "lsp", "path", "snippets", "buffer" } },
+    }
+  end },
 
   -- Keymap: telescope
-  { mod = "telescope", keys = {
-    { "<leader>ff", desc = "Find files" },
-    { "<leader>fg", desc = "Live grep" },
-    { "<leader>fb", desc = "Find buffers" },
-    { "<leader>fh", desc = "Help tags" },
-    { "<leader>fw", desc = "Grep word under cursor" },
-    { "<leader>fd", desc = "Find diagnostics" },
-    { "<leader>fr", desc = "Recent files" },
-  }, packadd = { "telescope.nvim", "plenary.nvim", "telescope-fzf-native.nvim" } },
+  { packadd = { "telescope.nvim", "plenary.nvim", "telescope-fzf-native.nvim" }, config = function()
+    local telescope = require "telescope"
+    telescope.setup { defaults = { file_ignore_patterns = { "node_modules", ".git/" } } }
+    pcall(telescope.load_extension, "fzf")
+  end, keys = {
+    { "<leader>ff", cmd = "<cmd>Telescope find_files<CR>", desc = "Find files" },
+    { "<leader>fg", cmd = "<cmd>Telescope live_grep<CR>", desc = "Live grep" },
+    { "<leader>fb", cmd = "<cmd>Telescope buffers<CR>", desc = "Find buffers" },
+    { "<leader>fh", cmd = "<cmd>Telescope help_tags<CR>", desc = "Help tags" },
+    { "<leader>fw", cmd = "<cmd>Telescope grep_string<CR>", desc = "Grep word under cursor" },
+    { "<leader>fd", cmd = "<cmd>Telescope diagnostics<CR>", desc = "Find diagnostics" },
+    { "<leader>fr", cmd = "<cmd>Telescope oldfiles<CR>", desc = "Recent files" },
+  } },
 
   -- Keymap: oil
-  { mod = "oil", keys = {
-    { "-", desc = "Open parent directory" },
-    { "<leader>o", desc = "Oil file browser" },
-  }, packadd = { "oil.nvim", "nvim-web-devicons" } },
+  { packadd = { "oil.nvim", "nvim-web-devicons" }, config = function()
+    require("oil").setup { default_file_explorer = true, view_options = { show_hidden = true } }
+  end, keys = {
+    { "-", cmd = "<cmd>Oil<CR>", desc = "Open parent directory" },
+    { "<leader>o", cmd = "<cmd>Oil<CR>", desc = "Oil file browser" },
+  } },
 
   -- Keymap: lazygit
-  { mod = "lazygit", keys = {
-    { "<leader>gg", desc = "LazyGit" },
-  }, packadd = { "lazygit.nvim", "plenary.nvim" } },
+  { packadd = { "lazygit.nvim", "plenary.nvim" }, keys = {
+    { "<leader>gg", cmd = "<cmd>LazyGit<CR>", desc = "LazyGit" },
+  } },
 
   -- Keymap: tmux navigator
-  { mod = "tmux", keys = {
-    { "<C-h>", desc = "Navigate left" },
-    { "<C-j>", desc = "Navigate down" },
-    { "<C-k>", desc = "Navigate up" },
-    { "<C-l>", desc = "Navigate right" },
-    { "<C-\\>", desc = "Navigate previous" },
-  }, packadd = { "vim-tmux-navigator" } },
+  { packadd = { "vim-tmux-navigator" }, keys = {
+    { "<C-h>", cmd = "<cmd>TmuxNavigateLeft<CR>", desc = "Navigate left" },
+    { "<C-j>", cmd = "<cmd>TmuxNavigateDown<CR>", desc = "Navigate down" },
+    { "<C-k>", cmd = "<cmd>TmuxNavigateUp<CR>", desc = "Navigate up" },
+    { "<C-l>", cmd = "<cmd>TmuxNavigateRight<CR>", desc = "Navigate right" },
+    { "<C-\\>", cmd = "<cmd>TmuxNavigatePrevious<CR>", desc = "Navigate previous" },
+  } },
 
-  -- Keymap: format
-  { mod = "conform", fn = "keymap", keys = {
-    { "<leader>cf", desc = "Format buffer" },
-  }, packadd = { "conform.nvim" } },
+  -- Keymap: manual format
+  { mod = "conform", packadd = { "conform.nvim" }, keys = {
+    { "<leader>cf", cmd = function() require("conform").format { async = true } end, desc = "Format buffer" },
+  } },
 }
