@@ -54,5 +54,4 @@ vim.diagnostic.config {
   signs = true,
 }
 
--- Return empty spec since LSP is configured natively
 return {}

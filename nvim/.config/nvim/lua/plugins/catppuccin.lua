@@ -1,16 +1,19 @@
-return {
-  "catppuccin/nvim",
-  name = "catppuccin",
-  priority = 1000,
-  opts = {
+local M = {}
+
+function M.setup()
+  require("catppuccin").setup {
     flavour = "mocha",
     integrations = {
       treesitter = true,
       native_lsp = { enabled = true },
     },
-  },
-  config = function(_, opts)
-    require("catppuccin").setup(opts)
-    vim.cmd.colorscheme "catppuccin"
-  end,
-}
+  }
+  vim.cmd.colorscheme "catppuccin"
+end
+
+-- Default: called when mod is loaded without fn
+setmetatable(M, {
+  __call = function() M.setup() end,
+})
+
+return M

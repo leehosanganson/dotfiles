@@ -1,6 +1,6 @@
 # Neovim Configuration
 
-Minimal neovim 0.12 configuration using [lazy.nvim](https://github.com/folke/lazy.nvim) for plugin management.
+Minimal neovim 0.12 configuration using native `vim.pack.add` for plugin management — no third-party plugin manager needed.
 
 ## Plugins
 

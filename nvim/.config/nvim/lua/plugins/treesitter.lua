@@ -1,9 +1,7 @@
-return {
-  "nvim-treesitter/nvim-treesitter",
-  build = ":TSUpdate",
-  event = { "BufReadPre", "BufNewFile" },
-  main = "nvim-treesitter.configs",
-  opts = {
+local M = {}
+
+function M.setup()
+  require("nvim-treesitter.configs").setup {
     highlight = { enable = true },
     indent = { enable = true },
     auto_install = true,
@@ -24,5 +22,11 @@ return {
       "markdown_inline",
       "bash",
     },
-  },
-}
+  }
+end
+
+setmetatable(M, {
+  __call = function() M.setup() end,
+})
+
+return M

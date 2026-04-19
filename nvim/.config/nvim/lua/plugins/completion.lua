@@ -1,8 +1,7 @@
-return {
-  "saghen/blink.cmp",
-  version = "1.*",
-  event = "InsertEnter",
-  opts = {
+local M = {}
+
+function M.setup()
+  require("blink.cmp").setup {
     keymap = { preset = "default" },
     appearance = {
       nerd_font_variant = "mono",
@@ -11,5 +10,11 @@ return {
     sources = {
       default = { "lsp", "path", "snippets", "buffer" },
     },
-  },
-}
+  }
+end
+
+setmetatable(M, {
+  __call = function() M.setup() end,
+})
+
+return M
