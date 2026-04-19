@@ -115,8 +115,12 @@ require("pack").setup {
       require("blink.cmp").setup {
         keymap = {
           preset = "default",
-          ["<Tab>"] = { "accept", "fallback" },
+          ["<Tab>"] = { "select_and_accept", "fallback" },
+          ["<C-j>"] = { "show", "show_documentation", "hide_documentation", "fallback" },
+          ["<C-n>"] = { "select_next", "fallback" },
+          ["<C-p>"] = { "select_prev", "fallback" },
         },
+
         appearance = { nerd_font_variant = "mono" },
         completion = {
           documentation = { auto_show = true },
@@ -138,8 +142,9 @@ require("pack").setup {
     end,
   },
 
-  -- Keymap: telescope
+  -- VimEnter: telescope
   {
+    event = { "VimEnter" },
     packadd = { "telescope.nvim", "plenary.nvim", "telescope-fzf-native.nvim" },
     config = function()
       local telescope = require "telescope"

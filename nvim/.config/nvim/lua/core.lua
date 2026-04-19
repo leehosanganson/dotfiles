@@ -1,3 +1,7 @@
+-- Disable netrw early so Oil.nvim can take over as the file explorer
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Set leader keys before plugins
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
@@ -25,11 +29,6 @@ vim.opt.softtabstop = 2
 vim.opt.timeoutlen = 300
 vim.opt.smartindent = true
 vim.opt.smarttab = true
-vim.opt.autocomplete = true
-vim.opt.inccommand = "split"
-vim.opt.cmdheight = 0
-vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
-vim.opt.pumborder = "rounded"
 
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
   group = vim.api.nvim_create_augroup("autoread", { clear = true }),
@@ -46,3 +45,19 @@ vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagn
 vim.keymap.set("n", "<leader>tw", function() vim.opt.wrap = not vim.opt.wrap:get() end, { desc = "Toggle wrap" })
 vim.keymap.set("v", "<Tab>", ">gv", { desc = "Indent selection" })
 vim.keymap.set("v", "<S-Tab>", "<gv", { desc = "Unindent selection" })
+
+-- Cmdline completion popup navigation
+vim.opt.autocomplete = true
+vim.opt.inccommand = "split"
+vim.opt.cmdheight = 0
+vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
+vim.opt.pumborder = "rounded"
+vim.opt.wildmode = "noselect:lastused,full"
+vim.opt.wildoptions = "pum"
+vim.keymap.set("c", "<Up>", "wildmenumode() ? '<C-E><Up>'   : '<Up>'", { expr = true })
+vim.keymap.set("c", "<Down>", "wildmenumode() ? '<C-E><Down>' : '<Down>'", { expr = true })
+vim.api.nvim_create_autocmd("CmdlineChanged", {
+  group = vim.api.nvim_create_augroup("cmdline_pum", { clear = true }),
+  pattern = { ":", "/", "?" },
+  callback = function() vim.fn.wildtrigger() end,
+})
