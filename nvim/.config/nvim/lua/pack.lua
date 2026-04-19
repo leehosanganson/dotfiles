@@ -42,9 +42,7 @@ local function load_entry(entry)
   -- Set permanent keymaps from keys with cmd
   if entry.keys then
     for _, k in ipairs(entry.keys) do
-      if k.cmd then
-        vim.keymap.set(k.mode or "n", k[1], k.cmd, { desc = k.desc })
-      end
+      if k.cmd then vim.keymap.set(k.mode or "n", k[1], k.cmd, { desc = k.desc }) end
     end
   end
 end

@@ -1,6 +1,7 @@
 return function()
   local lint = require "lint"
   lint.linters_by_ft = {
+    lua = { "selene" },
     nix = { "statix" },
     go = { "golangcilint" },
     javascript = { "eslint_d" },

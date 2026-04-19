@@ -1,18 +1,10 @@
 -- Native neovim 0.12 LSP configuration (no mason, no lspconfig)
 -- Servers are expected to be installed externally (e.g. via nix)
 
-local servers = {
-  "lua_ls",
-  "nixd",
-  "yamlls",
-  "helm_ls",
-  "jsonls",
-  "gopls",
-  "vtsls",
-}
-
--- Configure each server
 vim.lsp.config("lua_ls", {
+  cmd = { "lua-language-server" },
+  filetypes = { "lua" },
+  root_markers = { ".luarc.json", ".luarc.jsonc", ".git" },
   settings = {
     Lua = {
       runtime = { version = "LuaJIT" },
@@ -24,8 +16,39 @@ vim.lsp.config("lua_ls", {
   },
 })
 
--- Enable servers
-vim.lsp.enable(servers)
+vim.lsp.config("nixd", {
+  cmd = { "nixd" },
+  filetypes = { "nix" },
+  root_markers = { "flake.nix", ".git" },
+})
+
+vim.lsp.config("yamlls", {
+  cmd = { "yaml-language-server", "--stdio" },
+  filetypes = { "yaml" },
+  root_markers = { ".git" },
+})
+
+vim.filetype.add({
+  pattern = {
+    [".*/templates/.*%.ya?ml"] = "helm",
+    ["helmfile.*%.ya?ml"] = "helm",
+  },
+})
+
+vim.lsp.config("helm_ls", {
+  cmd = { "helm_ls", "serve" },
+  filetypes = { "helm" },
+  root_markers = { "Chart.yaml" },
+})
+
+vim.lsp.config("jsonls", {
+  cmd = { "vscode-json-language-server", "--stdio" },
+  filetypes = { "json", "jsonc" },
+  root_markers = { ".git" },
+})
+
+-- Enable only installed servers
+vim.lsp.enable({ "lua_ls", "nixd", "yamlls", "helm_ls", "jsonls" })
 
 -- LSP keymaps on attach
 vim.api.nvim_create_autocmd("LspAttach", {
