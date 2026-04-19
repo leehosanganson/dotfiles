@@ -37,6 +37,9 @@ local function load_entry(entry)
     else
       vim.notify("[pack] " .. entry.mod .. " has no function " .. entry.fn, vim.log.levels.ERROR)
     end
+  elseif type(mod.setup) == "function" then
+    local fn_ok, err = pcall(mod.setup)
+    if not fn_ok then vim.notify("[pack] " .. entry.mod .. ".setup(): " .. tostring(err), vim.log.levels.ERROR) end
   end
 end
 
@@ -60,8 +63,10 @@ function M.setup(registry)
         vim.keymap.set(mode, key, function()
           pcall(vim.keymap.del, mode, key)
           load_entry(entry)
-          local keys = vim.api.nvim_replace_termcodes(key, true, false, true)
-          vim.api.nvim_feedkeys(keys, "mit", false)
+          vim.schedule(function()
+            local keys = vim.api.nvim_replace_termcodes(key, true, false, true)
+            vim.api.nvim_feedkeys(keys, "mit", false)
+          end)
         end, { desc = desc, nowait = true })
       end
     elseif entry.defer then
