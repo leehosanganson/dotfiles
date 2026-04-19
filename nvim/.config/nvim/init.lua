@@ -1,4 +1,5 @@
 require "core"
+
 require("vim._core.ui2").enable {
   enable = true,
   msg = {
@@ -9,5 +10,6 @@ require("vim._core.ui2").enable {
     msg = { height = 0.5, timeout = 4500 },
   },
 }
+
 require "plugins.lsp"
 require "plugins"
