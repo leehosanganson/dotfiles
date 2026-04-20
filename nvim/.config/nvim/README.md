@@ -1,6 +1,31 @@
 # Neovim Config
 
-A minimal Neovim 0.12 setup for NixOS, using native `vim.pack.add` (no external plugin manager) with lazy-loading via `vim.schedule` and `VimEnter` autocmds.
+A minimal Neovim 0.12 setup for NixOS, using [lazy.nvim](https://github.com/folke/lazy.nvim) as the plugin manager with lazy-loading enabled by default.
+
+## Structure
+
+```
+nvim/
+├── init.lua                  # Entry point: bootstraps lazy.nvim, loads core & config.lsp
+└── lua/
+    ├── core/
+    │   ├── init.lua          # Requires options, keymaps, autocmds
+    │   ├── options.lua       # vim.g.* globals and vim.opt.* settings
+    │   ├── keymaps.lua       # General vim.keymap.set calls
+    │   └── autocmds.lua      # CmdlineChanged autocmd
+    ├── config/
+    │   ├── lsp.lua           # Native LSP setup (filetype, servers, keymaps, diagnostics)
+    │   └── statusline.lua    # Lualine configuration
+    └── plugins/
+        ├── colorscheme.lua   # catppuccin
+        ├── statusline.lua    # lualine spec
+        ├── editor.lua        # treesitter, nvim-autopairs, indent-blankline
+        ├── completion.lua    # blink.cmp, copilot.lua
+        ├── telescope.lua     # telescope + fzf-native
+        ├── git.lua           # gitsigns, lazygit
+        ├── tools.lua         # oil, vim-tmux-navigator, conform, nvim-lint
+        └── lsp.lua           # Empty (LSP config lives in lua/config/lsp.lua)
+```
 
 ## Requirements
 
