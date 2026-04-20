@@ -29,7 +29,7 @@ return {
         markdown = { "prettierd" },
         typescript = { "prettierd" },
         javascript = { "prettierd" },
-        go = { "gofmt" },
+        go = { "gofmt", "golangci-lint" },
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
       },

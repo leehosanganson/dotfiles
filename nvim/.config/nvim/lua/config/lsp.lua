@@ -65,6 +65,54 @@ vim.lsp.config("helm_ls", {
   root_markers = { "Chart.yaml" },
 })
 
+vim.lsp.config("gopls", {
+  cmd = { "gopls" },
+  filetypes = { "go", "gomod", "gowork", "gotmpl" },
+  root_markers = { "go.work", "go.mod", ".git" },
+  settings = {
+    gopls = {
+      analyses = {
+        unusedparams = true,
+        shadow = true,
+      },
+      staticcheck = true,
+      gofumpt = false,
+      hints = {
+        assignVariableTypes = true,
+        compositeLiteralFields = true,
+        functionTypeParameters = true,
+        parameterNames = true,
+        rangeVariableTypes = true,
+      },
+    },
+  },
+})
+
+vim.lsp.config("ts_ls", {
+  cmd = { "typescript-language-server", "--stdio" },
+  filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+  root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+  init_options = { hostInfo = "neovim" },
+  settings = {
+    typescript = {
+      inlayHints = {
+        includeInlayParameterNameHints = "all",
+        includeInlayVariableTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+      },
+      format = { enable = false },
+    },
+    javascript = {
+      inlayHints = {
+        includeInlayParameterNameHints = "all",
+        includeInlayVariableTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+      },
+      format = { enable = false },
+    },
+  },
+})
+
 vim.lsp.config("jsonls", {
   cmd = { "vscode-json-language-server", "--stdio" },
   filetypes = { "json", "jsonc" },
@@ -79,7 +127,7 @@ vim.lsp.config("jsonls", {
   end,
 })
 
-vim.lsp.enable { "lua_ls", "nixd", "yamlls", "helm_ls", "jsonls" }
+vim.lsp.enable { "lua_ls", "nixd", "yamlls", "helm_ls", "jsonls", "gopls", "ts_ls" }
 
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)

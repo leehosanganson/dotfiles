@@ -5,7 +5,7 @@ return {
     build = ":TSUpdate",
     opts = {
       auto_install = false,
-      ensure_installed = {},
+      ensure_installed = { "go", "gomod", "gosum", "typescript", "tsx", "javascript" },
       highlight = { enable = true },
       indent = { enable = true },
     },
