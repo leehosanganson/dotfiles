@@ -57,6 +57,10 @@ nvim/
 | `<leader>tw` | n    | Toggle line wrap                 |
 | `<Tab>`      | v    | Indent selection and re-select   |
 | `<S-Tab>`    | v    | Unindent selection and re-select |
+| `<leader>/`  | n    | Toggle comment                   |
+| `<leader>/`  | v    | Toggle comment                   |
+
+> **Note:** In command-line mode, `<Up>` / `<Down>` are remapped to navigate the popup menu (via `<C-p>` / `<C-n>`) when the menu is visible; otherwise they behave normally.
 
 ---
 
@@ -151,25 +155,36 @@ nvim/
 
 ## Copilot
 
-> **Note:** `copilot.lua` loads on `InsertEnter` and requires Node.js on PATH. Run `:Copilot auth` to authenticate. Inline suggestions and the panel are disabled — Copilot completions appear inside the **blink.cmp** menu. Use the standard blink.cmp bindings to accept.
+> **Note:** `copilot.lua` loads on `InsertEnter` and requires Node.js on PATH. Run `:Copilot auth` to authenticate. The panel is disabled — Copilot provides both inline suggestions (rendered natively) and completion items inside the **blink.cmp** menu.
+
+### Inline Suggestions
+
+> **Note:** These keymaps only fire when a Copilot inline suggestion is currently visible. `<Tab>` accepts the full inline suggestion via blink.cmp (see Completion section).
+
+| Key     | Mode | Description                          |
+| ------- | ---- | ------------------------------------ |
+| `<C-l>` | i    | Accept one word of inline suggestion |
+| `<M-]>` | i    | Next inline suggestion               |
+| `<M-[>` | i    | Previous inline suggestion           |
+| `<C-]>` | i    | Dismiss inline suggestion            |
 
 ---
 
 ## Completion (blink.cmp)
 
-> **Note:** Ghost text (inline preview) is **disabled**. Press `<Tab>` to accept the current suggestion from the completion menu.
+> **Note:** Ghost text (inline preview) is **disabled** in blink.cmp — Copilot renders inline suggestions natively. Press `<Tab>` to accept a Copilot inline suggestion (if visible) or the current completion item.
 
 Active in **insert** and **cmdline** mode. Uses the `"default"` preset.
 
-| Key         | Mode | Description               |
-| ----------- | ---- | ------------------------- |
-| `<Tab>`     | i    | Accept suggestion / fallback |
-| `<S-Tab>`   | i    | Select previous item      |
-| `<CR>`      | i    | Confirm selection         |
-| `<C-Space>` | i    | Trigger completion menu   |
-| `<C-e>`     | i    | Cancel / close menu       |
-| `<C-n>`     | i    | Navigate to next item     |
-| `<C-p>`     | i    | Navigate to previous item |
+| Key       | Mode | Description                                                                |
+| --------- | ---- | -------------------------------------------------------------------------- |
+| `<Tab>`   | i    | Accept Copilot inline suggestion (if visible), else accept completion item |
+| `<S-Tab>` | i    | Select previous item                                                       |
+| `<CR>`    | i    | Confirm selection                                                          |
+| `<C-j>`   | i    | Trigger completion menu                                                    |
+| `<C-e>`   | i    | Cancel / close menu                                                        |
+| `<C-n>`   | i    | Navigate to next item                                                      |
+| `<C-p>`   | i    | Navigate to previous item                                                  |
 
 ---
 
@@ -190,7 +205,7 @@ Active in **insert** and **cmdline** mode. Uses the `"default"` preset.
 | [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)                             | Fast and configurable statusline                     |
 | [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)                                 | Lua utility library (required by Telescope, LazyGit) |
 | [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons)                      | File type icons (used by Oil, lualine)               |
-| [copilot.lua](https://github.com/zbirenbaum/copilot.lua) | GitHub Copilot client (headless, blink-managed) |
-| [blink-cmp-copilot](https://github.com/giuxtaposition/blink-cmp-copilot) | Copilot source for blink.cmp |
+| [copilot.lua](https://github.com/zbirenbaum/copilot.lua)                                 | GitHub Copilot client (headless, blink-managed)      |
+| [blink-cmp-copilot](https://github.com/giuxtaposition/blink-cmp-copilot)                 | Copilot source for blink.cmp                         |
 | [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)          | Indentation guide lines                              |
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)                              | Git change indicators in the sign column             |
