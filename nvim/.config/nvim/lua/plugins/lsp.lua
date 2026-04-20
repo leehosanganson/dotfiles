@@ -1,6 +1,13 @@
 -- Native neovim 0.12 LSP configuration (no mason, no lspconfig)
 -- Servers are expected to be installed externally (e.g. via nix)
 
+vim.filetype.add {
+  pattern = {
+    [".*/templates/.*%.ya?ml"] = "helm",
+    [".*/helmfile.*%.ya?ml"] = "helm",
+  },
+}
+
 vim.lsp.config("lua_ls", {
   cmd = { "lua-language-server" },
   filetypes = { "lua" },
@@ -56,13 +63,6 @@ vim.lsp.config("yamlls", {
   },
 })
 
-vim.filetype.add {
-  pattern = {
-    [".*/templates/.*%.ya?ml"] = "helm",
-    [".*/helmfile.*%.ya?ml"] = "helm",
-  },
-}
-
 vim.lsp.config("helm_ls", {
   cmd = { "helm_ls", "serve" },
   filetypes = { "helm" },
@@ -108,3 +108,5 @@ vim.diagnostic.config {
   underline = true,
   signs = true,
 }
+
+return {}

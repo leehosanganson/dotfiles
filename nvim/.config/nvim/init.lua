@@ -13,4 +13,5 @@ require("lazy").setup("plugins", {
   install = { colorscheme = { "catppuccin" } },
   checker = { enabled = false },
   change_detection = { notify = false },
+  rocks = { enabled = false },
 })

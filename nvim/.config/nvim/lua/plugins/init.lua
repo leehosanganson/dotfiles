@@ -20,7 +20,7 @@ return {
     "nvim-lualine/lualine.nvim",
     lazy = false,
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function() require("plugins.statusline")() end,
+    config = function() require "config.statusline" end,
   },
 
   -- Copilot
@@ -40,12 +40,6 @@ return {
       require("oil").setup(opts)
       vim.keymap.set("n", "-", "<cmd>Oil<CR>", { desc = "Open parent directory", silent = true })
       vim.keymap.set("n", "<leader>o", "<cmd>Oil<CR>", { desc = "Oil file browser", silent = true })
-      vim.api.nvim_create_autocmd("VimEnter", {
-        once = true,
-        callback = function()
-          if vim.fn.argc() == 0 then vim.schedule(function() require("oil").open() end) end
-        end,
-      })
     end,
   },
 
@@ -60,7 +54,7 @@ return {
       auto_install = false,
       ensure_installed = {},
     },
-    config = function(_, opts) require("nvim-treesitter.configs").setup(opts) end,
+    config = function(_, opts) require("nvim-treesitter").setup(opts) end,
   },
 
   -- Linting
@@ -165,6 +159,7 @@ return {
   -- Completion
   {
     "saghen/blink.cmp",
+    build = "cargo build --release",
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
       { "giuxtaposition/blink-cmp-copilot" },
@@ -178,6 +173,7 @@ return {
         ["<C-p>"] = { "select_prev", "fallback" },
       },
       appearance = { nerd_font_variant = "mono" },
+      fuzzy = { implementation = "prefer_rust", prebuilt_binaries = { download = false } },
       completion = {
         documentation = { auto_show = true },
         ghost_text = { enabled = true },

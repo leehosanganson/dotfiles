@@ -51,7 +51,7 @@ vim.keymap.set("v", "<leader>/", "gc", { remap = true, desc = "Toggle Comment" }
 -- Cmdline completion popup navigation
 vim.opt.autocomplete = true
 vim.opt.inccommand = "split"
-vim.opt.cmdheight = 0
+vim.opt.cmdheight = 1
 vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
 vim.opt.pumborder = "rounded"
 vim.opt.wildmode = "noselect:lastused,full"
