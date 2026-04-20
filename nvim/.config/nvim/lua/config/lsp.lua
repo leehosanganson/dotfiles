@@ -26,30 +26,37 @@ vim.lsp.config("yamlls", {
   cmd = { "yaml-language-server", "--stdio" },
   filetypes = { "yaml" },
   root_markers = { ".git" },
-  settings = {
-    yaml = {
-      schemaStore = { enable = false, url = "" },
-      schemas = {
-        ["https://json.schemastore.org/github-workflow.json"] = ".github/workflows/*.{yml,yaml}",
-        ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.3-standalone-strict/all.json"] = {
-          "*.k8s.yaml",
-          "k8s/**/*.yaml",
-          "kubernetes/**/*.yaml",
-        },
-        ["https://json.schemastore.org/kustomization.json"] = { "kustomization.yaml", "kustomization.yml" },
-        ["https://json.schemastore.org/ansible-playbook.json"] = "playbooks/**/*.{yml,yaml}",
-        ["https://json.schemastore.org/ansible-role-2.9.json"] = "roles/**/*.{yml,yaml}",
-        ["https://json.schemastore.org/docker-compose.json"] = { "docker-compose*.{yml,yaml}", "compose*.{yml,yaml}" },
-        ["https://json.schemastore.org/helmfile.json"] = "helmfile*.{yml,yaml}",
-        ["https://raw.githubusercontent.com/argoproj/argo-cd/master/assets/openapi.json"] = "**/{application,appproject}*.yaml",
-        ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json"] = "**/openapi*.{yml,yaml}",
-        ["https://json.schemastore.org/chart.json"] = "Chart.yaml",
+  before_init = function(_, config)
+    local k8s_schema = {
+      ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.32.0-standalone-strict/all.json"] = {
+        "*.k8s.yaml",
+        "k8s/**/*.yaml",
+        "kubernetes/**/*.yaml",
+        "manifests/**/*.{yml,yaml}",
+        "deploy/**/*.{yml,yaml}",
       },
-      validate = true,
-      completion = true,
-      hover = true,
-    },
-  },
+    }
+
+    local ok, schemastore = pcall(require, "schemastore")
+    local yaml_schemas = ok and schemastore.yaml.schemas() or {}
+
+    -- Merge the Kubernetes schema entry into the schemas table
+    for url, globs in pairs(k8s_schema) do
+      yaml_schemas[url] = globs
+    end
+
+    config.settings = {
+      yaml = {
+        kubernetes = true,
+        schemaStore = { enable = false, url = "" },
+        schemas = yaml_schemas,
+        validate = true,
+        completion = true,
+        hover = true,
+        format = { enable = false },
+      },
+    }
+  end,
 })
 
 vim.lsp.config("helm_ls", {
