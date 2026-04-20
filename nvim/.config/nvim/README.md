@@ -19,12 +19,11 @@ nvim/
     └── plugins/
         ├── colorscheme.lua   # catppuccin
         ├── statusline.lua    # lualine spec
-        ├── editor.lua        # treesitter, nvim-autopairs, indent-blankline
+        ├── editor.lua        # treesitter, indent-blankline
         ├── completion.lua    # blink.cmp, copilot.lua
         ├── telescope.lua     # telescope + fzf-native
         ├── git.lua           # gitsigns, lazygit
         ├── tools.lua         # oil, vim-tmux-navigator, conform, nvim-lint
-        └── lsp.lua           # Empty (LSP config lives in lua/config/lsp.lua)
 ```
 
 ## Requirements
@@ -96,7 +95,7 @@ nvim/
 
 ## Oil (File Browser)
 
-> **Note:** Oil is lazy-loaded on first use.
+> **Note:** Oil loads at startup (`lazy = false`).
 
 | Key         | Mode | Description           |
 | ----------- | ---- | --------------------- |
@@ -146,23 +145,19 @@ nvim/
 
 ## Code
 
-> **Note:** conform.nvim is lazy-loaded on first use.
-
-| Key          | Mode | Description   |
-| ------------ | ---- | ------------- |
-| `<leader>cf` | n    | Format buffer |
+> **Note:** `conform.nvim` runs automatically on save via `BufWritePre`. No manual keymap is provided.
 
 ---
 
 ## Copilot
 
-> **Note:** `copilot.lua` loads immediately on startup and requires Node.js on PATH. Run `:Copilot auth` to authenticate. Inline suggestions and the panel are disabled — Copilot completions appear inside the **blink.cmp** menu. Use the standard blink.cmp bindings to accept.
+> **Note:** `copilot.lua` loads on `InsertEnter` and requires Node.js on PATH. Run `:Copilot auth` to authenticate. Inline suggestions and the panel are disabled — Copilot completions appear inside the **blink.cmp** menu. Use the standard blink.cmp bindings to accept.
 
 ---
 
 ## Completion (blink.cmp)
 
-> **Note:** Ghost text (inline preview) is enabled. Press `<Tab>` to accept the current suggestion.
+> **Note:** Ghost text (inline preview) is **disabled**. Press `<Tab>` to accept the current suggestion from the completion menu.
 
 Active in **insert** and **cmdline** mode. Uses the `"default"` preset.
 
@@ -199,4 +194,3 @@ Active in **insert** and **cmdline** mode. Uses the `"default"` preset.
 | [blink-cmp-copilot](https://github.com/giuxtaposition/blink-cmp-copilot) | Copilot source for blink.cmp |
 | [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)          | Indentation guide lines                              |
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)                              | Git change indicators in the sign column             |
-| [nvim-autopairs](https://github.com/windwp/nvim-autopairs)                               | Auto-close brackets, parens, and quotes              |
