@@ -1,30 +1,27 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPost", "BufNewFile" },
     build = ":TSUpdate",
     opts = {
-      highlight = { enable = true },
-      indent = { enable = true },
       auto_install = false,
       ensure_installed = {},
+      highlight = { enable = true },
+      indent = { enable = true },
     },
-    config = function(_, opts) require("nvim-treesitter").setup(opts) end,
+    config = function(_, opts)
+      require("nvim-treesitter").setup(opts)
+    end,
   },
-
-  {
-    "windwp/nvim-autopairs",
-    event = "InsertEnter",
-    opts = { check_ts = true },
-  },
-
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPost", "BufNewFile" },
     main = "ibl",
-    opts = {
-      indent = { char = "│" },
-      scope = { enabled = true },
-    },
+    opts = { indent = { char = "│" } },
+  },
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    opts = {},
   },
 }

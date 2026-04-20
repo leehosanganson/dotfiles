@@ -1,45 +1,36 @@
--- Disable netrw early so Oil.nvim can take over as the file explorer
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
+vim.g.netrw_banner = 0
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- Set leader keys before plugins
-vim.g.mapleader = " "
-vim.g.maplocalleader = ","
+local opt = vim.opt
 
--- Options
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.signcolumn = "yes"
-vim.opt.wrap = false
-vim.opt.scrolloff = 8
-vim.opt.autoread = true
-vim.opt.termguicolors = true
-vim.opt.updatetime = 250
-vim.opt.undofile = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.splitbelow = true
-vim.opt.splitright = true
-vim.opt.clipboard = "unnamedplus"
-vim.opt.cursorline = true
-vim.opt.expandtab = true
-vim.opt.shiftwidth = 2
-vim.opt.tabstop = 2
-vim.opt.softtabstop = 2
-vim.opt.timeoutlen = 300
-vim.opt.smartindent = true
-vim.opt.smarttab = true
-
--- Cmdline completion popup options
-vim.opt.autocomplete = true
-vim.opt.inccommand = "split"
-vim.opt.cmdheight = 1
-vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
-vim.opt.pumborder = "rounded"
-vim.opt.wildmode = "noselect:lastused,full"
-vim.opt.wildoptions = "pum"
-
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
-  group = vim.api.nvim_create_augroup("autoread", { clear = true }),
-  callback = function() vim.cmd.checktime() end,
-})
+opt.number = true
+opt.relativenumber = true
+opt.signcolumn = "yes"
+opt.wrap = false
+opt.scrolloff = 8
+opt.termguicolors = true
+opt.updatetime = 250
+opt.undofile = true
+opt.ignorecase = true
+opt.smartcase = true
+opt.splitbelow = true
+opt.splitright = true
+opt.clipboard = "unnamedplus"
+opt.cursorline = true
+opt.expandtab = true
+opt.shiftwidth = 2
+opt.tabstop = 2
+opt.softtabstop = 2
+opt.timeoutlen = 300
+opt.smartindent = true
+opt.smarttab = true
+opt.inccommand = "split"
+opt.completeopt = { "menu", "menuone", "noselect", "popup" }
+opt.pumborder = "rounded"
+opt.wildmode = "noselect:lastused,full"
+opt.wildoptions = "pum"
+opt.list = true
+opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
