@@ -13,14 +13,15 @@ permission:
   edit: allow
   write: allow
   bash:
-    "*": ask
     "grep *": allow
     "find *": allow
+    "sed": allow
     "ls *": allow
     "cat *": allow
     "git diff": allow
     "git log*": allow
     "git status": allow
+    "*": ask
   lsp: allow
   question: allow
   todowrite: allow
