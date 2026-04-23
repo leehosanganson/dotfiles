@@ -4,13 +4,11 @@ map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 map("n", "<leader>q", "<cmd>q<CR>", { desc = "Quit" })
 map("n", "<leader>w", "<cmd>w<CR>", { desc = "Save" })
 
-map("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
-map("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+map("n", "[d", function() vim.diagnostic.jump { count = -1, float = true } end, { desc = "Previous diagnostic" })
+map("n", "]d", function() vim.diagnostic.jump { count = 1, float = true } end, { desc = "Next diagnostic" })
 map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open diagnostic float" })
 
-map("n", "<leader>tw", function()
-  vim.wo.wrap = not vim.wo.wrap
-end, { desc = "Toggle wrap" })
+map("n", "<leader>tw", function() vim.wo.wrap = not vim.wo.wrap end, { desc = "Toggle wrap" })
 
 map("v", "<Tab>", ">gv", { desc = "Indent" })
 map("v", "<S-Tab>", "<gv", { desc = "Unindent" })

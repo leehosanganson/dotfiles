@@ -3,7 +3,7 @@ vim.api.nvim_create_autocmd("CmdlineChanged", {
   callback = function() vim.fn.wildtrigger() end,
 })
 
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
+vim.api.nvim_create_autocmd("BufEnter", {
   pattern = "*",
   command = "checktime",
 })

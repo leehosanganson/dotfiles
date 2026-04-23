@@ -8,7 +8,6 @@ return {
     },
     keys = {
       { "-", "<cmd>Oil<CR>", desc = "Open Oil" },
-      { "<leader>o", "<cmd>Oil<CR>", desc = "Open Oil" },
     },
   },
   {
@@ -29,9 +28,9 @@ return {
         markdown = { "prettierd" },
         typescript = { "prettierd" },
         javascript = { "prettierd" },
-        go = { "gofmt", "golangci-lint" },
-        javascriptreact = { "eslint_d" },
-        typescriptreact = { "eslint_d" },
+        go = { "gofmt" },
+        javascriptreact = { "prettierd" },
+        typescriptreact = { "prettierd" },
       },
     },
   },
@@ -46,6 +45,8 @@ return {
         go = { "golangcilint" },
         javascript = { "eslint_d" },
         typescript = { "eslint_d" },
+        javascriptreact = { "eslint_d" },
+        typescriptreact = { "eslint_d" },
       }
       vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
         callback = function()

@@ -1,4 +1,6 @@
-require "core"
+require "options"
+require "keymaps"
+require "autocmds"
 
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
@@ -31,4 +33,3 @@ if has_blink and blink.get_lsp_capabilities then
   capabilities = blink.get_lsp_capabilities()
 end
 vim.lsp.config("*", { capabilities = capabilities })
-require "config.lsp"

@@ -6,24 +6,20 @@ A minimal Neovim 0.12 setup for NixOS, using [lazy.nvim](https://github.com/folk
 
 ```
 nvim/
-├── init.lua                  # Entry point: bootstraps lazy.nvim, loads core & config.lsp
+├── init.lua              # Entry point: bootstraps lazy.nvim, loads options/keymaps/autocmds
 └── lua/
-    ├── core/
-    │   ├── init.lua          # Requires options, keymaps, autocmds
-    │   ├── options.lua       # vim.g.* globals and vim.opt.* settings
-    │   ├── keymaps.lua       # General vim.keymap.set calls
-    │   └── autocmds.lua      # CmdlineChanged autocmd
-    ├── config/
-    │   ├── lsp.lua           # Native LSP setup (filetype, servers, keymaps, diagnostics)
-    │   └── statusline.lua    # Lualine configuration
+    ├── options.lua       # vim.g.* globals and vim.opt.* settings
+    ├── keymaps.lua       # General keymaps and diagnostic navigation
+    ├── autocmds.lua      # General autocommands
     └── plugins/
         ├── colorscheme.lua   # catppuccin
-        ├── statusline.lua    # lualine spec
-        ├── editor.lua        # treesitter, indent-blankline
-        ├── completion.lua    # blink.cmp, copilot.lua
+        ├── lsp.lua           # Native LSP setup (filetype, servers, keymaps, diagnostics)
+        ├── statusline.lua    # lualine
+        ├── editor.lua        # treesitter, indent-blankline, lazydev
+        ├── completion.lua    # blink.cmp, blink.lib, copilot.lua
         ├── telescope.lua     # telescope + fzf-native
         ├── git.lua           # gitsigns, lazygit
-        ├── tools.lua         # oil, vim-tmux-navigator, conform, nvim-lint
+        └── tools.lua         # oil, vim-tmux-navigator, conform, nvim-lint, schemastore
 ```
 
 ## Requirements
