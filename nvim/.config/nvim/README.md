@@ -153,9 +153,29 @@ nvim/
 
 ## LaTeX
 
-> **Note:** LaTeX support is project-scoped. `vimtex` only loads when Neovim is started in a directory that looks like a LaTeX project (contains `*.tex` and one of `flake.nix`, `.envrc`, `.latexmkrc`, `latexmkrc`).
+> **Note:** LaTeX support is project-scoped. `vimtex` only loads when Neovim is started in a directory containing at least one `*.tex` file.
 >
 > Compilation is configured for continuous `latexmk` runs and PDF viewing via `zathura`. Inline math symbol conceal is enabled for TeX buffers.
+
+### Keymaps (vimtex defaults, `localleader` = `,`)
+
+| Key  | Mode | Description                |
+| ---- | ---- | -------------------------- |
+| `,ll` | n  | Toggle continuous compile  |
+| `,lv` | n  | Open/update PDF viewer     |
+| `,lk` | n  | Stop compiler              |
+| `,le` | n  | Open Vimtex errors         |
+| `,lc` | n  | Clean build artifacts      |
+
+### Commands
+
+| Command           | Description               |
+| ----------------- | ------------------------- |
+| `:VimtexCompile`  | Start/continue compilation |
+| `:VimtexView`     | Open/update PDF viewer     |
+| `:VimtexStop`     | Stop compilation           |
+| `:VimtexErrors`   | Show compilation errors    |
+| `:VimtexClean`    | Clean generated files      |
 
 ---
 
