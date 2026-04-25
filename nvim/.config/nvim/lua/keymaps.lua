@@ -26,16 +26,11 @@ map("c", "<Down>", function()
   return "<Down>"
 end, { expr = true })
 
-map("i", "<Tab>", function()
-  local cmp = require "blink.cmp"
-  if cmp.get_selected_item() then
-    cmp.accept()
+map("i", "<C-y>", function()
+  local copilot_ok, suggestion = pcall(require, "copilot.suggestion")
+  if copilot_ok and suggestion.is_visible() then
+    suggestion.accept()
   else
-    local copilot_ok, suggestion = pcall(require, "copilot.suggestion")
-    if copilot_ok and suggestion.is_visible() then
-      suggestion.accept()
-    else
-      require("minuet.virtualtext").action.accept()
-    end
+    require("minuet.virtualtext").action.accept()
   end
 end, { desc = "Accept blink selection, copilot, or minuet suggestion" })

@@ -30,7 +30,8 @@ return {
       fuzzy = { implementation = "lua" },
       appearance = { nerd_font_variant = "mono" },
       completion = {
-        documentation = { auto_show = true },
+        menu = { auto_show = false },
+        documentation = { auto_show = false },
       },
       sources = {
         default = { "lsp", "path", "snippets", "buffer" },
