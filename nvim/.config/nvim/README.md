@@ -19,7 +19,8 @@ nvim/
         ├── completion.lua    # blink.cmp, blink.lib, copilot.lua
         ├── telescope.lua     # telescope + fzf-native
         ├── git.lua           # gitsigns, lazygit
-        └── tools.lua         # oil, vim-tmux-navigator, conform, nvim-lint, schemastore
+        ├── tools.lua         # oil, vim-tmux-navigator, conform, nvim-lint, schemastore
+        └── latex.lua         # vimtex (project-scoped LaTeX workflow)
 ```
 
 ## Requirements
@@ -28,6 +29,7 @@ nvim/
 - Language servers installed externally (e.g. via nix): `lua_ls`, `nixd`, `yamlls`, `helm_ls`, `jsonls`
 - [ripgrep](https://github.com/BurntSushi/ripgrep) for Telescope live grep
 - [lazygit](https://github.com/jesseduffield/lazygit) for the git UI
+- LaTeX tooling available in shell (e.g. via Nix flake/direnv): `latexmk` + `zathura`
 
 ---
 
@@ -149,6 +151,34 @@ nvim/
 
 ---
 
+## LaTeX
+
+> **Note:** LaTeX support is project-scoped. `vimtex` only loads when Neovim is started in a directory containing at least one `*.tex` file.
+>
+> Compilation is configured for continuous `latexmk` runs and PDF viewing via `zathura`. Inline math symbol conceal is enabled for TeX buffers.
+
+### Keymaps (vimtex defaults, `localleader` = `,`)
+
+| Key  | Mode | Description                |
+| ---- | ---- | -------------------------- |
+| `,ll` | n  | Toggle continuous compile  |
+| `,lv` | n  | Open/update PDF viewer     |
+| `,lk` | n  | Stop compiler              |
+| `,le` | n  | Open Vimtex errors         |
+| `,lc` | n  | Clean build artifacts      |
+
+### Commands
+
+| Command           | Description               |
+| ----------------- | ------------------------- |
+| `:VimtexCompile`  | Start/continue compilation |
+| `:VimtexView`     | Open/update PDF viewer     |
+| `:VimtexStop`     | Stop compilation           |
+| `:VimtexErrors`   | Show compilation errors    |
+| `:VimtexClean`    | Clean generated files      |
+
+---
+
 ## Copilot
 
 > **Note:** `copilot.lua` loads on `InsertEnter` and requires Node.js on PATH. Run `:Copilot auth` to authenticate. The panel is disabled — Copilot provides both inline suggestions (rendered natively) and completion items inside the **blink.cmp** menu.
@@ -205,3 +235,4 @@ Active in **insert** and **cmdline** mode. Uses the `"default"` preset.
 | [blink-cmp-copilot](https://github.com/giuxtaposition/blink-cmp-copilot)                 | Copilot source for blink.cmp                         |
 | [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)          | Indentation guide lines                              |
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)                              | Git change indicators in the sign column             |
+| [vimtex](https://github.com/lervag/vimtex)                                                | Project-scoped LaTeX editing, continuous PDF build   |
