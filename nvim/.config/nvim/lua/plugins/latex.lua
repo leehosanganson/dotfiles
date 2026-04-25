@@ -1,7 +1,3 @@
-local function file_exists(path)
-  return vim.uv.fs_stat(path) ~= nil
-end
-
 local function is_latex_project()
   local cwd = vim.uv.cwd()
   if not cwd then return false end
@@ -9,10 +5,7 @@ local function is_latex_project()
   local tex_files = vim.fn.glob(vim.fs.joinpath(cwd, "*.tex"), false, true)
   if #tex_files == 0 then return false end
 
-  return file_exists(vim.fs.joinpath(cwd, "flake.nix"))
-    or file_exists(vim.fs.joinpath(cwd, ".envrc"))
-    or file_exists(vim.fs.joinpath(cwd, ".latexmkrc"))
-    or file_exists(vim.fs.joinpath(cwd, "latexmkrc"))
+  return true
 end
 
 return {
