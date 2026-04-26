@@ -21,6 +21,8 @@ permission:
     "planner": allow
     "generator": allow
     "evaluator": allow
+  skill:
+    "manage-project-memory": allow
 ---
 
 # General
