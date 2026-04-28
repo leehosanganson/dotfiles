@@ -1,7 +1,6 @@
 ---
 description: Implements a task by following the plan produced by the Planner.
 mode: subagent
-temperature: 0.2
 tools:
   write: true
   edit: true

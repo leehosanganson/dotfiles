@@ -1,7 +1,6 @@
 ---
 description: Breaks down a user task into a structured, step-by-step implementation plan.
 mode: subagent
-temperature: 0.3
 tools:
   write: false
   edit: false

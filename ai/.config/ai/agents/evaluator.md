@@ -1,7 +1,6 @@
 ---
 description: Independently evaluates the Generator's output against the original task and plan. Strictly isolated — cannot modify files.
 mode: subagent
-temperature: 0.1
 tools:
   write: false
   edit: false
