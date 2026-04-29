@@ -41,7 +41,7 @@ return {
 
   {
     "zbirenbaum/copilot.lua",
-    event = "InsertEnter",
+    event = { "InsertEnter", "BufReadPost", "BufNewFile" },
     opts = {
       suggestion = {
         enabled = true,
@@ -55,10 +55,12 @@ return {
 
   {
     "milanglacier/minuet-ai.nvim",
-    event = "InsertEnter",
+    cmd = { "Minuet" },
+    event = { "InsertEnter", "BufReadPost", "BufNewFile" },
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       provider = "openai_compatible",
+      n_completions = 1,
       provider_options = {
         openai_compatible = {
           end_point = "https://litellm.homelab.leehosanganson.dev/v1/chat/completions",
@@ -71,7 +73,6 @@ return {
       },
       virtualtext = {
         auto_trigger_ft = { "*" },
-        keymap = {},
       },
     },
   },
