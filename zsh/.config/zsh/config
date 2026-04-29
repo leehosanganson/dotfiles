@@ -28,6 +28,7 @@ prompt_end() {
 }
 
 # FZF
+source <(fzf --zsh)
 export FZF_BASE="$(which fzf)"
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 export FZF_TMUX_OPTS=" -p90%,70% "
@@ -44,24 +45,6 @@ alias k="kubectl"
 
 # fcd - find directory
 alias fcd='cd "$(find . -type d | fzf)"'
-
-# fh - search in your command history and execute selected command
-fh() {
-  local command
-  command=$( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
-  echo "$command"  # we just echo; widget will read it
-}
-
-fh-widget() {
-  local command
-  command="$(fh)"
-  if [[ -n "$command" ]]; then
-    LBUFFER="$command"
-    zle reset-prompt
-  fi
-}
-zle -N fh-widget
-bindkey '^R' fh-widget
 
 # Lazygit - 'q' to quit at selected directory, 'shift-q' to quit normally
 lg()
