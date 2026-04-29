@@ -66,7 +66,7 @@ return {
           end_point = "https://litellm.homelab.leehosanganson.dev/v1/chat/completions",
           api_key = "LITELLM_API_KEY",
           name = "LiteLLM",
-          model = "openai/gemma-4",
+          model = "unsloth/qwen-3.6",
           stream = true,
           optional = { max_tokens = 256, stop = { "\n" } },
         },
