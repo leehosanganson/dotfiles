@@ -36,7 +36,7 @@
         "apiKey": "{file:~/.config/sops-nix/secrets/litellm-api-key}"
       },
       "models": {
-        "openai/gemma-4": {
+        "unsloth/qwen-3.6": {
           "limit": {
             "context": 131072,
             "output": 8192
@@ -61,7 +61,5 @@
       }
     }
   },
-  "plugin": [
-    "@slkiser/opencode-quota"
-  ]
+  "plugin": ["@slkiser/opencode-quota"]
 }
