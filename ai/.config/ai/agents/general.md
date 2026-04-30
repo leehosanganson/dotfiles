@@ -10,6 +10,8 @@ permission:
   edit: deny
   bash:
     "*": ask
+    "ls": allow
+    "echo": allow
     "find": allow
     "sort": allow
     "cat": allow
