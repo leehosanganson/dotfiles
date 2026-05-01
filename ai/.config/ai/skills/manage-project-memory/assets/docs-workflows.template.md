@@ -1,6 +1,6 @@
 # Workflows
 
-<!-- Recurring processes, step sequences, and procedural conventions for this project. -->
+<!-- Step-by-step procedures, SOPs, recurring processes, and deployment steps. See AGENTS.md for high-level conventions. -->
 
 ## Recurring Processes
 - _No entries yet._
