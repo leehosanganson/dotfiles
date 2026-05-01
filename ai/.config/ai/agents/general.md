@@ -6,6 +6,8 @@ tools:
   edit: false
   bash: true
   read: true
+  glob: true
+  grep: true
 permission:
   write: deny
   edit: deny
