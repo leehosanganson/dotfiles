@@ -23,6 +23,10 @@ permission:
     "status*": allow
     "diff*": allow
     "log*": allow
+    "add*": allow
+    "commit*": allow
+    "push -u origin*": ask
+    "push -u origin main": deny
   agent:
     "planner": allow
     "generator": allow
