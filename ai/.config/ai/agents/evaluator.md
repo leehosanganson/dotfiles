@@ -11,20 +11,17 @@ tools:
 permission:
   edit: deny
   write: deny
+  git:
+    "status*": allow
+    "diff*": allow
+    "log*": allow
+    "push -u origin*": deny
   bash:
+    "grep*": allow
+    "find*": allow
+    "ls*": allow
+    "cat*": allow
     "*": deny
-    "grep *": allow
-    "find *": allow
-    "ls *": allow
-    "cat *": allow
-    "git diff": allow
-    "git log*": allow
-    "git status": allow
-  lsp: allow
-  todowrite: allow
-  question: allow
-  websearch: deny
-  webfetch: deny
 ---
 
 # Evaluator

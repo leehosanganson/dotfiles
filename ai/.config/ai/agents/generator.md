@@ -11,20 +11,24 @@ tools:
 permission:
   edit: allow
   write: allow
+  git:
+    "status*": allow
+    "diff*": allow
+    "log*": allow
+    "add*": allow
+    "commit*": allow
+    "push -u origin*": ask
+    "push -u origin main": deny
   bash:
-    "grep *": allow
-    "find *": allow
-    "sed": allow
-    "ls *": allow
-    "cat *": allow
-    "git diff": allow
-    "git log*": allow
-    "git status": allow
+    "grep*": allow
+    "find*": allow
+    "sed*": allow
+    "ls*": allow
+    "cat*": allow
     "*": ask
-  lsp: allow
-  question: allow
-  todowrite: allow
-  webfetch: allow
+  agent:
+    "planner": allow
+    "evaluator": allow
 ---
 
 # Generator

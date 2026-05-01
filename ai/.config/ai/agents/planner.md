@@ -12,15 +12,10 @@ permission:
   edit: deny
   write: deny
   bash:
+    "grep*": allow
+    "find*": allow
+    "ls*": allow
     "*": ask
-    "grep *": allow
-    "find *": allow
-    "ls *": allow
-  lsp: allow
-  question: allow
-  todowrite: allow
-  websearch: allow
-  webfetch: allow
 ---
 
 # Planner

@@ -9,6 +9,7 @@ tools:
 permission:
   write: deny
   edit: deny
+  gh: deny
   bash:
     "ls*": allow
     "echo*": allow
