@@ -10,19 +10,19 @@ permission:
   write: deny
   edit: deny
   bash:
-    "ls *": allow
-    "echo *": allow
-    "find *": allow
-    "sort *": allow
-    "cat *": allow
-    "grep *": allow
-    "xargs *": allow
-    "head *": allow
+    "ls*": allow
+    "echo*": allow
+    "find*": allow
+    "sort*": allow
+    "cat*": allow
+    "grep*": allow
+    "xargs*": allow
+    "head*": allow
     "*": ask
   git:
-    "status *": allow
-    "diff *": allow
-    "log *": allow
+    "status*": allow
+    "diff*": allow
+    "log*": allow
   agent:
     "planner": allow
     "generator": allow
