@@ -9,6 +9,14 @@ tools:
   bash: true
   grep: true
   glob: true
+permission:
+  bash:
+    "obsidian*": allow
+    "ls*": allow
+    "cat*": allow
+    "grep*": allow
+    "find*": allow
+    "*": deny
 ---
 
 # Blog Writer Agent

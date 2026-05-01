@@ -17,8 +17,8 @@ permission:
     "log*": allow
     "add*": allow
     "commit*": allow
-    "push -u origin*": ask
     "push -u origin main": deny
+    "push -u origin*": ask
   bash:
     "grep*": allow
     "find*": allow

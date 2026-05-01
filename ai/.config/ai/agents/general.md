@@ -17,8 +17,6 @@ permission:
     "sort*": allow
     "cat*": allow
     "grep*": allow
-    "xargs*": allow
-    "head*": allow
     "*": ask
   git:
     "status*": allow
@@ -26,8 +24,8 @@ permission:
     "log*": allow
     "add*": allow
     "commit*": allow
-    "push -u origin*": ask
     "push -u origin main": deny
+    "push -u origin*": allow
   agent:
     "planner": allow
     "generator": allow
