@@ -4,20 +4,25 @@ mode: all
 tools:
   write: false
   edit: false
-  bash: false
+  bash: true
   read: true
 permission:
+  write: deny
   edit: deny
   bash:
+    "ls *": allow
+    "echo *": allow
+    "find *": allow
+    "sort *": allow
+    "cat *": allow
+    "grep *": allow
+    "xargs *": allow
+    "head *": allow
     "*": ask
-    "ls": allow
-    "echo": allow
-    "find": allow
-    "sort": allow
-    "cat": allow
-    "grep": allow
-    "xargs": allow
-    "head": allow
+  git:
+    "status *": allow
+    "diff *": allow
+    "log *": allow
   agent:
     "planner": allow
     "generator": allow
