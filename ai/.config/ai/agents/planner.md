@@ -12,6 +12,7 @@ permission:
     "find *": allow
     "grep *": allow
   question: allow
+  todowrite: deny
 ---
 
 # Planner

@@ -15,6 +15,7 @@ permission:
     "git diff *": allow
     "git log *": allow
   question: allow
+  todowrite: deny
 ---
 
 # Evaluator

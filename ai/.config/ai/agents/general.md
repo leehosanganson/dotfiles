@@ -37,6 +37,7 @@ permission:
   question: allow
   webfetch: allow
   websearch: allow
+  todowrite: allow
   doom_loop: deny
 ---
 
