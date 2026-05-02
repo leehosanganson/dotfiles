@@ -15,6 +15,7 @@ permission:
     "cat *": allow
     "grep *": allow
     "git branch *": allow
+    "git checkout *": allow
     "git status *": allow
     "git diff *": allow
     "git log *": allow
