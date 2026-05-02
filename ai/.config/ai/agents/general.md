@@ -8,12 +8,14 @@ permission:
   glob: allow
   grep: allow
   bash:
-    "ls*": allow
+    "ls *": allow
     "echo *": allow
     "find *": allow
     "sort *": allow
     "cat *": allow
+    "xargs *": allow
     "grep *": allow
+    "head *": allow
     "git branch *": allow
     "git checkout *": allow
     "git status *": allow
@@ -36,11 +38,17 @@ permission:
   skill:
     "*": deny
     "manage-project-memory": allow
+  lsp: deny
+  apply_patch: deny
   question: allow
   webfetch: allow
   websearch: allow
   todowrite: allow
   doom_loop: deny
+  # Built-in subagents
+  general: deny
+  explore: allow
+  think: deny
 ---
 
 # General

@@ -13,15 +13,22 @@ permission:
     "find *": allow
     "grep *": allow
     "sed *": allow
-    "git status *": allow
+    "git branch *": allow
     "git checkout *": allow
+    "git status *": allow
     "git diff *": allow
     "git log *": allow
     "git add *": allow
     "git commit *": allow
-    "git push -u origin *": ask
+    "git push -u origin *": allow
     "git push -u origin main": deny
+    "gh *": deny
+    "gh pr create *": allow
+    "gh pr view *": allow
+    "gh issue *": allow
+    "gh repo* ": allow
   task:
+    "*": deny
     "planner": allow
     "evaluator": allow
   question: allow
