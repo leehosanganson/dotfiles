@@ -28,6 +28,7 @@ permission:
     "gh issue *": allow
     "gh repo* ": allow
   task:
+    "*": deny
     "planner": allow
     "generator": allow
     "evaluator": allow
