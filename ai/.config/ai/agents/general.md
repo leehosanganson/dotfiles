@@ -23,8 +23,8 @@ permission:
     "git log *": allow
     "git add *": allow
     "git commit *": allow
-    "git push -u origin *": allow
-    "git push -u origin main": deny
+    "git push *": allow
+    "git push * main": deny
     "gh *": deny
     "gh pr create *": allow
     "gh pr view *": allow
