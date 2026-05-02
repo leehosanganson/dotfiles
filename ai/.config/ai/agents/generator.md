@@ -14,6 +14,7 @@ permission:
     "grep *": allow
     "sed *": allow
     "git status *": allow
+    "git checkout *": allow
     "git diff *": allow
     "git log *": allow
     "git add *": allow
