@@ -2,21 +2,19 @@
 description: Analyzes your existing writing style using the Obsidian CLI and transforms drafts into polished Medium blog posts, then updates your Publishing tracker.
 mode: all
 temperature: 0.4
-tools:
-  read: true
-  write: true
-  edit: true
-  bash: true
-  grep: true
-  glob: true
 permission:
+  "*": deny
+  read: allow
+  edit: allow
+  glob: allow
+  grep: allow
   bash:
-    "obsidian*": allow
     "ls*": allow
-    "cat*": allow
-    "grep*": allow
-    "find*": allow
-    "*": deny
+    "cat *": allow
+    "find *": allow
+    "grep *": allow
+    "obsidian *": allow
+  question: allow
 ---
 
 # Blog Writer Agent

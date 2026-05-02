@@ -1,39 +1,43 @@
 ---
 description: Orchestrates the Planner, Generator, and Evaluator sub-agents to complete a user task end-to-end.
 mode: all
-tools:
-  write: false
-  edit: false
-  bash: true
-  read: true
-  glob: true
-  grep: true
 permission:
-  write: deny
+  "*": ask
+  read: allow
   edit: deny
-  gh: deny
+  glob: allow
+  grep: allow
   bash:
     "ls*": allow
-    "echo*": allow
-    "find*": allow
-    "sort*": allow
-    "cat*": allow
-    "grep*": allow
-    "*": ask
-  git:
-    "status*": allow
-    "diff*": allow
-    "log*": allow
-    "add*": allow
-    "commit*": allow
-    "push -u origin main": deny
-    "push -u origin*": allow
-  agent:
+    "echo *": allow
+    "find *": allow
+    "sort *": allow
+    "cat *": allow
+    "grep *": allow
+    "git branch *": allow
+    "git status *": allow
+    "git diff *": allow
+    "git log *": allow
+    "git add *": allow
+    "git commit *": allow
+    "git push -u origin *": allow
+    "git push -u origin main": deny
+    "gh *": deny
+    "gh pr create *": allow
+    "gh pr view *": allow
+    "gh issue *": allow
+    "gh repo* ": allow
+  task:
     "planner": allow
     "generator": allow
     "evaluator": allow
   skill:
+    "*": deny
     "manage-project-memory": allow
+  question: allow
+  webfetch: allow
+  websearch: allow
+  doom_loop: deny
 ---
 
 # General

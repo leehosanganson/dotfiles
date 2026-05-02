@@ -1,21 +1,17 @@
 ---
 description: Breaks down a user task into a structured, step-by-step implementation plan.
 mode: subagent
-tools:
-  write: false
-  edit: false
-  bash: false
-  read: true
-  glob: true
-  grep: true
 permission:
-  edit: deny
-  write: deny
+  "*": deny
+  read: allow
+  glob: allow
+  grep: allow
   bash:
-    "grep*": allow
-    "find*": allow
     "ls*": allow
-    "*": ask
+    "cat *": allow
+    "find *": allow
+    "grep *": allow
+  question: allow
 ---
 
 # Planner

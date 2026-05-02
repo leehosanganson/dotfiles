@@ -1,34 +1,29 @@
 ---
 description: Implements a task by following the plan produced by the Planner.
 mode: subagent
-tools:
-  write: true
-  edit: true
-  read: true
-  bash: true
-  glob: true
-  grep: true
 permission:
+  "*": ask
+  read: allow
   edit: allow
-  write: allow
-  git:
-    "status*": allow
-    "diff*": allow
-    "log*": allow
-    "add*": allow
-    "commit*": allow
-    "push -u origin main": deny
-    "push -u origin*": ask
+  glob: allow
+  grep: allow
   bash:
-    "grep*": allow
-    "find*": allow
-    "sed*": allow
     "ls*": allow
-    "cat*": allow
-    "*": ask
-  agent:
+    "cat *": allow
+    "find *": allow
+    "grep *": allow
+    "sed *": allow
+    "git status *": allow
+    "git diff *": allow
+    "git log *": allow
+    "git add *": allow
+    "git commit *": allow
+    "git push -u origin *": ask
+    "git push -u origin main": deny
+  task:
     "planner": allow
     "evaluator": allow
+  question: allow
 ---
 
 # Generator

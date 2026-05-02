@@ -1,27 +1,20 @@
 ---
 description: Independently evaluates the Generator's output against the original task and plan. Strictly isolated — cannot modify files.
 mode: subagent
-tools:
-  write: false
-  edit: false
-  bash: false
-  read: true
-  glob: true
-  grep: true
 permission:
-  edit: deny
-  write: deny
-  git:
-    "status*": allow
-    "diff*": allow
-    "log*": allow
-    "push -u origin*": deny
+  "*": deny
+  read: allow
+  glob: allow
+  grep: allow
   bash:
-    "grep*": allow
-    "find*": allow
     "ls*": allow
-    "cat*": allow
-    "*": deny
+    "cat *": allow
+    "find *": allow
+    "grep *": allow
+    "git status *": allow
+    "git diff *": allow
+    "git log *": allow
+  question: allow
 ---
 
 # Evaluator
