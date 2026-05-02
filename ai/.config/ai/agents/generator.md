@@ -24,6 +24,7 @@ permission:
     "planner": allow
     "evaluator": allow
   question: allow
+  todowrite: deny
 ---
 
 # Generator

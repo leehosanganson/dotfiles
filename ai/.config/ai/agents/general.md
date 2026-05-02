@@ -29,6 +29,7 @@ permission:
     "gh issue *": allow
     "gh repo* ": allow
   task:
+    "*": deny
     "planner": allow
     "generator": allow
     "evaluator": allow
@@ -38,6 +39,7 @@ permission:
   question: allow
   webfetch: allow
   websearch: allow
+  todowrite: allow
   doom_loop: deny
 ---
 
