@@ -19,6 +19,8 @@ permission:
   explore: allow
   webfetch: allow
   websearch: allow
+  external_directory:
+    "~/**": allow
 ---
 
 # Planner

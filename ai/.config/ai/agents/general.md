@@ -54,6 +54,8 @@ permission:
   websearch: allow
   todowrite: allow
   doom_loop: deny
+  external_directory:
+    "~/**": allow
   # Built-in subagents
   general: deny
   explore: allow
