@@ -23,8 +23,10 @@ permission:
     "git show *": allow
     "git branch *": allow
     "git rev-parse *": allow
+    "git remote -v": allow
     "git add *": allow
     "git commit *": allow
+    "git stash *": allow
     "git checkout *": allow
     "git switch *": allow
     "git fetch *": allow

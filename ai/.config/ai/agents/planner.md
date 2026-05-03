@@ -11,6 +11,9 @@ permission:
     "cat *": allow
     "find *": allow
     "grep *": allow
+    "git status *": allow
+    "git log *": allow
+    "git diff *": allow
   question: allow
   todowrite: deny
   explore: allow

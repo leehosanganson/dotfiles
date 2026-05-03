@@ -22,6 +22,13 @@ permission:
     "git commit *": allow
     "git push -u origin *": allow
     "git push -u origin main": deny
+    "git stash *": allow
+    "git switch *": allow
+    "git fetch *": allow
+    "git merge *": allow
+    "git pull *": allow
+    "git remote -v": allow
+    "git rev-parse *": allow
     "gh *": deny
     "gh pr create *": allow
     "gh pr view *": allow
