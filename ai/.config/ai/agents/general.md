@@ -16,20 +16,27 @@ permission:
     "xargs *": allow
     "grep *": allow
     "head *": allow
-    "git branch *": allow
-    "git checkout *": allow
+    "git *": deny
     "git status *": allow
-    "git diff *": allow
     "git log *": allow
+    "git diff *": allow
+    "git show *": allow
+    "git branch *": allow
+    "git rev-parse *": allow
     "git add *": allow
     "git commit *": allow
+    "git checkout *": allow
+    "git switch *": allow
+    "git fetch *": allow
+    "git merge *": allow
+    "git pull *": allow
     "git push *": allow
-    "git push * main": deny
+    "git push * --force*": deny
+    "git push *main*": deny
     "gh *": deny
-    "gh pr create *": allow
-    "gh pr view *": allow
+    "gh pr *": allow
     "gh issue *": allow
-    "gh repo* ": allow
+    "gh repo view *": allow
   task:
     "*": deny
     "planner": allow
