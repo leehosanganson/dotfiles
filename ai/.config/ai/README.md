@@ -1,32 +1,35 @@
+# AI Configuration for OpenCode
 
-# Difference between Agents, Skills and Workflows
-| Feature   | Purpose                  | When to Use                     | Directory                        |
-|-----------|--------------------------|---------------------------------|----------------------------------|
-| Rules     | AGENTS.md                | Applicable to all contexts      | ~/rules/
-| Agent     | Parallel worker          | Concurrent multi-task execution | ~/agents/                        |
-| Command   | Specified prompt         | Executing specific operations   | ~/commands/                      |
-| Skill     | Domain container         | Load On-demand Capabilities     | ~/skills/{Domain}/               |
-| Tools     | CLI commands             | Automating repetitive tasks     | ~/tools/                         |
+This directory holds shared agents, commands, skills, and rules that feed into [OpenCode](https://github.com/opencode-ai/opencode). All files are stored in `~/.dotfiles/ai/.config/ai/` and symlinked into `~/.config/opencode/`.
 
+---
 
-# Directory Structure
+## Agents, Skills, Commands, Rules
+
+| Feature | Purpose          | When to Use                     | Directory                             |
+| ------- | ---------------- | ------------------------------- | ------------------------------------- |
+| Rules   | AGENTS.md        | Applicable to all contexts      | `~/.config/opencode/rules/`           |
+| Agent   | Parallel worker  | Concurrent multi-task execution | `~/.config/opencode/agents/`          |
+| Command | Specified prompt | Executing specific operations   | `~/.config/opencode/commands/`        |
+| Skill   | Domain container | Load on-demand capabilities     | `~/.config/opencode/skills/{Domain}/` |
+| Tools   | CLI commands     | Automating repetitive tasks     | `~/.config/opencode/tools/`           |
+
+---
+
+## Usage
+
+### Using Rules (AGENTS.md)
+
+To apply a rule to an OpenCode project, symlink it as `AGENTS.md` at the project root:
+
+```bash
+ln -s ~/.dotfiles/ai/.config/ai/rules/python-coding.md {PROJECT_ROOT}/AGENTS.md
 ```
-~/.config/ai/
-├── agents/
-├── commands/
-├── skills/
-├── tools/
-└── README.md
-```
 
-# Usage
+To use these files with OpenCode, create symlinks from your dotfiles source to `~/.config/opencode/`. Run all the following commands once:
 
-Use symlinks to link the AI agents, skills, and rules to the project root or user home directory.
-
-```
-ln -s ~/.dotfiles/ai/.config/ai/rules/{rule}.md {PROJECT_ROOT}/AGENTS.md
-```
-
-```
-ln -s ~/.dotfiles/ai/.config/ai/{agents/skills/...} ~/.config/{opencode/copilot/...}/{agents/skills/...}
+```bash
+ln -s ~/.dotfiles/ai/.config/ai/agents ~/.config/opencode/agents
+ln -s ~/.dotfiles/ai/.config/ai/commands ~/.config/opencode/commands
+ln -s ~/.dotfiles/ai/.config/ai/skills ~/.config/opencode/skills
 ```
