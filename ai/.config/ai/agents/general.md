@@ -41,6 +41,7 @@ permission:
     "gh repo view *": allow
   task:
     "*": deny
+    "explore": allow
     "planner": allow
     "generator": allow
     "evaluator": allow
