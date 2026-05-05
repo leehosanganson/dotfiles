@@ -31,7 +31,6 @@ return {
         go = { "gofmt" },
         javascriptreact = { "prettierd" },
         typescriptreact = { "prettierd" },
-        terraform = { "terraformfmt" },
       },
     },
   },
