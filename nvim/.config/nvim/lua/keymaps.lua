@@ -34,3 +34,8 @@ map("i", "<C-y>", function()
     require("minuet.virtualtext").action.accept()
   end
 end, { desc = "Accept blink selection, copilot, or minuet suggestion" })
+
+map("n", "<leader>lv", function()
+  local pdf = vim.fn.expand "%:p:r" .. ".pdf"
+  vim.fn.jobstart({ "zathura", pdf }, { detach = true })
+end, { desc = "Manual Zathura Open" })
