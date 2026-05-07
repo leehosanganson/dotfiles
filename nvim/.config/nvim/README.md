@@ -52,6 +52,7 @@ nvim/
 | `[d`         | n    | Previous diagnostic              |
 | `]d`         | n    | Next diagnostic                  |
 | `<leader>e`  | n    | Show diagnostic float            |
+| `<leader>ai` | n    | Toggle AI ghost text             |
 | `<leader>tw` | n    | Toggle line wrap                 |
 | `<Tab>`      | v    | Indent selection and re-select   |
 | `<S-Tab>`    | v    | Unindent selection and re-select |
@@ -182,6 +183,8 @@ nvim/
 ## Copilot
 
 > **Note:** `copilot.lua` loads on `InsertEnter` and requires Node.js on PATH. Run `:Copilot auth` to authenticate. The panel is disabled — Copilot provides both inline suggestions (rendered natively) and completion items inside the **blink.cmp** menu.
+>
+> Use `<leader>ai` in normal mode to toggle AI ghost text globally. This flips Copilot inline auto-trigger and Minuet virtual text together, with a notification confirming whether ghost text is enabled or disabled.
 
 ### Inline Suggestions
 

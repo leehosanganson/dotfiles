@@ -11,6 +11,38 @@ end
 
 vim.env.LITELLM_API_KEY = get_secret "~/.config/sops-nix/secrets/litellm-api-key"
 
+vim.g.ai_ghost_text_enabled = true
+
+local function sync_copilot_auto_trigger(enabled)
+  local copilot_loaded = package.loaded["copilot.suggestion"] ~= nil
+  if not copilot_loaded then return false end
+
+  local config_ok, copilot_config = pcall(require, "copilot.config")
+  local current_auto_trigger = config_ok and copilot_config and copilot_config.suggestion and copilot_config.suggestion.auto_trigger
+
+  if current_auto_trigger == enabled then return true end
+
+  local suggestion_ok, suggestion = pcall(require, "copilot.suggestion")
+  if suggestion_ok and suggestion and suggestion.toggle_auto_trigger then pcall(suggestion.toggle_auto_trigger) end
+
+  return true
+end
+
+---@return boolean enabled
+function _G.toggle_ai_ghost_text()
+  local next_state = not vim.g.ai_ghost_text_enabled
+  vim.g.ai_ghost_text_enabled = next_state
+
+  sync_copilot_auto_trigger(next_state)
+
+  if vim.fn.exists(":Minuet") == 2 then
+    local minuet_cmd = next_state and "Minuet virtualtext enable" or "Minuet virtualtext disable"
+    pcall(vim.cmd, minuet_cmd)
+  end
+
+  return next_state
+end
+
 return {
   {
     "saghen/blink.cmp",
@@ -42,15 +74,21 @@ return {
   {
     "zbirenbaum/copilot.lua",
     event = { "InsertEnter", "BufReadPost", "BufNewFile" },
-    opts = {
-      suggestion = {
-        enabled = true,
-        auto_trigger = true,
-        keymap = {
-          accept = false,
+    opts = function()
+      return {
+        suggestion = {
+          enabled = true,
+          auto_trigger = vim.g.ai_ghost_text_enabled,
+          keymap = {
+            accept = false,
+          },
         },
-      },
-    },
+      }
+    end,
+    config = function(_, opts)
+      require("copilot").setup(opts)
+      sync_copilot_auto_trigger(vim.g.ai_ghost_text_enabled)
+    end,
   },
 
   {
@@ -72,7 +110,7 @@ return {
         },
       },
       virtualtext = {
-        auto_trigger_ft = { "*" },
+        auto_trigger_ft = vim.g.ai_ghost_text_enabled and { "*" } or {},
       },
     },
   },

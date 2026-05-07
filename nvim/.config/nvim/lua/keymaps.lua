@@ -10,6 +10,16 @@ map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open diagnostic float
 
 map("n", "<leader>tw", function() vim.wo.wrap = not vim.wo.wrap end, { desc = "Toggle wrap" })
 
+map("n", "<leader>ai", function()
+  if type(_G.toggle_ai_ghost_text) ~= "function" then
+    vim.notify("AI ghost text toggle is unavailable", vim.log.levels.WARN)
+    return
+  end
+
+  local enabled = _G.toggle_ai_ghost_text()
+  vim.notify("AI ghost text " .. (enabled and "enabled" or "disabled"), vim.log.levels.INFO)
+end, { desc = "Toggle AI ghost text" })
+
 map("v", "<Tab>", ">gv", { desc = "Indent" })
 map("v", "<S-Tab>", "<gv", { desc = "Unindent" })
 
