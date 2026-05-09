@@ -16,7 +16,7 @@ nvim/
         ├── lsp.lua           # Native LSP setup (filetype, servers, keymaps, diagnostics)
         ├── statusline.lua    # lualine
         ├── editor.lua        # treesitter, indent-blankline, lazydev
-        ├── completion.lua    # blink.cmp, blink.lib, copilot.lua
+        ├── completion.lua    # blink.cmp, blink.lib, copilot.lua, minuet-ai.nvim
         ├── telescope.lua     # telescope + fzf-native
         ├── git.lua           # gitsigns, lazygit
         ├── tools.lua         # oil, vim-tmux-navigator, conform, nvim-lint, schemastore
@@ -52,14 +52,15 @@ nvim/
 | `[d`         | n    | Previous diagnostic              |
 | `]d`         | n    | Next diagnostic                  |
 | `<leader>e`  | n    | Show diagnostic float            |
-| `<leader>ai` | n    | Toggle AI ghost text             |
 | `<leader>tw` | n    | Toggle line wrap                 |
+| `<leader>ai` | n    | Toggle AI ghost text             |
+| `<leader>/`  | n    | Toggle comment (gcc)             |
+| `<leader>/`  | v    | Toggle comment (gc)              |
+| `<leader>lv` | n    | Manual Zathura PDF preview       |
 | `<Tab>`      | v    | Indent selection and re-select   |
 | `<S-Tab>`    | v    | Unindent selection and re-select |
-| `<leader>/`  | n    | Toggle comment                   |
-| `<leader>/`  | v    | Toggle comment                   |
 
-> **Note:** In command-line mode, `<Up>` / `<Down>` are remapped to navigate the popup menu (via `<C-p>` / `<C-n>`) when the menu is visible; otherwise they behave normally.
+> **Note:** In command-line mode, `<Up>` / `<Down>` are remapped to navigate the popup menu (via `<C-p>` / `<C-n>`) when visible; otherwise they behave normally.
 
 ---
 
@@ -82,7 +83,7 @@ nvim/
 
 ## Telescope
 
-> **Note:** Telescope is lazy-loaded — the plugin initialises on first use of any of these keymaps.
+> **Note:** Telescope is lazy-loaded — the plugin initialises on first use of any of these keymaps. File search scopes to the project root (detected via `.git`, `package.json`, `Cargo.toml`, etc.).
 
 | Key          | Mode | Description            |
 | ------------ | ---- | ---------------------- |
@@ -96,14 +97,28 @@ nvim/
 
 ---
 
+## Harpoon
+
+> **Note:** [Harpoon](https://github.com/ThePrimeagen/harpoon) (harpoon2) provides quick file navigation. Files are marked with `<leader>a`.
+
+| Key         | Mode | Description                 |
+| ----------- | ---- | --------------------------- |
+| `<leader>a` | n    | Add current file to Harpoon |
+| `<C-e>`     | n    | Toggle Harpoon quick menu   |
+| `<C-h>`     | n    | Jump to Harpoon file 1      |
+| `<C-j>`     | n    | Jump to Harpoon file 2      |
+| `<C-k>`     | n    | Jump to Harpoon file 3      |
+| `<C-l>`     | n    | Jump to Harpoon file 4      |
+
+---
+
 ## Oil (File Browser)
 
-> **Note:** Oil loads at startup (`lazy = false`).
+> **Note:** Oil loads at startup (`lazy = false`) and shows hidden files by default.
 
-| Key         | Mode | Description           |
-| ----------- | ---- | --------------------- |
-| `-`         | n    | Open parent directory |
-| `<leader>o` | n    | Oil file browser      |
+| Key | Mode | Description           |
+| --- | ---- | --------------------- |
+| `-` | n    | Open parent directory |
 
 ---
 
@@ -119,101 +134,36 @@ nvim/
 
 ## Git Signs
 
-> **Note:** gitsigns is loaded on first buffer read. Signs appear in the sign column for added (▎), changed (▎), and deleted (󰍵/󰐊) lines.
+> **Note:** gitsigns is loaded on first buffer read. Signs appear in the sign column for added (▎), changed (▎), and changedelete (▎) lines; deletes are hidden.
 
-| Key          | Mode | Description  |
-| ------------ | ---- | ------------ |
-| `]c`         | n    | Next hunk    |
-| `[c`         | n    | Prev hunk    |
-| `<leader>gp` | n    | Preview hunk |
-| `<leader>gs` | n    | Stage hunk   |
-| `<leader>gr` | n    | Reset hunk   |
-| `<leader>gb` | n    | Blame line   |
-
----
-
-## Tmux Navigation
-
-> **Note:** vim-tmux-navigator is lazy-loaded on first use.
-
-| Key     | Mode | Description               |
-| ------- | ---- | ------------------------- |
-| `<C-h>` | n    | Navigate left             |
-| `<C-j>` | n    | Navigate down             |
-| `<C-k>` | n    | Navigate up               |
-| `<C-l>` | n    | Navigate right            |
-| `<C-\>` | n    | Navigate to previous pane |
+| Key          | Mode | Description   |
+| ------------ | ---- | ------------- |
+| `]c`         | n    | Next hunk     |
+| `[c`         | n    | Previous hunk |
+| `<leader>gp` | n    | Preview hunk  |
+| `<leader>gs` | n    | Stage hunk    |
+| `<leader>gr` | n    | Reset hunk    |
+| `<leader>gb` | n    | Blame line    |
 
 ---
 
-## Code
+## AI Suggestions & Completion
 
-> **Note:** `conform.nvim` runs automatically on save via `BufWritePre`. No manual keymap is provided.
+### blink.cmp + Copilot + Minuet
 
----
+Ghost text (inline preview) is **disabled** in blink.cmp — Copilot renders inline suggestions natively. Minuet provides AI-powered virtual text completions.
 
-## LaTeX
+| Key     | Mode | Description                                           |
+| ------- | ---- | ----------------------------------------------------- |
+| `<C-y>` | i    | Accept blink selection, Copilot, or Minuet suggestion |
+| `<Tab>` | i    | Accept completion item (via blink.cmp default preset) |
+| `<CR>`  | i    | Confirm selection                                     |
+| `<C-j>` | i    | Trigger completion menu                               |
+| `<C-e>` | i    | Cancel / close menu                                   |
+| `<C-n>` | i    | Navigate to next item                                 |
+| `<C-p>` | i    | Navigate to previous item                             |
 
-> **Note:** LaTeX support is project-scoped. `vimtex` only loads when Neovim is started in a directory containing at least one `*.tex` file.
->
-> Compilation is configured for continuous `latexmk` runs and PDF viewing via `zathura`. Inline math symbol conceal is enabled for TeX buffers.
-
-### Keymaps (vimtex defaults, `localleader` = `,`)
-
-| Key  | Mode | Description                |
-| ---- | ---- | -------------------------- |
-| `,ll` | n  | Toggle continuous compile  |
-| `,lv` | n  | Open/update PDF viewer     |
-| `,lk` | n  | Stop compiler              |
-| `,le` | n  | Open Vimtex errors         |
-| `,lc` | n  | Clean build artifacts      |
-
-### Commands
-
-| Command           | Description               |
-| ----------------- | ------------------------- |
-| `:VimtexCompile`  | Start/continue compilation |
-| `:VimtexView`     | Open/update PDF viewer     |
-| `:VimtexStop`     | Stop compilation           |
-| `:VimtexErrors`   | Show compilation errors    |
-| `:VimtexClean`    | Clean generated files      |
-
----
-
-## Copilot
-
-> **Note:** `copilot.lua` loads on `InsertEnter` and requires Node.js on PATH. Run `:Copilot auth` to authenticate. The panel is disabled — Copilot provides both inline suggestions (rendered natively) and completion items inside the **blink.cmp** menu.
->
-> Use `<leader>ai` in normal mode to toggle AI ghost text globally. This flips Copilot inline auto-trigger and Minuet virtual text together, with a notification confirming whether ghost text is enabled or disabled.
-
-### Inline Suggestions
-
-> **Note:** These keymaps only fire when a Copilot inline suggestion is currently visible. `<Tab>` accepts the full inline suggestion via blink.cmp (see Completion section).
-
-| Key     | Mode | Description                          |
-| ------- | ---- | ------------------------------------ |
-| `<C-l>` | i    | Accept one word of inline suggestion |
-| `<M-]>` | i    | Next inline suggestion               |
-| `<M-[>` | i    | Previous inline suggestion           |
-| `<C-]>` | i    | Dismiss inline suggestion            |
-
----
-
-## Completion (blink.cmp)
-
-> **Note:** Ghost text (inline preview) is **disabled** in blink.cmp — Copilot renders inline suggestions natively. Press `<Tab>` to accept a Copilot inline suggestion (if visible) or the current completion item.
-
-Active in **insert** and **cmdline** mode. Uses the `"default"` preset.
-
-| Key       | Mode | Description                                                                |
-| --------- | ---- | -------------------------------------------------------------------------- |
-| `<Tab>`   | i    | Accept Copilot inline suggestion (if visible), else accept completion item |
-| `<S-Tab>` | i    | Select previous item                                                       |
-| `<CR>`    | i    | Confirm selection                                                          |
-| `<C-j>`   | i    | Trigger completion menu                                                    |
-| `<C-e>`   | i    | Cancel / close menu                                                        |
-| `<C-n>`   | i    | Navigate to next item                                                      |
-| `<C-p>`   | i    | Navigate to previous item                                                  |
+> **Note:** Use `<leader>ai` in normal mode to toggle all AI ghost text (Copilot inline + Minuet virtual text) with a confirmation notification.
 
 ---
 
@@ -235,7 +185,7 @@ Active in **insert** and **cmdline** mode. Uses the `"default"` preset.
 | [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)                                 | Lua utility library (required by Telescope, LazyGit) |
 | [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons)                      | File type icons (used by Oil, lualine)               |
 | [copilot.lua](https://github.com/zbirenbaum/copilot.lua)                                 | GitHub Copilot client (headless, blink-managed)      |
-| [blink-cmp-copilot](https://github.com/giuxtaposition/blink-cmp-copilot)                 | Copilot source for blink.cmp                         |
+| [minuet-ai.nvim](https://github.com/milanglacier/minuet-ai.nvim)                         | AI virtual text completions via LiteLLM              |
 | [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)          | Indentation guide lines                              |
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)                              | Git change indicators in the sign column             |
-| [vimtex](https://github.com/lervag/vimtex)                                                | Project-scoped LaTeX editing, continuous PDF build   |
+| [vimtex](https://github.com/lervag/vimtex)                                               | Project-scoped LaTeX editing, continuous PDF build   |
