@@ -1,6 +1,6 @@
 ---
 description: Analyzes your existing writing style using the Obsidian CLI and transforms drafts into polished Medium blog posts, then updates your Publishing tracker.
-mode: all
+mode: subagent
 temperature: 0.4
 permission:
   "*": deny

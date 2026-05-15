@@ -1,6 +1,6 @@
 ---
 description: Analyzes your existing writing style using the Obsidian CLI and transforms drafts into engaging LinkedIn posts, then updates your Publishing tracker.
-mode: all
+mode: subagent
 temperature: 0.4
 permission:
   "*": deny
