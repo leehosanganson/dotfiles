@@ -41,7 +41,7 @@
         "unsloth/qwen-3.6": {
           "limit": {
             "context": 131072,
-            "output": 8192
+            "output": 16384
           }
         },
         "gemini/gemini-2.5-flash-lite": {},

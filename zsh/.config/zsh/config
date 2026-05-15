@@ -43,6 +43,7 @@ alias ls="ls --color=auto"
 alias vim="nvim"
 alias zshconfig="nvim ~/.zshrc"
 alias k="kubectl"
+alias opencode="OPENCODE_ENABLE_EXA=1 opencode"
 alias oc="opencode"
 
 # fcd - find directory
