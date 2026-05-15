@@ -17,7 +17,7 @@ permission:
     "ls *": allow
     "find *": allow
     "grep *": allow
-  websearch: allow
+  "searxng_*": allow
   webfetch: allow
   question: allow
   todowrite: allow

@@ -52,7 +52,7 @@ permission:
   apply_patch: deny
   question: allow
   webfetch: allow
-  websearch: allow
+  "searxng_*": allow
   todowrite: allow
   doom_loop: deny
   external_directory:

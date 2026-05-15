@@ -18,7 +18,7 @@ permission:
   todowrite: deny
   explore: allow
   webfetch: allow
-  websearch: allow
+  "searxng_*": allow
   external_directory:
     "~/**": allow
 ---

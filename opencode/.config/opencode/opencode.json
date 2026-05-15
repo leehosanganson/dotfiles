@@ -61,6 +61,14 @@
       "headers": {
         "Authorization": "Bearer {file:~/.config/sops-nix/secrets/opencode-github-pat}"
       }
+    },
+    "searxng": {
+      "enabled": true,
+      "type": "local",
+      "command": ["npx", "-y", "mcp-searxng"],
+      "environment": {
+        "SEARXNG_URL": "https://searxng.homelab.leehosanganson.dev"
+      }
     }
   },
   "plugin": ["@slkiser/opencode-quota"]

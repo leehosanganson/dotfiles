@@ -21,7 +21,7 @@ permission:
   todowrite: allow
   explore: allow
   webfetch: allow
-  websearch: allow
+  "searxng_*": allow
   external_directory:
     "~/Documents/**": allow
 ---
