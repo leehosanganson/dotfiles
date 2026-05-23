@@ -15,7 +15,7 @@ permission:
   webfetch: allow
   skill:
     "*": deny
-    "run-bash-command": allow
+    "bash-tool-usage": allow
     "write-research-notes": allow
   external_directory:
     "~/Documents/**": allow

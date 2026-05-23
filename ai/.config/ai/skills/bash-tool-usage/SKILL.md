@@ -1,9 +1,9 @@
 ---
-name: run-bash-command
+name: bash-tool-usage
 description: >-
-  Execute shell commands in the terminal when needed. Use whenever an agent needs to run
-  commands — git, npm, docker, uv/python execution, or other system-level tasks. Always prefer
-  `uv` over `python` for running Python scripts.
+  Guidelines for correctly using the bash tool: prefer native tools (Read, Grep, Glob, Write)
+  for file operations. Reserve bash only for shell-level operations — git, npm, docker, uv/python,
+  and system commands. Never use cd; keep commands single-purpose; always prefer uv over python.
 ---
 
 ## Guidelines

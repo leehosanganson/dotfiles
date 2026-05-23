@@ -11,12 +11,14 @@ permission:
   lsp: allow
   apply_patch: allow
   bash:
+    "mkdir *": allow
     "mv *": allow
     "touch *": allow
     "echo *": allow
     "sed *": allow
-    "rm f *": deny
-    "rm rf *": deny
+    "rm *": allow
+    "rm -f *": ask
+    "rm -rf *": ask
     "uv run *": allow
     "git status *": allow
     "git log *": allow
@@ -48,7 +50,7 @@ permission:
   skill:
     "*": deny
     "manage-project-memory": allow
-    "run-bash-command": allow
+    "bash-tool-usage": allow
   external_directory:
     "~/**": allow
     "/tmp/**": allow
