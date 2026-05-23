@@ -7,10 +7,6 @@ permission:
   glob: allow
   grep: allow
   bash:
-    "ls*": allow
-    "cat *": allow
-    "find *": allow
-    "grep *": allow
     "git status *": allow
     "git log *": allow
     "git diff *": allow

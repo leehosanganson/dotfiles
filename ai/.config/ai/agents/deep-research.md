@@ -9,11 +9,7 @@ permission:
   glob: allow
   grep: allow
   bash:
-    "ls *": allow
-    "cat *": allow
     "mkdir *": allow
-    "find *": allow
-    "echo *": allow
     "uv run *": allow
   task:
     "*": deny

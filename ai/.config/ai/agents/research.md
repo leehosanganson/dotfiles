@@ -10,7 +10,6 @@ permission:
   grep: allow
   bash:
     "mkdir *": allow
-    "cat *": allow
     "uv run *": allow
   "searxng_*": allow
   webfetch: allow

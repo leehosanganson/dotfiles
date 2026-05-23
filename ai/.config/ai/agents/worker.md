@@ -8,20 +8,16 @@ permission:
   edit: allow
   glob: allow
   grep: allow
+  lsp: allow
+  apply_patch: allow
   bash:
-    "ls *": allow
     "mv *": allow
-    "cat *": allow
     "touch *": allow
     "echo *": allow
-    "find *": allow
-    "grep *": allow
     "sed *": allow
-    "rm *": allow
     "rm f *": deny
     "rm rf *": deny
     "uv run *": allow
-    "git *": allow
     "git status *": allow
     "git log *": allow
     "git diff *": allow
@@ -54,6 +50,7 @@ permission:
     "manage-project-memory": allow
     "run-bash-command": allow
   external_directory:
+    "~/**": allow
     "/tmp/**": allow
 ---
 
@@ -84,14 +81,14 @@ You are the **Worker** in an agent harness. Your sole responsibility is to imple
 
 You have native Opencode tools available. **Always prefer them over bash commands:**
 
-| Instead of running `bash(...)`... | Use this tool instead |
-|---|---|
-| `cat file` | **Read** tool |
-| `grep -r "pattern" .` | **Grep** tool |
-| `find . -name "*.ext"` | **Glob** tool |
-| `echo "text" > file` or `printf ...` | **Write** tool |
-| `sed -i 's/foo/bar/' file` | **Edit** tool |
-| Listing a directory | **Read** on the directory path |
+| Instead of running `bash(...)`...    | Use this tool instead          |
+| ------------------------------------ | ------------------------------ |
+| `cat file`                           | **Read** tool                  |
+| `grep -r "pattern" .`                | **Grep** tool                  |
+| `find . -name "*.ext"`               | **Glob** tool                  |
+| `echo "text" > file` or `printf ...` | **Write** tool                 |
+| `sed -i 's/foo/bar/' file`           | **Edit** tool                  |
+| Listing a directory                  | **Read** on the directory path |
 
 Use bash only for operations that genuinely require a shell: git, npm, uv, docker, and other system-level commands. If a task can be done through a native tool, using bash instead is a violation.
 

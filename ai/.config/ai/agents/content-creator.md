@@ -8,10 +8,6 @@ permission:
   glob: allow
   grep: allow
   bash:
-    "ls *": allow
-    "cat *": allow
-    "find *": allow
-    "grep *": allow
     "obsidian *": allow
   task:
     "*": deny
