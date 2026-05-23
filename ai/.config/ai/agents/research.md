@@ -146,6 +146,18 @@ If any sub-topic could not be researched due to errors, rate limits, or blocked 
 - Suggest alternative search queries that might bypass the issue
 - **Do not mark anything as complete** — let the orchestrator decide whether and how to redispatch
 
+#### Webfetch Error Recovery
+
+If you encounter repeated `webfetch` errors (e.g., 5 or more failures across different URLs):
+
+1. **Pause webfetching immediately.** Do not keep retrying the same URLs or blindly fetching new ones.
+2. **Use `searxng_*` web search instead** to investigate what is going on. Search for:
+   - Whether the sites are still online or have changed domains/URLs
+   - Alternative sources that cover the same information
+   - Known issues with accessing those URLs (e.g., rate limits, GeoIP blocks, Cloudflare challenges)
+3. Based on the search results, identify a better approach — such as finding mirrors, alternative domains, or different authoritative sources that host similar content.
+4. Only resume `webfetch` once you have a revised strategy for which URLs are likely to succeed and why.
+
 ## Constraints
 
 - **Never produce HTML reports or final documents.** Your output is strictly structured Markdown finding notes. The orchestrator handles compilation and report generation.
