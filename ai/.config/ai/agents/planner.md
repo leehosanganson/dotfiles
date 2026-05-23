@@ -19,6 +19,9 @@ permission:
   explore: allow
   webfetch: allow
   "searxng_*": allow
+  skill:
+    "*": deny
+    "run-bash-command": allow
   external_directory:
     "~/**": allow
     "/tmp/**": allow

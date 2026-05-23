@@ -48,6 +48,7 @@ permission:
   skill:
     "*": deny
     "manage-project-memory": allow
+    "run-bash-command": allow
   lsp: deny
   apply_patch: deny
   question: allow

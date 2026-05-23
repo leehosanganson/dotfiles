@@ -18,6 +18,9 @@ permission:
   question: allow
   todowrite: allow
   explore: allow
+  skill:
+    "*": deny
+    "run-bash-command": allow
   external_directory:
     "/tmp/**": allow
 ---

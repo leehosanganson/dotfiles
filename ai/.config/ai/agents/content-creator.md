@@ -17,6 +17,9 @@ permission:
     "*": deny
     "post-writer": allow
     "blog-writer": allow
+  skill:
+    "*": deny
+    "run-bash-command": allow
   question: allow
 ---
 

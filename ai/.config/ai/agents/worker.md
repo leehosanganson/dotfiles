@@ -50,6 +50,7 @@ permission:
   skill:
     "*": deny
     "manage-project-memory": allow
+    "run-bash-command": allow
   external_directory:
     "/tmp/**": allow
 ---

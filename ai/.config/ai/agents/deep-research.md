@@ -24,6 +24,7 @@ permission:
   "searxng_*": allow
   skill:
     "*": deny
+    "run-bash-command": allow
     "write-report": allow
   external_directory:
     "~/Documents/**": allow

@@ -20,6 +20,7 @@ permission:
   "searxng_*": allow
   skill:
     "*": deny
+    "run-bash-command": allow
     "write-research-notes": allow
   webfetch: allow
   question: allow

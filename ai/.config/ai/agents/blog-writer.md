@@ -14,6 +14,9 @@ permission:
     "find *": allow
     "grep *": allow
     "obsidian *": allow
+  skill:
+    "*": deny
+    "run-bash-command": allow
   question: allow
 ---
 
