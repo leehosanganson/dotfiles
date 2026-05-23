@@ -18,6 +18,7 @@ permission:
     "find *": allow
     "grep *": allow
   "searxng_*": allow
+  skill: allow
   webfetch: allow
   question: allow
   todowrite: allow
@@ -96,16 +97,22 @@ For each curated URL:
 
 ### Step 6 — Note-Taking (Structured Markdown)
 
-After completing a batch of fetches for a sub-topic, write a structured Markdown note to the topic directory:
+After completing a batch of fetches for a sub-topic, use `scripts/write-research.sh` from the `write-research-notes` skill to write the structured Markdown note:
 
-- **File naming**: `<sub-topic>-findings.md` (e.g., `"quantum-algorithms-findings.md"`)
-- **Structure** of each note:
-  - `## Summary` — concise overview of what was researched and the main conclusions
-  - `## Key Findings` — numbered list of key facts, data points, or insights discovered
-    - Each finding must reference its source URL inline using Markdown link syntax: `[source](url)`
-  - `## Sources` — complete list of all URLs searched and fetched for this sub-topic
+```bash
+# Use the write-research-notes skill's bundled script (after loading the skill)
+echo "## Summary
+concise overview of what was researched and the main conclusions
 
-Save each note directly into `~/Documents/research/<topic-slug>/`. If multiple sub-topics are assigned, produce one note per sub-topic.
+## Key Findings
+1. Finding one with [source](url)
+2. Finding two with [source](url)
+
+## Sources
+- https://example.com" | /home/ansonlee/dotfiles/ai/.config/ai/skills/write-research-notes/scripts/write-research.sh <topic-slug> "<sub-topic-title>" <subfolder>
+```
+
+The script handles frontmatter insertion, proper directory structure, and canonical storage at `$HOME/Documents/research/`. Do not write note files manually — always pipe your Markdown content through the script.
 
 ### Step 7 — Report Back to Orchestrator
 
@@ -130,6 +137,6 @@ If any sub-topic could not be researched due to errors, rate limits, or blocked 
 - **Always check `tracked_searches.txt` before every search** and `tracked_urls.txt` before every fetch. Never repeat queries or URLs. This is the most critical rule — duplication wastes time and produces redundant information.
 - **Evaluate URLs before fetching.** Never blindly webfetch every result from a search. Filter for authoritative, relevant sources only. Skipping low-quality pages is essential.
 - **Never delegate further work.** The `task` tool must be denied entirely — you do not spawn sub-agents or delegate to other agents.
-- **Never use skills.** All `skill` tool access is denied.
+- **Use bundled skills for writing.** When writing research findings notes, always use `scripts/write-research.sh` from the `write-research-notes` skill. This ensures consistent frontmatter, proper directory structure, and canonical storage at `$HOME/Documents/research/`. Do not write note files manually — pipe your Markdown content through the script.
 - **Ask clarifying questions** if the orchestrator's directive lacks specifics (e.g., missing topic slug, no research questions). Collect only what is needed.
 - **Write structured notes for every sub-topic.** Do not skip note-taking — each sub-topic must have its own `<sub-topic>-findings.md` file with summaries, key findings (with source citations), and a sources list.
