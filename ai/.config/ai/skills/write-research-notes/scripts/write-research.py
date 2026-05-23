@@ -3,49 +3,63 @@
 write-research.py — Write a research note with YAML frontmatter.
 
 Usage:
-    cat > /tmp/content.md << 'EOF'  # Step 1 — write content to temp file
-    # Kubernetes Setup             # (heredoc ends here)
+    # Auto-project derived from slug (first part before '/'):
+    cat > /tmp/content.md << 'EOF'
+    # Kubernetes Setup
     EOF
-    uv run scripts/write-research.py k8s-setup < /tmp/content.md          # Step 2 — pipe as stdin
+    uv run scripts/write-research.py k8s-setup < /tmp/content.md
 
-    uv run scripts/write-research.py my-topic -t "My Topic" \
-      -f ~/Documents/research/my-topic.md < /tmp/content.md
+    # Explicit project override:
+    cat > /tmp/content.md << 'EOF'
+    # Project Findings
+    EOF
+    uv run scripts/write-research.py findings -t "Project Findings" \
+      -p my-project < /tmp/content.md
 
 The script reads markdown content from the CONTENT environment variable,
 the --content flag, or stdin (in that order of precedence), prepends YAML
-frontmatter, and writes to $HOME/Documents/research/<topic-slug>.md.
+frontmatter, and writes to $HOME/Documents/research/YYYYMMDD_HHMMSS-project/YYYYMMDD_HHMMSS-slug.md.
 """
 
 import os
 import sys
 import argparse
 from pathlib import Path
-from datetime import date
+from datetime import datetime
 
 
 def usage():
     prog = os.path.basename(sys.argv[0]) if len(sys.argv) > 0 else "write-research.py"
     print(
-        f"Usage: {prog} <topic-slug> [-t TITLE] [-f FILEPATH] [--content TEXT]\n"
+        f"Usage: {prog} <topic-slug> [-t TITLE] [-p PROJECT] [-f FILEPATH] [--content TEXT]\n"
         "\n"
         "Arguments:\n"
-        "  topic-slug    URL-friendly name for the note (e.g., proxmox-server-build)\n"
+        "  topic-slug    URL-friendly name for the note (e.g., k8s-setup)\n"
         "\n"
         "Options:\n"
         "  -t, --title TITLE        Title of the note (auto-derived from slug if not provided)\n"
-        "  -f, --filepath FILEPATH  Explicit output file path (auto-resolves if not given)\n"
+        "  -p, --project PROJECT    Project name for the session directory.\n"
+        "                           If not given, auto-derived from topic-slug\n"
+        "                           (first part before '/' or the full slug).\n"
+        "  -f, --filepath FILEPATH  Explicit output file path (overrides auto-resolution)\n"
         "  --content TEXT           Markdown content on the command line\n"
         "\n"
         "Environment Variables:\n"
         "  CONTENT    Markdown content (takes precedence over --content)\n"
         "\n"
         "Examples:\n"
-        f'  cat > /tmp/content.md << \'EOF\'   # Step 1 — write content to temp file\n'
+        f'  cat > /tmp/content.md << \'EOF\'\n'
         f'  # Kubernetes Setup\n'
         f'  EOF\n'
-        f'  uv run {prog} k8s-setup < /tmp/content.md   # Step 2 — pipe as stdin\n'
-        f'  uv run {prog} my-topic -t "My Topic" \\\n'
-        f'    -f ~/Documents/research/my-topic.md < /tmp/content.md\n',
+        f'  uv run {prog} k8s-setup < /tmp/content.md\n'
+        f'    → ~/Documents/research/20260523_143000-k8s-setup.md\n'
+        f'\n'
+        f'  cat > /tmp/content.md << \'EOF\'\n'
+        f'  # Project Findings\n'
+        f'  EOF\n'
+        f'  uv run {prog} findings -t "Project Findings" \\\n'
+        f'    -p my-project < /tmp/content.md\n'
+        f'    → ~/Documents/research/20260523_143000-my-project/findings.md\n',
         file=sys.stderr,
     )
     sys.exit(1)
@@ -68,15 +82,28 @@ def main():
             "  # Kubernetes Setup\n"
             "  EOF\n"
             "  uv run scripts/write-research.py k8s-setup < /tmp/content.md\n"
+            "\n"
+            "  cat > /tmp/content.md << 'EOF'\n"
+            "  # Project Findings\n"
+            "  EOF\n"
+            "  uv run scripts/write-research.py findings -t \"Project Findings\" \\\n"
+            "    -p my-project < /tmp/content.md\n"
         ),
     )
     parser.add_argument(
         "topic_slug",
-        help="URL-friendly name for the note (e.g., proxmox-server-build)",
+        help="URL-friendly name for the note (e.g., k8s-setup)",
     )
     parser.add_argument(
         "-t", "--title",
         help="Title of the note (auto-derived from slug if not provided)",
+    )
+    parser.add_argument(
+        "-p", "--project",
+        help=(
+            "Project name for the session directory. If not given, auto-derived "
+            "from topic-slug (first part before '/' or the full slug)."
+        ),
     )
     parser.add_argument(
         "-f", "--filepath",
@@ -122,39 +149,38 @@ def main():
     # Resolve output path
     # --------------------------------------------------------------------------
     if args.filepath:
-        # Expand ~ in filepath
+        # Explicit filepath override — bypasses auto-resolution entirely
         output_file = Path(os.path.expanduser(str(args.filepath)))
-        # Ensure parent directory exists
         output_file.parent.mkdir(parents=True, exist_ok=True)
     else:
-        # Auto-resolve: $HOME/Documents/research/<subfolder>/<topic-slug>.md
-        research_dir = Path(os.environ.get("HOME", "/home/ansonlee")).joinpath(
+        # Derive project name: explicit flag > auto from slug
+        if args.project:
+            project = args.project
+        elif "/" in args.topic_slug:
+            project = args.topic_slug.split("/", 1)[0]
+        else:
+            project = args.topic_slug
+
+        # Build session directory: ~/Documents/research/<datetime>-<project>/
+        research_base = Path(os.environ.get("HOME", "/home/ansonlee")).joinpath(
             "Documents", "research"
         )
+        now = datetime.now()
+        timestamp_str = now.strftime("%Y%m%d_%H%M%S")
+        session_dir = research_base / f"{timestamp_str}-{project}"
+        session_dir.mkdir(parents=True, exist_ok=True)
 
-        subfolder = ""
-        target_file = f"{args.topic_slug}.md"
-
-        # Handle "subfolder/topic-slug" pattern in the slug itself
-        if "/" in args.topic_slug:
-            parts = args.topic_slug.rsplit("/", 1)
-            subfolder = parts[0]
-            target_file = f"{parts[1]}.md"
-
-        if subfolder:
-            output_dir = research_dir / subfolder
-        else:
-            output_dir = research_dir
-
-        output_dir.mkdir(parents=True, exist_ok=True)
-        output_file = output_dir / target_file
+        # Build filename: YYYYMMDD_HHMMSS-topic-slug.md
+        filename = f"{timestamp_str}-{args.topic_slug}.md"
+        output_file = session_dir / filename
 
     # --------------------------------------------------------------------------
     # Build and write: frontmatter + content → file
     # --------------------------------------------------------------------------
-    today = date.today().isoformat()
+    now = datetime.now()
+    date_str = now.strftime("%Y-%m-%d")
 
-    frontmatter = f"---\ntitle: {title}\ndate: {today}\ntags: []\nstatus: draft\n---\n"
+    frontmatter = f"---\ntitle: {title}\ndate: {date_str}\ntags: []\nstatus: draft\n---\n"
 
     output_file.write_text(frontmatter + md_content, encoding="utf-8")
 

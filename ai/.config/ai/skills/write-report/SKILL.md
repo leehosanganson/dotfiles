@@ -8,18 +8,22 @@ description: >-
 
 This skill produces uniformly-styled HTML reports via `scripts/write-report.py`. Reports are generated from markdown content and rendered into clean, professional HTML — no extra tools required beyond Python.
 
+By default, reports are saved into `$HOME/Documents/research/<YYYYMMDD_HHMMSS>-<project>/<YYYYMMDD_HHMMSS>-<title-slug>.html`, organized in timestamped session directories for easy retrieval.
+
 ## How to Use
 
 **Always use `scripts/write-report.py`** bundled with this skill. The single-command pattern is:
 
 ```bash
 CONTENT="# My Report\n\nContent here." uv run scripts/write-report.py -t "Report Title"
+# → writes to ~/Documents/research/20260523_143000-report-title.html
 ```
 
-This writes to `./report.html` in the current directory. To specify a custom output path:
+The project directory is auto-derived from the title. To specify a custom project for the session:
 
 ```bash
-CONTENT="# Summary\n\nMore content." uv run scripts/write-report.py -t "Q2 Summary" -o q2-report.html
+CONTENT="# Summary\n\nMore content." uv run scripts/write-report.py -t "Q2 Summary" -p finance
+# → writes to ~/Documents/research/20260523_143000-finance/20260523_143000-q2-summary.html
 ```
 
 Or use the `--content` flag instead of an environment variable:
@@ -32,23 +36,23 @@ uv run scripts/write-report.py -t "Title" --content "# Inline content"
 
 1. **Use `CONTENT=` env var** — set it inline before `uv run`. This is the primary pattern and works in all agent contexts.
 2. **Use `-t` for the title** — always required, never skip it.
-3. **Use `-o` to specify output path** — defaults to `./report.html` if omitted.
-4. **No pipes, no temp files** — just a single `uv run` command with `CONTENT=` or `--content`.
+3. **Use `-p` for project name override** — specifies the session directory under `~/Documents/research/`; auto-derived from the title if not provided.
+4. **Use `-o` to specify an explicit output path** — bypasses auto-resolution and writes directly to the given path; only use when you need a custom location outside the session directory.
+5. **No pipes, no temp files** — just a single `uv run` command with `CONTENT=` or `--content`.
 
 ### Examples
 
 ```bash
-# Meeting summary as HTML report
-CONTENT="# Team Meeting Notes\n\n- Discussed Q2 roadmap\n- Action items assigned" \
-  uv run scripts/write-report.py -t "Q2 Planning Meeting"
+# Meeting summary (auto-project from title)
+CONTENT="# Team Meeting Notes" uv run scripts/write-report.py -t "Q2 Planning Meeting"
+# → ~/Documents/research/20260523_143000-q2-planning-meeting.html
 
-# Research writeup
-CONTENT="# Project Findings\n\nThe data shows a **15% improvement**." \
-  uv run scripts/write-report.py -t "Project Alpha Findings" -o project-findings.html
+# Report with explicit project
+CONTENT="# Project Findings" uv run scripts/write-report.py -t "Alpha Findings" -p finance
+# → ~/Documents/research/20260523_143000-finance/findings.html
 
-# Deep research report with explicit path
-CONTENT="# AI Safety Survey\n\nKey themes:\n- Alignment\n- Interpretability" \
-  uv run scripts/write-report.py -t "AI Safety Survey" -o ai-safety.html
+# Explicit output path override (bypasses auto-resolution)
+uv run scripts/write-report.py -t "Title" --content "# Hello" -o custom.html
 ```
 
 ## Template Features

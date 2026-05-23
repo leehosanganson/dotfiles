@@ -4,12 +4,23 @@ write-report.py — Generate a styled HTML report from markdown content.
 
 Usage:
     CONTENT="# My Report" uv run scripts/write-report.py -t "Report Title"
-    CONTENT="..." uv run scripts/write-report.py -t "Title" -o output.html
-    uv run scripts/write-report.py -t "Title" --content "# Inline content"
+    # → writes to ~/Documents/research/20260523_143000-report-title.html
+
+    CONTENT="# Summary" uv run scripts/write-report.py -t "Q2 Summary" -p finance
+    # → writes to ~/Documents/research/20260523_143000-summary.html
+
+    uv run scripts/write-report.py -t "Title" --content "# Inline" -o custom.html
+    # explicit override still works
 
 The script reads markdown content from the CONTENT environment variable,
 the --content flag, or stdin (in that order of precedence), then converts
-it to a styled HTML page.
+it to a styled HTML page.  By default output is placed in a timestamped
+session directory under ~/Documents/research/.
+
+Output path resolution:
+    1. If -o/--output is given explicitly, it bypasses auto-resolution.
+    2. Otherwise the file is written to:
+       ~/Documents/research/<YYYYMMDD_HHMMSS>-<project>/<YYYYMMDD_HHMMSS>-<title-slug>.html
 """
 
 import os
@@ -117,14 +128,54 @@ def convert_markdown(md):
     return '\n'.join(output)
 
 
+def slugify(title):
+    """Turn a title into a URL-safe slug."""
+    slug = title.lower()
+    slug = re.sub(r'[^a-z0-9\s-]', '', slug)
+    slug = re.sub(r'\s+', '-', slug)
+    slug = re.sub(r'-+', '-', slug)
+    slug = slug.strip('-')
+    return slug
+
+
+def resolve_output_path(args):
+    """Resolve the output file path.
+
+    If -o/--output is explicitly provided, use it as-is (override).
+    Otherwise, auto-resolve to a timestamped session directory under
+    ~/Documents/research/.
+    """
+    if args.output is not None:
+        # Explicit override given by the user via -o flag
+        return args.output
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    # Determine project name: explicit -p flag or auto-derived from title
+    if args.project:
+        project = slugify(args.project)
+    else:
+        project = slugify(args.title)
+
+    home = os.environ.get("HOME", "/home/ansonlee")
+    research_base = os.path.join(home, "Documents", "research")
+    session_dir = os.path.join(research_base, f"{timestamp}-{project}")
+
+    os.makedirs(session_dir, exist_ok=True)
+
+    title_slug = slugify(args.title)
+    output_filename = f"{timestamp}-{title_slug}.html"
+    return os.path.join(session_dir, output_filename)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Generate a styled HTML report from markdown content.",
         epilog=(
             "Examples:\n"
             '  CONTENT="# My Report" uv run scripts/write-report.py -t "My Report Title"\n'
-            '  CONTENT="# Summary" uv run scripts/write-report.py -t "Q2 Summary" -o q2-report.html\n'
-            '  uv run scripts/write-report.py -t "Title" --content "# Hello world"\n'
+            '  CONTENT="# Summary" uv run scripts/write-report.py -t "Q2 Summary" -p finance\n'
+            '  uv run scripts/write-report.py -t "Title" --content "# Hello world" -o custom.html\n'
         ),
     )
     parser.add_argument(
@@ -134,8 +185,13 @@ def main():
     )
     parser.add_argument(
         "-o", "--output",
-        default="report.html",
-        help="Output file path (default: report.html)",
+        default=None,
+        help="Output file path (default: auto-resolve to timestamped session dir)",
+    )
+    parser.add_argument(
+        "-p", "--project",
+        default=None,
+        help="Project name for the session directory. Auto-derived from title if not provided.",
     )
     parser.add_argument(
         "--content",
@@ -318,12 +374,14 @@ def main():
 """
 
     # --------------------------------------------------------------------------
-    # Write output
+    # Resolve output path & write
     # --------------------------------------------------------------------------
-    with open(args.output, "w", encoding="utf-8") as f:
+    output_path = resolve_output_path(args)
+
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(html_output)
 
-    print(args.output)
+    print(output_path)
 
 
 if __name__ == "__main__":
