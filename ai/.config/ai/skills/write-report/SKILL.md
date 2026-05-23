@@ -6,18 +6,25 @@ description: >-
 
 ## Overview
 
-This skill produces uniformly-styled HTML reports via `scripts/write-report.sh`. Reports are generated from markdown content and rendered into clean, professional HTML — no extra tools required beyond bash and Python.
+This skill produces uniformly-styled HTML reports via `scripts/write-report.py`. Reports are generated from markdown content and rendered into clean, professional HTML — no extra tools required beyond Python.
 
 ## How to Use
 
-**Always use `scripts/write-report.sh`** bundled with this skill:
+**Always use `scripts/write-report.py`** bundled with this skill:
 
 ```bash
 # Default: writes to ./report.html in the current directory
-echo "Your markdown content here" | scripts/write-report.sh "Report Title"
+echo "Your markdown content here" | uv run scripts/write-report.py "Report Title"
 
 # Custom output file path
-echo "Your markdown content here" | scripts/write-report.sh "Report Title" /path/to/output.html
+echo "Your markdown content here" | uv run scripts/write-report.py "Report Title" /path/to/output.html
+```
+
+**When the agent framework blocks pipes**, use a temp file instead:
+
+```bash
+printf "# My Report\n\nContent here." > /tmp/report-input.md
+uv run scripts/write-report.py "Report Title" < /tmp/report-input.md
 ```
 
 ### Examples
@@ -25,11 +32,11 @@ echo "Your markdown content here" | scripts/write-report.sh "Report Title" /path
 ```bash
 # Meeting summary as HTML report
 echo "# Team Meeting Notes\n\n- Discussed Q2 roadmap\n- Action items assigned" \
-  | scripts/write-report.sh "Q2 Planning Meeting"
+  | uv run scripts/write-report.py "Q2 Planning Meeting"
 
 # Research writeup
 echo "# Project Findings\n\nThe data shows a **15% improvement**." \
-  | scripts/write-report.sh "Project Alpha Findings" project-findings.html
+  | uv run scripts/write-report.py "Project Alpha Findings" project-findings.html
 ```
 
 ## Template Features

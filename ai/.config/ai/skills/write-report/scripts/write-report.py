@@ -1,65 +1,36 @@
-#!/usr/bin/env bash
-#
-# write-report.sh — Generate a styled HTML report from markdown content
-#
-# Usage:
-#   echo "markdown content" | scripts/write-report.sh <title> [output-file]
-#
-# Arguments:
-#   title         The report title
-#   output-file   Optional output path (defaults to ./report.html)
+#!/usr/bin/env python3
+"""
+write-report.py — Generate a styled HTML report from markdown content.
 
-set -euo pipefail
+Usage:
+    echo "markdown content" | scripts/write-report.py <title> [output-file]
 
-##############################################################################
-# Argument parsing
-##############################################################################
+The script reads markdown from stdin and produces an HTML report.
+If no output file is specified, writes to ./report.html in the current directory.
 
-if [ $# -lt 1 ]; then
-  cat >&2 <<EOF
-Usage: $(basename "$0") <title> [output-file]
+With uv:
+    echo "# My Report" | uv run scripts/write-report.py "Report Title"
+    echo "# Summary"   | uv run scripts/write-report.py "Q2 Summary" q2-report.html
+"""
 
-Arguments:
-  title         The report title
-  output-file   Optional output path (defaults to ./report.html)
-
-Examples:
-  echo "# My Report" | $(basename "$0") "My Report Title"
-  echo "# Summary" | $(basename "$0") "Q2 Summary" q2-report.html
-EOF
-  exit 1
-fi
-
-TITLE="$1"
-OUTPUT_FILE="${2:-report.html}"
-
-##############################################################################
-# Check that stdin is actually piped (not a terminal)
-##############################################################################
-
-if [ -t 0 ]; then
-  echo "Error: This script reads markdown content from stdin." >&2
-  exit 1
-fi
-
-##############################################################################
-# Write the Python converter to a temp file so stdin stays available for
-# the markdown content piped in by the user.
-##############################################################################
-
-CONVERTER="$(mktemp /tmp/write-report-XXXXXX.py)"
-trap 'rm -f "$CONVERTER"' EXIT
-
-cat > "$CONVERTER" <<'PYEOF'
 import os
 import sys
 import html
 import re
-from datetime import datetime
+
 
 def escape(text):
     """Escape HTML special characters."""
     return html.escape(text)
+
+
+def convert_inline(text):
+    """Convert inline markdown (bold, code)."""
+    text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
+    text = re.sub(r'__(.*?)__', r'<strong>\1</strong>', text)
+    text = re.sub(r'`(.*?)`', r'<code>\1</code>', text)
+    return text
+
 
 def convert_markdown(md):
     """Convert a subset of markdown to HTML.
@@ -144,24 +115,45 @@ def convert_markdown(md):
 
     return '\n'.join(output)
 
-def convert_inline(text):
-    """Convert inline markdown (bold, code)."""
-    # Bold: **text** or __text__
-    text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
-    text = re.sub(r'__(.*?)__', r'<strong>\1</strong>', text)
-    # Inline code: `code`
-    text = re.sub(r'`(.*?)`', r'<code>\1</code>', text)
-    return text
 
-# Read stdin (markdown content) — this works because we read the script from a file
-md_content = sys.stdin.read()
+def usage():
+    prog = os.path.basename(sys.argv[0]) if len(sys.argv) > 0 else "write-report.py"
+    print(
+        f"Usage: {prog} <title> [output-file]\n"
+        "\n"
+        "Arguments:\n"
+        "  title         The report title\n"
+        "  output-file   Optional output path (defaults to ./report.html)\n"
+        "\n"
+        "Examples:\n"
+        f'  echo "# My Report" | {prog} "My Report Title"\n'
+        f'  echo "# Summary" | {prog} "Q2 Summary" q2-report.html\n',
+        file=sys.stderr,
+    )
 
-# Get title from environment variable passed by bash
-title = os.environ.get('REPORT_TITLE', 'Untitled Report')
 
-now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+def main():
+    # --- Argument parsing ---
+    if len(sys.argv) < 2:
+        print("Error: title is required.", file=sys.stderr)
+        usage()
+        sys.exit(1)
 
-html_output = f"""<!DOCTYPE html>
+    title = sys.argv[1]
+    output_file = sys.argv[2] if len(sys.argv) >= 3 else "report.html"
+
+    # --- Check that stdin is actually piped (not a terminal) ---
+    if sys.stdin.isatty():
+        print("Error: This script reads markdown content from stdin.", file=sys.stderr)
+        usage()
+        sys.exit(1)
+
+    # --- Read markdown from stdin ---
+    md_content = sys.stdin.read()
+
+    now = __import__('datetime').datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    html_output = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -308,13 +300,12 @@ html_output = f"""<!DOCTYPE html>
 </html>
 """
 
-print(html_output)
-PYEOF
+    # --- Write output ---
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(html_output)
 
-##############################################################################
-# Run the converter: stdin is piped markdown, env var carries the title
-##############################################################################
+    print(output_file)
 
-REPORT_TITLE="$TITLE" python3 "$CONVERTER" > "$OUTPUT_FILE"
 
-echo "$OUTPUT_FILE"
+if __name__ == "__main__":
+    main()
