@@ -15,7 +15,7 @@ permission:
     "git log *": allow
     "git diff *": allow
   question: allow
-  todowrite: deny
+  todowrite: allow
   explore: allow
   webfetch: allow
   "searxng_*": allow

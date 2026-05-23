@@ -16,7 +16,7 @@ permission:
     "git log *": allow
     "git show *": allow
   question: allow
-  todowrite: deny
+  todowrite: allow
   explore: allow
 ---
 

@@ -2,7 +2,7 @@
 description: Implements a task by following the plan produced by the Planner.
 mode: subagent
 permission:
-  "*": ask
+  "*": deny
   read: allow
   edit: allow
   glob: allow
@@ -10,6 +10,8 @@ permission:
   bash:
     "ls*": allow
     "cat *": allow
+    "touch *": allow
+    "echo *": allow
     "find *": allow
     "grep *": allow
     "sed *": allow
@@ -29,7 +31,6 @@ permission:
     "git pull *": allow
     "git remote -v": allow
     "git rev-parse *": allow
-    "gh *": deny
     "gh pr create *": allow
     "gh pr view *": allow
     "gh issue *": allow
@@ -39,7 +40,6 @@ permission:
     "planner": allow
     "evaluator": allow
   question: allow
-  todowrite: deny
   explore: allow
   skill:
     "*": deny
