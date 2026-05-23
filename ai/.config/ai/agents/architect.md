@@ -57,6 +57,7 @@ permission:
   doom_loop: deny
   external_directory:
     "~/**": allow
+    "/tmp/**": allow
   # Built-in subagents
   architect: deny
   explore: allow

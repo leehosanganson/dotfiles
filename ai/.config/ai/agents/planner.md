@@ -21,6 +21,7 @@ permission:
   "searxng_*": allow
   external_directory:
     "~/**": allow
+    "/tmp/**": allow
 ---
 
 # Planner

@@ -18,6 +18,8 @@ permission:
   question: allow
   todowrite: allow
   explore: allow
+  external_directory:
+    "/tmp/**": allow
 ---
 
 # Evaluator

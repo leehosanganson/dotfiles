@@ -50,6 +50,8 @@ permission:
   skill:
     "*": deny
     "manage-project-memory": allow
+  external_directory:
+    "/tmp/**": allow
 ---
 
 # Worker
