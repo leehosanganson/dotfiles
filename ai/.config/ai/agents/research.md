@@ -18,7 +18,9 @@ permission:
     "find *": allow
     "grep *": allow
   "searxng_*": allow
-  skill: allow
+  skill:
+    "*": deny
+    "write-research-notes": allow
   webfetch: allow
   question: allow
   todowrite: allow
@@ -99,20 +101,21 @@ For each curated URL:
 
 After completing a batch of fetches for a sub-topic, use `scripts/write-research.sh` from the `write-research-notes` skill to write the structured Markdown note:
 
-```bash
-# Use the write-research-notes skill's bundled script (after loading the skill)
-echo "## Summary
 concise overview of what was researched and the main conclusions
 
 ## Key Findings
+
 1. Finding one with [source](url)
 2. Finding two with [source](url)
 
 ## Sources
-- https://example.com" | /home/ansonlee/dotfiles/ai/.config/ai/skills/write-research-notes/scripts/write-research.sh <topic-slug> "<sub-topic-title>" <subfolder>
-```
 
-The script handles frontmatter insertion, proper directory structure, and canonical storage at `$HOME/Documents/research/`. Do not write note files manually — always pipe your Markdown content through the script.
+- https://example.com" | /home/ansonlee/dotfiles/ai/.config/ai/skills/write-research-notes/scripts/write-research.sh <topic-slug> "<sub-topic-title>" <subfolder>
+  ```
+
+  ```
+
+The script handles frontmatter insertion, proper directory structure, and canonical storage at `$HOME/Documents/research/`. Do not write note files manually — always use the `skill` tool first to load the skill, then pipe your Markdown content through the script.
 
 ### Step 7 — Report Back to Orchestrator
 

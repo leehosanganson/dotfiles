@@ -22,7 +22,9 @@ permission:
   explore: allow
   webfetch: allow
   "searxng_*": allow
-  skill: allow
+  skill:
+    "*": deny
+    "write-report": allow
   external_directory:
     "~/Documents/**": allow
 ---
@@ -99,11 +101,6 @@ Read all `<sub-topic>-findings.md` files from `~/Documents/research/<topic-slug>
 - **Sources / References** — Complete list of all URLs cited, formatted as clickable hyperlinks
 
 Then pipe the synthesized Markdown content through `scripts/write-report.sh` from the `write-report` skill to generate the final HTML document:
-
-```bash
-# Use the write-report skill's bundled script (after loading the skill)
-echo "[synthesized markdown content]" | /home/ansonlee/dotfiles/ai/.config/ai/skills/write-report/scripts/write-report.sh ~/Documents/deep-research.md
-```
 
 ### Step 5 — Save Report
 
