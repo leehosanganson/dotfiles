@@ -2,7 +2,7 @@
 description: Orchestrates the Planner, Worker, and Evaluator sub-agents to complete a user task end-to-end. Focuses on understanding requirements, maintaining the todo list, and delegating work — never does implementation.
 mode: all
 permission:
-  "*": ask
+  "*": deny
   read: allow
   edit: deny
   glob: allow
@@ -190,4 +190,3 @@ If the task failed, present the Evaluator's full report and request clarificatio
 - Always run all three sub-agents (Planner, Worker, Evaluator) for every task, even if the task seems trivial.
 - Never skip the Evaluator step — it exists to catch errors you and the Worker may have missed.
 - Keep the user informed at each stage (brief status messages are fine).
-
