@@ -10,33 +10,45 @@ This skill produces uniformly-styled HTML reports via `scripts/write-report.py`.
 
 ## How to Use
 
-**Always use `scripts/write-report.py`** bundled with this skill:
+**Always use `scripts/write-report.py`** bundled with this skill. The single-command pattern is:
 
 ```bash
-# Default: writes to ./report.html in the current directory
-echo "Your markdown content here" | uv run scripts/write-report.py "Report Title"
-
-# Custom output file path
-echo "Your markdown content here" | uv run scripts/write-report.py "Report Title" /path/to/output.html
+CONTENT="# My Report\n\nContent here." uv run scripts/write-report.py -t "Report Title"
 ```
 
-**When the agent framework blocks pipes**, use a temp file instead:
+This writes to `./report.html` in the current directory. To specify a custom output path:
 
 ```bash
-printf "# My Report\n\nContent here." > /tmp/report-input.md
-uv run scripts/write-report.py "Report Title" < /tmp/report-input.md
+CONTENT="# Summary\n\nMore content." uv run scripts/write-report.py -t "Q2 Summary" -o q2-report.html
 ```
+
+Or use the `--content` flag instead of an environment variable:
+
+```bash
+uv run scripts/write-report.py -t "Title" --content "# Inline content"
+```
+
+### Key Rules
+
+1. **Use `CONTENT=` env var** — set it inline before `uv run`. This is the primary pattern and works in all agent contexts.
+2. **Use `-t` for the title** — always required, never skip it.
+3. **Use `-o` to specify output path** — defaults to `./report.html` if omitted.
+4. **No pipes, no temp files** — just a single `uv run` command with `CONTENT=` or `--content`.
 
 ### Examples
 
 ```bash
 # Meeting summary as HTML report
-echo "# Team Meeting Notes\n\n- Discussed Q2 roadmap\n- Action items assigned" \
-  | uv run scripts/write-report.py "Q2 Planning Meeting"
+CONTENT="# Team Meeting Notes\n\n- Discussed Q2 roadmap\n- Action items assigned" \
+  uv run scripts/write-report.py -t "Q2 Planning Meeting"
 
 # Research writeup
-echo "# Project Findings\n\nThe data shows a **15% improvement**." \
-  | uv run scripts/write-report.py "Project Alpha Findings" project-findings.html
+CONTENT="# Project Findings\n\nThe data shows a **15% improvement**." \
+  uv run scripts/write-report.py -t "Project Alpha Findings" -o project-findings.html
+
+# Deep research report with explicit path
+CONTENT="# AI Safety Survey\n\nKey themes:\n- Alignment\n- Interpretability" \
+  uv run scripts/write-report.py -t "AI Safety Survey" -o ai-safety.html
 ```
 
 ## Template Features

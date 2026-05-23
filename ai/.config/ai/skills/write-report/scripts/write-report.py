@@ -3,20 +3,21 @@
 write-report.py — Generate a styled HTML report from markdown content.
 
 Usage:
-    echo "markdown content" | scripts/write-report.py <title> [output-file]
+    CONTENT="# My Report" uv run scripts/write-report.py -t "Report Title"
+    CONTENT="..." uv run scripts/write-report.py -t "Title" -o output.html
+    uv run scripts/write-report.py -t "Title" --content "# Inline content"
 
-The script reads markdown from stdin and produces an HTML report.
-If no output file is specified, writes to ./report.html in the current directory.
-
-With uv:
-    echo "# My Report" | uv run scripts/write-report.py "Report Title"
-    echo "# Summary"   | uv run scripts/write-report.py "Q2 Summary" q2-report.html
+The script reads markdown content from the CONTENT environment variable,
+the --content flag, or stdin (in that order of precedence), then converts
+it to a styled HTML page.
 """
 
 import os
 import sys
 import html
 import re
+import argparse
+from datetime import datetime
 
 
 def escape(text):
@@ -116,49 +117,65 @@ def convert_markdown(md):
     return '\n'.join(output)
 
 
-def usage():
-    prog = os.path.basename(sys.argv[0]) if len(sys.argv) > 0 else "write-report.py"
-    print(
-        f"Usage: {prog} <title> [output-file]\n"
-        "\n"
-        "Arguments:\n"
-        "  title         The report title\n"
-        "  output-file   Optional output path (defaults to ./report.html)\n"
-        "\n"
-        "Examples:\n"
-        f'  echo "# My Report" | {prog} "My Report Title"\n'
-        f'  echo "# Summary" | {prog} "Q2 Summary" q2-report.html\n',
-        file=sys.stderr,
+def main():
+    parser = argparse.ArgumentParser(
+        description="Generate a styled HTML report from markdown content.",
+        epilog=(
+            "Examples:\n"
+            '  CONTENT="# My Report" uv run scripts/write-report.py -t "My Report Title"\n'
+            '  CONTENT="# Summary" uv run scripts/write-report.py -t "Q2 Summary" -o q2-report.html\n'
+            '  uv run scripts/write-report.py -t "Title" --content "# Hello world"\n'
+        ),
+    )
+    parser.add_argument(
+        "-t", "--title",
+        required=True,
+        help="Report title (required)",
+    )
+    parser.add_argument(
+        "-o", "--output",
+        default="report.html",
+        help="Output file path (default: report.html)",
+    )
+    parser.add_argument(
+        "--content",
+        help="Markdown content on the command line (alternative to CONTENT env var)",
     )
 
+    args = parser.parse_args()
 
-def main():
-    # --- Argument parsing ---
-    if len(sys.argv) < 2:
-        print("Error: title is required.", file=sys.stderr)
-        usage()
+    # --------------------------------------------------------------------------
+    # Resolve content source (CONTENT env var > --content flag > stdin)
+    # --------------------------------------------------------------------------
+    md_content = os.environ.get("CONTENT", "").strip()
+
+    if not md_content and args.content:
+        md_content = args.content.strip()
+
+    if not md_content and not sys.stdin.isatty():
+        md_content = sys.stdin.read().strip()
+
+    if not md_content:
+        print(
+            "Error: No content provided.\n"
+            "  Use CONTENT env var:   CONTENT='# My Report' uv run scripts/write-report.py -t 'Title'\n"
+            "  Or --content flag:     uv run scripts/write-report.py -t 'Title' --content '# Inline'\n"
+            "  Or pipe via stdin:     echo '# My Report' | uv run scripts/write-report.py -t 'Title'\n",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
-    title = sys.argv[1]
-    output_file = sys.argv[2] if len(sys.argv) >= 3 else "report.html"
-
-    # --- Check that stdin is actually piped (not a terminal) ---
-    if sys.stdin.isatty():
-        print("Error: This script reads markdown content from stdin.", file=sys.stderr)
-        usage()
-        sys.exit(1)
-
-    # --- Read markdown from stdin ---
-    md_content = sys.stdin.read()
-
-    now = __import__('datetime').datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # --------------------------------------------------------------------------
+    # Generate HTML
+    # --------------------------------------------------------------------------
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     html_output = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{escape(title)}</title>
+  <title>{escape(args.title)}</title>
   <style>
     *, *::before, *::after {{
       box-sizing: border-box;
@@ -284,7 +301,7 @@ def main():
 <body>
   <div class="report">
     <header>
-      <h1>{escape(title)}</h1>
+      <h1>{escape(args.title)}</h1>
       <hr>
     </header>
 
@@ -300,11 +317,13 @@ def main():
 </html>
 """
 
-    # --- Write output ---
-    with open(output_file, "w", encoding="utf-8") as f:
+    # --------------------------------------------------------------------------
+    # Write output
+    # --------------------------------------------------------------------------
+    with open(args.output, "w", encoding="utf-8") as f:
         f.write(html_output)
 
-    print(output_file)
+    print(args.output)
 
 
 if __name__ == "__main__":

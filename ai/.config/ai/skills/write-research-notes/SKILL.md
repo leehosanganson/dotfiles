@@ -12,42 +12,61 @@ description: >-
 
 **Always use `scripts/write-research.py`** bundled with this skill — never write files directly into `$HOME/Documents/research/`. The script handles:
 
-- Directory creation (creates any missing parent directories)
 - YAML frontmatter generation (`title`, `date`, `tags`, `status`)
+- Directory creation (creates any missing parent directories)
 - Path resolution and file naming
+- Content source resolution (stdin, `--content` flag, or `CONTENT` env var — in that order of precedence)
 
-### Running the Script
+### Writing Research Notes (Sequential Commands)
 
-Use `uv run` so the Python environment is available even inside sandboxed agent contexts that block pipes. This avoids shell-pipe restrictions entirely:
+Always use two sequential commands: write content to a temp file, then pipe it into the script.
 
 ```bash
-# Method A — pipe content via stdin (works in most agents)
-echo "Your markdown content here" | uv run --with yq scripts/write-research.py topic-slug "Title of Research Note"
+# Step 1 — Write content to a temp file
+cat > /tmp/content.md << 'EOF'
+# Methodology Report
 
-# Method B — write a temp file then pass it (avoids pipes entirely)
-printf "Your markdown content here" > /tmp/research-input.md
-uv run --with yq scripts/write-research.py topic-slug "Title of Research Note" < /tmp/research-input.md
+This is the research content...
+EOF
 
-# Method C — use Python directly if uv is not available
-echo "Your markdown content here" | python3 scripts/write-research.py topic-slug "Title of Research Note"
+# Step 2 — Run the script, piping the temp file as stdin
+uv run scripts/write-research.py topic-slug -f ~/Documents/research/topic-slug.md < /tmp/content.md
 ```
 
-**Recommended for agents:** Use Method B (redirect from a temp file) when the agent framework blocks pipes. The `uv run` ensures any Python dependencies are resolved before execution.
+Key rules:
+1. **Use a heredoc** to write content into a temp file (like `/tmp/content.md`). This handles multi-line content, special characters, and long text reliably.
+2. **Pipe the temp file via stdin** (`< /tmp/content.md`) rather than using env vars or pipes. The script reads from stdin when no `CONTENT` env var is set.
+3. **Use `-t` for explicit title** — optional; if omitted, auto-derived from slug.
+4. **Use `-f` for explicit output path** — overrides auto-resolution to `$HOME/Documents/research/<topic-slug>.md`.
+5. **No chaining** — run the heredoc command first, then the script in a separate command.
 
-#### Examples
+### Examples
 
 ```bash
-# Simple note (goes at top level)
-echo "# Proxmox Server Build\n\nNotes about building the production server." \
-  | uv run scripts/write-research.py proxmox-server-build "Proxmox Server Build"
+# Simple note (auto-resolves path)
+cat > /tmp/content.md << 'EOF'
+# Proxmox Server Build
 
-# Organized under a subfolder
-echo "# Kubernetes Setup\n\nInitial cluster configuration notes." \
-  | uv run scripts/write-research.py k8s-setup "Kubernetes Setup"
+Notes about building the production server.
+EOF
+uv run scripts/write-research.py proxmox-server-build < /tmp/content.md
 
-# With explicit subfolder argument (avoids slash-in-slug)
-printf "# Deep Learning Notes" > /tmp/dl.md
-uv run --with yq scripts/write-research.py dl-overview "Deep Learning Overview" ai-ml < /tmp/dl.md
+# With explicit title and output path
+cat > /tmp/content.md << 'EOF'
+# Deep Learning Overview
+
+Initial findings on model evaluation...
+EOF
+uv run scripts/write-research.py dl-overview -t "Deep Learning Overview" \
+  -f ~/Documents/research/dl-overview.md < /tmp/content.md
+
+# Organized under a subfolder (auto-resolved via slug)
+cat > /tmp/content.md << 'EOF'
+# Kubernetes Setup
+
+Initial cluster configuration notes.
+EOF
+uv run scripts/write-research.py k8s-setup < /tmp/content.md
 ```
 
 ### File Structure
