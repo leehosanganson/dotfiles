@@ -3,13 +3,14 @@
 write-report.py — Generate a styled HTML report from markdown content.
 
 Usage:
-    uv run scripts/write-report.py -t "Report Title" --content /tmp/content.md --target ~/Documents/report.html
+    uv run scripts/write-report.py -t "Report Title" --project myproject --content /tmp/content.md [--target report.html]
 
 The script reads markdown content from the --content flag, converts it to a
-styled HTML page, and writes it to the exact path specified by --target.
+styled HTML page, and writes it to the specified target path (or auto-resolves
+to ~/Documents/research/<project>/report.html when omitted).
 
---target is required and must be an explicit file path — no auto-resolution
-or timestamp generation is performed.
+Required arguments: --title, --project, --content
+Optional argument:  --target (defaults to ~/Documents/research/<project>/report.html)
 """
 
 import os
@@ -122,7 +123,8 @@ def main():
         description="Generate a styled HTML report from markdown content.",
         epilog=(
             "Examples:\n"
-            '  uv run scripts/write-report.py -t "My Report Title" --content /tmp/content.md --target ~/Documents/report.html\n'
+            '  uv run scripts/write-report.py -t "My Report Title" --project myproj --content /tmp/content.md\n'
+            '  uv run scripts/write-report.py -t "My Report Title" --project myproj --content /tmp/content.md --target ~/Documents/report.html\n'
         ),
     )
     parser.add_argument(
@@ -132,14 +134,14 @@ def main():
     )
     parser.add_argument(
         "--target",
-        required=True,
+        default=None,
         metavar="PATH",
-        help="Output file path (required)",
+        help="Output file path (optional; defaults to ~/Documents/research/<project>/report.html)",
     )
     parser.add_argument(
         "-p", "--project",
-        default=None,
-        help="Project name (informational only; not used in output path resolution)",
+        required=True,
+        help="Project name (required; used for default output path resolution)",
     )
     parser.add_argument(
         "--content",
@@ -149,6 +151,24 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # --------------------------------------------------------------------------
+    # Validate required arguments
+    # --------------------------------------------------------------------------
+    if not args.title:
+        print("Error: --title must be a non-empty string", file=sys.stderr)
+        sys.exit(1)
+
+    # --------------------------------------------------------------------------
+    # Resolve target path (auto-create directory, default to project-based path)
+    # --------------------------------------------------------------------------
+    if args.target is None:
+        home = os.environ.get("HOME", os.path.expanduser("~"))
+        target_dir = os.path.join(home, "Documents", "research", args.project)
+        args.target = os.path.join(target_dir, "report.html")
+
+        # Auto-create the directory structure
+        os.makedirs(target_dir, exist_ok=True)
 
     # --------------------------------------------------------------------------
     # Read content from --content

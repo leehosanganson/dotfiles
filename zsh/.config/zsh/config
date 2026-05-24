@@ -43,7 +43,7 @@ alias ls="ls --color=auto"
 alias vim="nvim"
 alias zshconfig="nvim ~/.zshrc"
 alias k="kubectl"
-alias oc="opencode"
+alias oc="AI_SKILL_DIR=$HOME/.config/ai/skills opencode"
 
 # fcd - find directory
 alias fcd='cd "$(find . -type d | fzf)"'

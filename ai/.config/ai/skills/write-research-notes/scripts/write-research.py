@@ -3,15 +3,15 @@
 write-research.py — Write a research note with YAML frontmatter.
 
 Usage:
-    uv run scripts/write-research.py [topic-slug] --content PATH [--target OUTPUT] [-t TITLE] [-p PROJECT]
+    uv run scripts/write-research.py [topic-slug] --content PATH -t TITLE -p PROJECT [--target OUTPUT]
 
+All three of `topic-slug`, `-t/--title`, and `-p/--project` are required.
 The script reads markdown content from --content, prepends YAML frontmatter,
 and writes to the resolved output path (auto-derived from target path or
 content filename if topic-slug is omitted).
 """
 
 import os
-import re
 import sys
 import argparse
 from pathlib import Path
@@ -21,34 +21,24 @@ from datetime import datetime
 def usage():
     prog = os.path.basename(sys.argv[0]) if len(sys.argv) > 0 else "write-research.py"
     print(
-        f"Usage: {prog} [topic-slug] --content PATH [--target OUTPUT] [-t TITLE] [-p PROJECT]\n"
+        f"Usage: {prog} [topic-slug] --content PATH -t TITLE -p PROJECT [--target OUTPUT]\n"
         "\n"
         "Arguments:\n"
-        "  topic-slug      URL-friendly name for the note (e.g., k8s-setup)\n"
-        "                 Optional. Auto-derived from --target path or content filename if omitted.\n"
+        "  topic-slug      URL-friendly name for the note (e.g., k8s-setup). Required.\n"
         "\n"
         "Options:\n"
-        "  -t, --title TITLE        Title of the note (auto-derived from slug if not provided)\n"
-        "  -p, --project PROJECT    Project name for the session directory.\n"
-        "                           If not given, auto-derived from topic-slug\n"
-        "                           (first part before '/' or the full slug).\n"
+        "  -t, --title TITLE        Title of the note. Required.\n"
+        "  -p, --project PROJECT    Project name for the session directory. Required.\n"
         "  --target FILEPATH        Explicit output file path (overrides auto-resolution)\n"
         "  --content PATH           Read markdown content from this file (required)\n"
         "\n"
         "Examples:\n"
-        f'  uv run {prog} k8s-setup --content /tmp/content.md\n'
-        f'    → ~/Documents/research/20260523_143000-k8s-setup/20260523_143000-k8s-setup.md\n'
-        f'  uv run {prog} --content /tmp/content.md --target ~/Documents/research/20260523_143000-my-topic/20260523_143000-my-topic.md\n'
-        f'  uv run {prog} k8s-setup --content /tmp/content.md -p my-project --target ~/Documents/research/20260523_143000-my-project/20260523_143000-k8s-setup.md\n',
+        f'  uv run {prog} k8s-setup --content /tmp/content.md -t "Kubernetes Setup" -p my-project\n'
+        f'    → ~/Documents/research/20260523_143000-my-project/20260523_143000-k8s-setup.md\n'
+        f'  uv run {prog} k8s-setup --content /tmp/content.md -t "Kubernetes Setup" -p my-project --target ~/Documents/research/dl-overview.md\n',
         file=sys.stderr,
     )
     sys.exit(1)
-
-
-def slug_to_title(slug):
-    """Derive a title from a topic-slug: replace separators with spaces, then title-case."""
-    title = slug.replace('_', ' ').replace('-', ' ').replace('/', ' ')
-    return title.title()
 
 
 def main():
@@ -56,27 +46,23 @@ def main():
         description="Write a research note with YAML frontmatter.",
         epilog=(
             "Examples:\n"
-            "  uv run scripts/write-research.py k8s-setup --content /tmp/content.md\n"
-            "  uv run scripts/write-research.py --content /tmp/content.md --target ~/Documents/research/20260523_143000-my-topic/20260523_143000-my-topic.md\n"
-            "  uv run scripts/write-research.py k8s-setup --content /tmp/content.md -p my-project --target ~/Documents/research/20260523_143000-my-project/20260523_143000-k8s-setup.md\n"
+            "  uv run scripts/write-research.py k8s-setup --content /tmp/content.md -t \"Kubernetes Setup\" -p my-project\n"
+            "  uv run scripts/write-research.py k8s-setup --content /tmp/content.md -t \"Kubernetes Setup\" -p my-project --target ~/Documents/research/dl-overview.md\n"
         ),
     )
     parser.add_argument(
         "topic_slug",
-        nargs="?",
-        default=None,
-        help="URL-friendly name for the note (e.g., k8s-setup). Auto-derived from --target or --content if omitted.",
+        help="URL-friendly name for the note (e.g., k8s-setup). Required.",
     )
     parser.add_argument(
         "-t", "--title",
-        help="Title of the note (auto-derived from slug if not provided)",
+        required=True,
+        help="Title of the note. Required.",
     )
     parser.add_argument(
         "-p", "--project",
-        help=(
-            "Project name for the session directory. If not given, auto-derived "
-            "from topic-slug (first part before '/' or the full slug)."
-        ),
+        required=True,
+        help="Project name for the session directory. Required.",
     )
     parser.add_argument(
         "--target",
@@ -90,21 +76,6 @@ def main():
     )
 
     args = parser.parse_args()
-
-    # --------------------------------------------------------------------------
-    # Resolve topic-slug (explicit > auto-derived)
-    # --------------------------------------------------------------------------
-    if not args.topic_slug:
-        # Try deriving from --target path stem
-        if args.target:
-            target_stem = Path(args.target).stem
-            # Strip timestamp prefix (YYYYMMDD_HHMMSS-)
-            slug = re.sub(r'^\d{8}_\d{6}-', '', target_stem)
-        else:
-            # Derive from content filename stem
-            content_stem = Path(args.content).stem
-            slug = content_stem
-        args.topic_slug = slug
 
     # --------------------------------------------------------------------------
     # Resolve content source (--content only)
@@ -126,25 +97,20 @@ def main():
         sys.exit(1)
 
     # --------------------------------------------------------------------------
-    # Resolve title (explicit > derived from slug)
+    # Title is required (enforced by argparse --required=True)
     # --------------------------------------------------------------------------
-    title = args.title if args.title else slug_to_title(args.topic_slug)
+    title = args.title
 
     # --------------------------------------------------------------------------
-    # Resolve output path
+    # Project is required (enforced by argparse --required=True)
     # --------------------------------------------------------------------------
     if args.target:
         # Explicit target override — bypasses auto-resolution entirely
         output_file = Path(os.path.expanduser(str(args.target)))
         output_file.parent.mkdir(parents=True, exist_ok=True)
     else:
-        # Derive project name: explicit flag > auto from slug
-        if args.project:
-            project = args.project
-        elif "/" in args.topic_slug:
-            project = args.topic_slug.split("/", 1)[0]
-        else:
-            project = args.topic_slug
+        # Project is required (enforced by argparse --required=True)
+        project = args.project
 
         # Build session directory: ~/Documents/research/<datetime>-<project>/
         research_base = Path(os.environ.get("HOME", "/home/ansonlee")).joinpath(
