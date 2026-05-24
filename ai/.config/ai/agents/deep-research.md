@@ -90,19 +90,24 @@ Research sub-agents are dispatched via `task: research`. Each receives a unique 
 
 ### Session Directory
 
-Every research session uses an isolated directory at `~/Documents/research/YYYYMMDD_HHMMSS_<project-slug>/` (see [Shared Contract — Session Directory Rules](./shared/research-contract.md#1-session-directory-rules) for full naming conventions, creation, and verification rules).
+Every research session uses an isolated directory at `~/Documents/research/YYYYMMDD_HHMMSS_<project-slug>/` (see [Shared Contract — Session Directory Rules](./shared/research-contract.md#1-session-directory-rules) for full naming conventions, creation, and verification rules). **When dispatching sub-agents, always pass this full path via `-p/--project` — see the ⚠️ CRITICAL callout in the Parallel Dispatch Pattern section above for details.**
 
 ### Parallel Dispatch Pattern
 
 To dispatch multiple Research sub-agents simultaneously, **make multiple `task` tool calls in a single response**. This is the critical pattern for throughput:
 
+> ⚠️ **CRITICAL — Session directory path contract:** You MUST pass the full session directory path (e.g., `~/Documents/research/20260524_143000_building-quantum-computers`) as the `-p/--project` value. Never pass a project name or slug alone. This is enforced by the [Shared Contract — Session Directory Rules](./shared/research-contract.md#1-session-directory-rules); violating it causes sub-agents to write into wrong directories and breaks cross-agent coordination.
+
 ```yaml
 # CORRECT — parallel dispatch (same response turn):
 task: research  # project: ~/Documents/research/20260524_143000_building-quantum-computers, topic: "quantum-superposition", output: "superposition.md"
 task: research  # project: ~/Documents/research/20260524_143000_building-quantum-computers, topic: "quantum-decoherence", output: "decoherence.md"
+
+# ❌ WRONG — passing just a project name/slug instead of full path:
+task: research  # project: building-quantum-computers, topic: "quantum-superposition", output: "superposition.md"
 ```
 
-When you make multiple `task` tool calls in the same response, they run concurrently. **Always use the full session directory path** (e.g., `~/Documents/research/20260524_143000_building-quantum-computers`) as the `-p/--project` value so every sub-agent writes into the correct isolated directory. Always dispatch all items from your highest-priority batch this way — never dispatch one and wait for it to finish before making the next call.
+When you make multiple `task` tool calls in the same response, they run concurrently. **Always use the full session directory path** (e.g., `~/Documents/research/20260524_143000_building-quantum-computers`) as the `-p/--project` value so every sub-agent writes into the correct isolated directory. If you pass anything other than the full session directory path, sub-agents will fail to write into the correct isolated directory — their output files will land in wrong or unintended locations, breaking cross-agent coordination and quality review. Always dispatch all items from your highest-priority batch this way — never dispatch one and wait for it to finish before making the next call.
 
 ## Dynamic Todo List
 
@@ -203,6 +208,13 @@ Wait for the user to approve or request adjustments. Do not proceed until you ha
 ### Step 1 — Dispatch Research Batch
 
 1. Use the session directory created in Step 0. **Every sub-agent dispatch MUST include the full session directory path** as the `-p/--project` flag value. This is mandatory — no exceptions.
+
+   ❌ **WRONG — incorrect delegation (passing project slug instead of full path):**
+   ```yaml
+   task: research  # project: building-quantum-computers, topic: "quantum-superposition", output: "superposition.md"
+   ```
+   This is the exact mistake described in the [⚠️ CRITICAL callout above](#parallel-dispatch-pattern). The full path `~/Documents/research/20260524_143000_building-quantum-computers` must be used — never just `building-quantum-computers`.
+
 2. From your todo list, identify the highest-priority uncompleted items to form the dispatch batch.
 3. For each item: mark it `in_progress` via `todowrite`, then dispatch `task: research` with the topic slug, research questions/keywords, `-p/--project` flag set to the session directory path, and a unique output filename. Sub-agents run in parallel — each writes to its own unique file within the session directory.
 4. Wait for all dispatched sub-agents in the batch to complete.
@@ -285,4 +297,5 @@ All research tasks MUST be **atomic** — each task is an independent, self-cont
 - **Never delegate beyond Research sub-agents.** The `task` tool is restricted to `"research": allow` only.
 - **Use bundled skills for writing.** When compiling the HTML report, always use the `write-report` skill. Do not write HTML manually.
 - **Spot-check sources during quality review.** Use `webfetch` to verify at least one cited source URL per batch to guard against hallucinated references.
+- **Always pass full session directory path via `-p/--project`.** Never pass a project name, slug, or partial path — always use the complete `~/Documents/research/YYYYMMDD_HHMMSS_<project-slug>/` path. This is mandatory for every `task: research` dispatch and is enforced by the [Shared Contract — Session Directory Rules](./shared/research-contract.md#1-session-directory-rules).
 - **Shared contract rules apply in full.** Session Directory Rules, Escalation Protocol, and Output Contract are defined in [./shared/research-contract.md](./shared/research-contract.md) — follow them without exception.
