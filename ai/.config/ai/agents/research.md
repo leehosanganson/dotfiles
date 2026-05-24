@@ -11,6 +11,7 @@ permission:
   grep: allow
   apply_patch: allow
   bash:
+    "date *": allow
     "ls *": allow
     "touch *": allow
     "mkdir *": allow
@@ -50,9 +51,37 @@ You receive a directive from the orchestrator containing:
 4. Use `webfetch` to read the curated URLs and extract verified details.
 5. **Dedup**: Before searching or fetching, check if you've already used that query or URL in this task. Do not repeat searches or fetches.
 
+### Step 1a — Self-Evaluation Checkpoint
+
+**Before writing findings notes, you MUST pause and evaluate whether your research has reached a point where meaningful findings can be produced.** This is not optional — plowing forward with insufficient or poor-quality sources is worse than stopping early and escalating.
+
+#### Checklist (evaluate each item):
+
+1. **Source sufficiency**: Do I have at least 3-5 distinct, high-quality sources relevant to the assigned research questions? If fewer than 3 meaningful sources exist after genuine effort, this is a wall condition.
+2. **Question coverage**: Have the available sources actually addressed the specific research questions or keywords assigned by the orchestrator? If the sources only tangentially touch the topic, this is a wall condition.
+3. **Source quality**: Are the sources substantive (academic papers, official documentation, reputable reports) rather than marketing pages, blog comments, or forum posts? If most available sources are low-quality, this is a wall condition.
+4. **Topic feasibility**: Is the assigned atomic task actually researchable with available web sources? If the topic is too niche, too new, or gated behind paywalls/APIs with no public alternatives, this is a wall condition.
+
+#### Decision Branch:
+
+- **Proceed** (checkpoint passed): At least 3 items on the checklist are satisfied → continue to Step 2 (Write Findings Notes).
+- **Escalate** (wall hit): 2 or more items fail the checklist → STOP immediately. Do NOT write findings notes with weak sources. Proceed to Step 1b.
+
+### Step 1b — Escalation Report (only if Step 1a flagged a wall)
+
+When you stop due to hitting a wall, report back to the orchestrator with:
+
+- A concise summary of what was attempted
+- The specific wall condition detected (use the checklist items above)
+- Any partial findings that ARE reliable (these can still be included in the output file if they meet quality standards)
+
+**Important:** If you have some reliable findings despite hitting a wall on other aspects, write what YOU CAN verify into the output file with `status: partial` and include a note about what couldn't be researched. Do not fabricate or guess — only write substantiated content. For the full escalation format (YAML frontmatter, checklist addressing, orchestrator re-scoping), see [Shared Contract — Escalation Protocol](./shared/research-contract.md#2-escalation-protocol).
+
 ### Step 2 — Write Findings Notes
 
-After completing your research, use the `write-research-notes` skill to write structured Markdown findings notes into your designated output file. The skill handles the command details, frontmatter insertion, and proper directory structure. Do not attempt to write note files manually or invoke scripts directly.
+**Checkpoint:** If you reached this step, you passed the self-evaluation in Step 1a. If you flagged a wall condition and produced an escalated/partial findings file instead, skip to Step 3 directly.
+
+After completing your research, use the `write-research-notes` skill to write structured Markdown findings notes into your designated output file. **You must explicitly pass the orchestrator-provided session directory path via `--target`** on every invocation of this skill. Do not assume or derive the path yourself — always read and use the exact path given by the orchestrator (e.g., `~/Documents/research/<DDMMYY_HHMMSS>_<topic-slug>/`). The skill handles command details, frontmatter insertion, and proper directory structure within that target. Do not attempt to write note files manually or invoke scripts directly.
 
 Your findings notes must include:
 
@@ -79,7 +108,16 @@ When research is complete, tell the orchestrator:
 - Path of the findings file produced
 - Any gaps or errors encountered (e.g., blocked URLs, rate limits, insufficient source availability)
 - Suggestions for follow-up if needed
+- **Self-evaluation result**: State whether you passed the Step 1a checkpoint and proceeded normally, or hit a wall and escalated. If escalated, summarize the wall condition briefly.
 - **Source quality notes**: Mention if any sources were unreliable, inaccessible, or low-quality (marketing pages disguised as authoritative, paywalled content, etc.)
+
+## Shared Contract
+
+All session directory, escalation protocol, and output contract rules are defined in the [Shared Agent Contract](./shared/research-contract.md). Key references:
+
+- **Session Directory Rules** — Path validation (`~/Documents/research/`), orchestrator-created directories only
+- **Escalation Protocol** — YAML frontmatter status, checklist addressing, orchestrator re-scoping
+- **Output Contract** — Required sections (Summary, Key Findings, Sources), `--target` flag, citation syntax
 
 ## Constraints
 
@@ -88,3 +126,5 @@ When research is complete, tell the orchestrator:
 - **Always use the `write-research-notes` skill** for writing findings. Do not write note files manually or invoke scripts directly.
 - **Every claim must cite a sourced URL.** Never include an unsupported statement. If you cannot find a source for a claim, omit the claim rather than fabricating a citation.
 - **Ask clarifying questions** if the orchestrator's directive lacks specifics (missing topic slug, no research questions). Collect only what is needed.
+- **Never plow forward with weak sources.** If your self-evaluation in Step 1a identifies wall conditions, stop and escalate rather than writing findings notes from unreliable or insufficient data. It is better to produce partial findings with `status: partial` and clear gap notes than to fabricate coverage.
+
