@@ -3,13 +3,15 @@
 write-research.py — Write a research note with YAML frontmatter.
 
 Usage:
-    uv run scripts/write-research.py topic-slug --file /tmp/content.md
+    uv run scripts/write-research.py [topic-slug] --content PATH [--target OUTPUT] [-t TITLE] [-p PROJECT]
 
-The script reads markdown content from --file, prepends YAML frontmatter,
-and writes to $HOME/Documents/research/YYYYMMDD_HHMMSS-project/YYYYMMDD_HHMMSS-slug.md.
+The script reads markdown content from --content, prepends YAML frontmatter,
+and writes to the resolved output path (auto-derived from target path or
+content filename if topic-slug is omitted).
 """
 
 import os
+import re
 import sys
 import argparse
 from pathlib import Path
@@ -19,22 +21,25 @@ from datetime import datetime
 def usage():
     prog = os.path.basename(sys.argv[0]) if len(sys.argv) > 0 else "write-research.py"
     print(
-        f"Usage: {prog} <topic-slug> [-t TITLE] [-p PROJECT] [-f FILEPATH] --file PATH\n"
+        f"Usage: {prog} [topic-slug] --content PATH [--target OUTPUT] [-t TITLE] [-p PROJECT]\n"
         "\n"
         "Arguments:\n"
-        "  topic-slug    URL-friendly name for the note (e.g., k8s-setup)\n"
+        "  topic-slug      URL-friendly name for the note (e.g., k8s-setup)\n"
+        "                 Optional. Auto-derived from --target path or content filename if omitted.\n"
         "\n"
         "Options:\n"
         "  -t, --title TITLE        Title of the note (auto-derived from slug if not provided)\n"
         "  -p, --project PROJECT    Project name for the session directory.\n"
         "                           If not given, auto-derived from topic-slug\n"
         "                           (first part before '/' or the full slug).\n"
-        "  -f, --filepath FILEPATH  Explicit output file path (overrides auto-resolution)\n"
-        "  -F, --file PATH          Read markdown content from this file\n"
+        "  --target FILEPATH        Explicit output file path (overrides auto-resolution)\n"
+        "  --content PATH           Read markdown content from this file (required)\n"
         "\n"
         "Examples:\n"
-        f'  uv run {prog} k8s-setup --file /tmp/content.md\n'
-        f'    → ~/Documents/research/20260523_143000-k8s-setup/20260523_143000-k8s-setup.md\n',
+        f'  uv run {prog} k8s-setup --content /tmp/content.md\n'
+        f'    → ~/Documents/research/20260523_143000-k8s-setup/20260523_143000-k8s-setup.md\n'
+        f'  uv run {prog} --content /tmp/content.md --target ~/Documents/research/20260523_143000-my-topic/20260523_143000-my-topic.md\n'
+        f'  uv run {prog} k8s-setup --content /tmp/content.md -p my-project --target ~/Documents/research/20260523_143000-my-project/20260523_143000-k8s-setup.md\n',
         file=sys.stderr,
     )
     sys.exit(1)
@@ -51,12 +56,16 @@ def main():
         description="Write a research note with YAML frontmatter.",
         epilog=(
             "Examples:\n"
-            "  uv run scripts/write-research.py k8s-setup --file /tmp/content.md\n"
+            "  uv run scripts/write-research.py k8s-setup --content /tmp/content.md\n"
+            "  uv run scripts/write-research.py --content /tmp/content.md --target ~/Documents/research/20260523_143000-my-topic/20260523_143000-my-topic.md\n"
+            "  uv run scripts/write-research.py k8s-setup --content /tmp/content.md -p my-project --target ~/Documents/research/20260523_143000-my-project/20260523_143000-k8s-setup.md\n"
         ),
     )
     parser.add_argument(
         "topic_slug",
-        help="URL-friendly name for the note (e.g., k8s-setup)",
+        nargs="?",
+        default=None,
+        help="URL-friendly name for the note (e.g., k8s-setup). Auto-derived from --target or --content if omitted.",
     )
     parser.add_argument(
         "-t", "--title",
@@ -70,40 +79,48 @@ def main():
         ),
     )
     parser.add_argument(
-        "-f", "--filepath",
+        "--target",
         help="Explicit output file path (overrides auto-resolution)",
     )
     parser.add_argument(
-        "-F", "--file",
+        "--content",
         metavar="PATH",
-        help="Read markdown content from this file",
+        required=True,
+        help="Read markdown content from this file (required)",
     )
 
     args = parser.parse_args()
 
     # --------------------------------------------------------------------------
-    # Resolve content source (--file only)
+    # Resolve topic-slug (explicit > auto-derived)
     # --------------------------------------------------------------------------
-    if not args.file:
-        print(
-            "Error: --file is required.\n"
-            f"  Usage: {os.path.basename(sys.argv[0])} topic-slug --file /tmp/content.md",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+    if not args.topic_slug:
+        # Try deriving from --target path stem
+        if args.target:
+            target_stem = Path(args.target).stem
+            # Strip timestamp prefix (YYYYMMDD_HHMMSS-)
+            slug = re.sub(r'^\d{8}_\d{6}-', '', target_stem)
+        else:
+            # Derive from content filename stem
+            content_stem = Path(args.content).stem
+            slug = content_stem
+        args.topic_slug = slug
 
+    # --------------------------------------------------------------------------
+    # Resolve content source (--content only)
+    # --------------------------------------------------------------------------
     try:
-        md_content = Path(args.file).read_text(encoding="utf-8").strip()
+        md_content = Path(args.content).read_text(encoding="utf-8").strip()
     except FileNotFoundError:
-        print(f"Error: File not found: {args.file}", file=sys.stderr)
+        print(f"Error: File not found: {args.content}", file=sys.stderr)
         sys.exit(1)
     except OSError as e:
-        print(f"Error: Cannot read file {args.file}: {e}", file=sys.stderr)
+        print(f"Error: Cannot read file {args.content}: {e}", file=sys.stderr)
         sys.exit(1)
 
     if not md_content:
         print(
-            f"Error: File is empty: {args.file}",
+            f"Error: File is empty: {args.content}",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -116,9 +133,9 @@ def main():
     # --------------------------------------------------------------------------
     # Resolve output path
     # --------------------------------------------------------------------------
-    if args.filepath:
-        # Explicit filepath override — bypasses auto-resolution entirely
-        output_file = Path(os.path.expanduser(str(args.filepath)))
+    if args.target:
+        # Explicit target override — bypasses auto-resolution entirely
+        output_file = Path(os.path.expanduser(str(args.target)))
         output_file.parent.mkdir(parents=True, exist_ok=True)
     else:
         # Derive project name: explicit flag > auto from slug

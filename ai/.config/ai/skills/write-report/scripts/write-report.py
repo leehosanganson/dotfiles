@@ -3,20 +3,13 @@
 write-report.py — Generate a styled HTML report from markdown content.
 
 Usage:
-    uv run scripts/write-report.py -t "Report Title" --file /tmp/content.md
-    # → writes to ~/Documents/research/20260523_143000-report-title.html
+    uv run scripts/write-report.py -t "Report Title" --content /tmp/content.md --target ~/Documents/report.html
 
-    uv run scripts/write-report.py -t "Q2 Summary" -p finance --file /tmp/content.md
-    # → writes to ~/Documents/research/20260523_143000-finance/20260523_143000-q2-summary.html
+The script reads markdown content from the --content flag, converts it to a
+styled HTML page, and writes it to the exact path specified by --target.
 
-The script reads markdown content from the --file flag, then converts it to a
-styled HTML page.  By default output is placed in a timestamped session
-directory under ~/Documents/research/.
-
-Output path resolution:
-    1. If -o/--output is given explicitly, it bypasses auto-resolution.
-    2. Otherwise the file is written to:
-       ~/Documents/research/<YYYYMMDD_HHMMSS>-<project>/<YYYYMMDD_HHMMSS>-<title-slug>.html
+--target is required and must be an explicit file path — no auto-resolution
+or timestamp generation is performed.
 """
 
 import os
@@ -124,53 +117,12 @@ def convert_markdown(md):
     return '\n'.join(output)
 
 
-def slugify(title):
-    """Turn a title into a URL-safe slug."""
-    slug = title.lower()
-    slug = re.sub(r'[^a-z0-9\s-]', '', slug)
-    slug = re.sub(r'\s+', '-', slug)
-    slug = re.sub(r'-+', '-', slug)
-    slug = slug.strip('-')
-    return slug
-
-
-def resolve_output_path(args):
-    """Resolve the output file path.
-
-    If -o/--output is explicitly provided, use it as-is (override).
-    Otherwise, auto-resolve to a timestamped session directory under
-    ~/Documents/research/.
-    """
-    if args.output is not None:
-        # Explicit override given by the user via -o flag
-        return args.output
-
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    # Determine project name: explicit -p flag or auto-derived from title
-    if args.project:
-        project = slugify(args.project)
-    else:
-        project = slugify(args.title)
-
-    home = os.environ.get("HOME", "/home/ansonlee")
-    research_base = os.path.join(home, "Documents", "research")
-    session_dir = os.path.join(research_base, f"{timestamp}-{project}")
-
-    os.makedirs(session_dir, exist_ok=True)
-
-    title_slug = slugify(args.title)
-    output_filename = f"{timestamp}-{title_slug}.html"
-    return os.path.join(session_dir, output_filename)
-
-
 def main():
     parser = argparse.ArgumentParser(
         description="Generate a styled HTML report from markdown content.",
         epilog=(
             "Examples:\n"
-            '  uv run scripts/write-report.py -t "My Report Title" --file /tmp/content.md\n'
-            '  uv run scripts/write-report.py -t "Q2 Summary" -p finance --file /tmp/content.md\n'
+            '  uv run scripts/write-report.py -t "My Report Title" --content /tmp/content.md --target ~/Documents/report.html\n'
         ),
     )
     parser.add_argument(
@@ -179,17 +131,18 @@ def main():
         help="Report title (required)",
     )
     parser.add_argument(
-        "-o", "--output",
-        default=None,
-        help="Output file path (default: auto-resolve to timestamped session dir)",
+        "--target",
+        required=True,
+        metavar="PATH",
+        help="Output file path (required)",
     )
     parser.add_argument(
         "-p", "--project",
         default=None,
-        help="Project name for the session directory. Auto-derived from title if not provided.",
+        help="Project name (informational only; not used in output path resolution)",
     )
     parser.add_argument(
-        "-F", "--file",
+        "--content",
         metavar="PATH",
         required=True,
         help="Read markdown content from this file (required)",
@@ -198,20 +151,20 @@ def main():
     args = parser.parse_args()
 
     # --------------------------------------------------------------------------
-    # Read content from --file
+    # Read content from --content
     # --------------------------------------------------------------------------
     try:
-        md_content = open(args.file, encoding="utf-8").read().strip()
+        md_content = open(args.content, encoding="utf-8").read().strip()
     except FileNotFoundError:
-        print(f"Error: File not found: {args.file}", file=sys.stderr)
+        print(f"Error: File not found: {args.content}", file=sys.stderr)
         sys.exit(1)
     except OSError as e:
-        print(f"Error: Cannot read file {args.file}: {e}", file=sys.stderr)
+        print(f"Error: Cannot read file {args.content}: {e}", file=sys.stderr)
         sys.exit(1)
 
     if not md_content:
         print(
-            f"Error: File is empty: {args.file}",
+            f"Error: File is empty: {args.content}",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -221,12 +174,12 @@ def main():
     # --------------------------------------------------------------------------
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    html_output = f"""<!DOCTYPE html>
+    html_output = """<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{escape(args.title)}</title>
+  <title>{}</title>
   <style>
     *, *::before, *::after {{
       box-sizing: border-box;
@@ -352,31 +305,29 @@ def main():
 <body>
   <div class="report">
     <header>
-      <h1>{escape(args.title)}</h1>
+      <h1>{}</h1>
       <hr>
     </header>
 
     <div class="content">
-{convert_markdown(md_content)}
+{}
     </div>
 
     <footer>
-      Generated on {now}
+      Generated on {}
     </footer>
   </div>
 </body>
 </html>
-"""
+""".format(escape(args.title), escape(args.title), convert_markdown(md_content), now)
 
     # --------------------------------------------------------------------------
-    # Resolve output path & write
+    # Write to explicit target path
     # --------------------------------------------------------------------------
-    output_path = resolve_output_path(args)
-
-    with open(output_path, "w", encoding="utf-8") as f:
+    with open(args.target, "w", encoding="utf-8") as f:
         f.write(html_output)
 
-    print(output_path)
+    print(args.target)
 
 
 if __name__ == "__main__":
