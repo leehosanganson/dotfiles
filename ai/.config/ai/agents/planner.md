@@ -3,6 +3,7 @@ description: Translates a single task item from the Architect's todo list into a
 mode: subagent
 permission:
   "*": deny
+  "which *": allow
   read: allow
   glob: allow
   grep: allow

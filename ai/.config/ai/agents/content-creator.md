@@ -3,6 +3,7 @@ description: Orchestrates the post-writer and blog-writer sub-agents to produce 
 mode: primary
 permission:
   "*": deny
+  "which *": allow
   read: allow
   edit: allow
   glob: allow

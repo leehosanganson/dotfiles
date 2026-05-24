@@ -3,6 +3,7 @@ description: Implements a single task item by faithfully following the plan prod
 mode: subagent
 permission:
   "*": deny
+  "which *": allow
   read: allow
   write: allow
   edit: allow

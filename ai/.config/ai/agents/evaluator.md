@@ -3,6 +3,7 @@ description: Independently evaluates a single task item's Worker output against 
 mode: subagent
 permission:
   "*": deny
+  "which *": allow
   read: allow
   glob: allow
   grep: allow

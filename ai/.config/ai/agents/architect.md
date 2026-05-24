@@ -3,6 +3,7 @@ description: Orchestrates parallel Planner→Worker→Evaluator mini-cycles to c
 mode: all
 permission:
   "*": deny
+  "which *": allow
   read: allow
   glob: allow
   grep: allow

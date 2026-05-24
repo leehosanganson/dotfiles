@@ -4,6 +4,7 @@ mode: subagent
 temperature: 0.4
 permission:
   "*": deny
+  "which *": allow
   read: allow
   edit: allow
   glob: allow
