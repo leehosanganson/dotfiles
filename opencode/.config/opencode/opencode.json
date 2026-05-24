@@ -4,12 +4,6 @@
   "default_agent": "architect",
   "model": "litellm/unsloth/qwen-3.6",
   "small_model": "litellm/unsloth/qwen-3.6",
-  "permission": {
-    "external_directory": {
-      "~/**": "allow",
-      "/tmp/**": "allow"
-    }
-  },
   "compaction": {
     "auto": true,
     "prune": true,
