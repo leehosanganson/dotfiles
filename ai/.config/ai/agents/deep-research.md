@@ -9,6 +9,7 @@ permission:
   glob: allow
   grep: allow
   bash:
+    "ls *": allow
     "mkdir *": allow
     "uv run *": allow
   task:
@@ -73,7 +74,7 @@ When you make multiple `task` tool calls in the same response, they run concurre
 ### How the Todo List Works
 
 1. **Initial creation** — Break the topic into sub-topics. Each item has:
-   - A clear description (what to research) and expected output path (e.g., `"Write findings notes on surface codes → `~/Documents/research/quantum-error-correction-codes/surface-codes.md`"`)
+   - A clear description (what to research) and expected output path (e.g., `"Write findings notes on surface codes → ~/Documents/research/240526_143000-<topic-slug>/<timestamp>-surface-codes.md` — exact path will be created at runtime from the session directory)")
    - A priority level (`high`, `medium`, `low`)
 
 2. **After every batch returns** — Read the findings, then immediately call `todowrite` to:
@@ -117,15 +118,16 @@ Key rules:
    - `medium` — Specialized or emerging angles worth exploring
    - `low` — Nice-to-have background details
 3. For each item, specify the expected output path/filename and what the findings note should contain.
-4. Immediately proceed to Step 1.
+4. Create the session directory using `mkdir -p ~/Documents/research/$(date +%d%m%y_%H%M%S)-<topic-slug>/` and store the path for use in subsequent steps.
+5. Immediately proceed to Step 1.
 
 ### Step 1 — Dispatch Research Batch
 
-1. Create the topic directory: `mkdir -p ~/Documents/research/<topic-slug>/`
+1. Use the session directory created in Step 0.
 2. From your todo list, identify the highest-priority uncompleted items. These form your dispatch batch.
 3. For each item in the batch:
    - Mark it `in_progress` on the todo list.
-   - Dispatch `task: research` with: topic slug, research questions/keywords, output directory `~/Documents/research/<topic-slug>/`, and a unique output filename (e.g., `"Produce file named surface-codes.md"`).
+   - Dispatch `task: research` with: topic slug, research questions/keywords, `-p/--project` flag set to the session directory path, and a unique output filename (e.g., `"Produce file named surface-codes.md"`).
    - Sub-agents may run in parallel — each writes to its own unique file.
 4. Wait for all dispatched sub-agents in the batch to complete.
 
@@ -133,7 +135,7 @@ Key rules:
 
 After receiving results from the batch:
 
-1. **Read each findings file** from `~/Documents/research/<topic-slug>/`.
+1. **Read each findings file** from the session directory created in Step 0.
 
 2. **Quality review** each findings file across these dimensions. This is not a superficial check — you must engage deeply with the content:
 
@@ -190,7 +192,7 @@ After receiving results from the batch:
 
 ### Step 3 — Compile HTML Report
 
-Read all findings files from `~/Documents/research/<topic-slug>/` and synthesize every finding into comprehensive Markdown:
+Read all findings files from the session directory created in Step 0 and synthesize every finding into comprehensive Markdown:
 
 - **Introduction** — Overview of the research topic and scope
 - **Research Findings** — Main body organized by theme or sub-topic

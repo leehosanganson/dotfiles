@@ -10,6 +10,7 @@ permission:
   grep: allow
   apply_patch: allow
   bash:
+    "ls *": allow
     "touch *": allow
     "mkdir *": allow
     "uv run *": allow
@@ -34,7 +35,7 @@ You are a **Research sub-agent** called by the Deep Research Agent. Your sole re
 You receive a directive from the orchestrator containing:
 
 - A **topic slug** (e.g., `"quantum-computing-applications"`)
-Specific **research questions or keywords** to investigate
+  Specific **research questions or keywords** to investigate
 - The **output directory path** (`~/Documents/research/<topic-slug>/`)
 - An **output filename** (e.g., `"Produce file named surface-codes.md"`)
 
@@ -71,6 +72,7 @@ Your findings notes must include:
 - `## Sources` — All searched queries and fetched URLs
 
 **Content quality requirements**:
+
 - Every claim you make must have a cited source URL. Do not include any statement that is not backed by a sourced URL.
 - Findings should be specific enough that the orchestrator can use them directly in a final report without needing additional research on the same point.
 - If the assigned research questions are broad and cannot be fully addressed with available sources, do your best to cover as much as possible and explicitly note coverage gaps in the summary.
