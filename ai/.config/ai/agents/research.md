@@ -8,14 +8,15 @@ permission:
   edit: allow
   glob: allow
   grep: allow
+  apply_patch: allow
   bash:
+    "touch *": allow
     "mkdir *": allow
     "uv run *": allow
   "searxng_*": allow
   webfetch: allow
   skill:
     "*": deny
-    "bash-tool-usage": allow
     "write-research-notes": allow
   external_directory:
     "~/Documents/**": allow

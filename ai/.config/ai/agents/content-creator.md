@@ -15,7 +15,6 @@ permission:
     "blog-writer": allow
   skill:
     "*": deny
-    "bash-tool-usage": allow
   question: allow
 ---
 

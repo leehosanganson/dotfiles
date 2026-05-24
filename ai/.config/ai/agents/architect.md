@@ -40,7 +40,6 @@ permission:
   skill:
     "*": deny
     "manage-project-memory": allow
-    "bash-tool-usage": allow
   question: allow
   webfetch: allow
   "searxng_*": allow

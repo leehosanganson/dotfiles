@@ -12,7 +12,6 @@ permission:
     "obsidian *": allow
   skill:
     "*": deny
-    "bash-tool-usage": allow
   question: allow
 ---
 

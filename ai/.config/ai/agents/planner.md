@@ -17,7 +17,6 @@ permission:
   "searxng_*": allow
   skill:
     "*": deny
-    "bash-tool-usage": allow
   external_directory:
     "~/**": allow
     "/tmp/**": allow

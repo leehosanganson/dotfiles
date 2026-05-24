@@ -16,7 +16,6 @@ permission:
   explore: allow
   skill:
     "*": deny
-    "bash-tool-usage": allow
   external_directory:
     "~/**": allow
     "/tmp/**": allow
