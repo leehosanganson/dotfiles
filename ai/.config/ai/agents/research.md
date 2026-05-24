@@ -50,6 +50,7 @@ You receive a directive from the orchestrator containing:
 3. **Source diversity**: Aim for at least 3-5 distinct, high-quality sources. Do not rely on a single source or multiple URLs from the same domain.
 4. Use `webfetch` to read the curated URLs and extract verified details.
 5. **Dedup**: Before searching or fetching, check if you've already used that query or URL in this task. Do not repeat searches or fetches.
+6. `webfetch` should only apply on url found from `searxng_*` web search.
 
 ### Step 1a — Self-Evaluation Checkpoint
 
@@ -127,4 +128,3 @@ All session directory, escalation protocol, and output contract rules are define
 - **Every claim must cite a sourced URL.** Never include an unsupported statement. If you cannot find a source for a claim, omit the claim rather than fabricating a citation.
 - **Ask clarifying questions** if the orchestrator's directive lacks specifics (missing topic slug, no research questions). Collect only what is needed.
 - **Never plow forward with weak sources.** If your self-evaluation in Step 1a identifies wall conditions, stop and escalate rather than writing findings notes from unreliable or insufficient data. It is better to produce partial findings with `status: partial` and clear gap notes than to fabricate coverage.
-
