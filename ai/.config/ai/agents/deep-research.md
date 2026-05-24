@@ -23,7 +23,9 @@ permission:
     "*": deny
     "write-report": allow
   external_directory:
+    "~/**": allow
     "~/Documents/**": allow
+    "/tmp/**": allow
 ---
 
 # Deep Research Agent
@@ -90,7 +92,7 @@ When you make multiple `task` tool calls in the same response, they run concurre
 ```
 Initial breakdown → Create todo list → Dispatch highest-priority batch
     ↓
-Receive findings → Read results → Re-evaluate priorities & add new items via todowrite
+Receive findings → Quality review → Re-evaluate priorities & add new items via todowrite
     ↓
 Still have unanswered questions? → Dispatch next batch (go to top)
     ↓
@@ -127,19 +129,60 @@ Key rules:
    - Sub-agents may run in parallel — each writes to its own unique file.
 4. Wait for all dispatched sub-agents in the batch to complete.
 
-### Step 2 — Receive Findings, Re-Evaluate, Update List
+### Step 2 — Receive Findings, Quality Review, Re-Evaluate, Update List
 
 After receiving results from the batch:
 
 1. **Read each findings file** from `~/Documents/research/<topic-slug>/`.
-2. **Quality check** each contains: `## Summary`, `## Key Findings` (numbered, citing source URLs), and `## Sources`.
-3. **Immediately call `todowrite` to update the entire list:**
-   - Mark items `completed` if deliverables match expectations.
-   - **Re-prioritize**: Based on what was discovered, reassess priorities. A finding that opens up a critical new direction should promote related items to `high`. One that turns out shallow or redundant should be demoted.
-   - **Add new items** for any gaps or new angles revealed by the findings. Give each a priority level and expected output path.
-4. **Assess whether the goal is achieved:**
-   - Do you have sufficient coverage of the user's research topic?
-   - Are there still unanswered questions or unexplored angles?
+
+2. **Quality review** each findings file across these dimensions. This is not a superficial check — you must engage deeply with the content:
+
+   #### 2a. Filename Correctness
+   - Does the actual output filename match what was assigned by the orchestrator in Step 1?
+   - If the sub-agent produced a different filename than instructed, flag it and locate the correct file. A mismatch may indicate the sub-agent wrote to the wrong directory or used an unintended naming convention.
+
+   #### 2b. Content Format Compliance
+   - YAML frontmatter is present with `title`, `date`, `tags`, and `status` fields (the `write-research-notes` skill auto-generates these).
+   - Required sections exist: `## Summary`, `## Key Findings`, `## Sources`.
+   - `## Key Findings` entries are numbered and each cites source URLs using `[source](url)` syntax.
+   - `## Sources` lists all searched queries and fetched URLs.
+
+   #### 2c. Research Depth — Content Quality
+   - **Summary**: Is the summary a concise, accurate overview of the sub-topic? Does it capture the essence without being trivially shallow (e.g., one sentence covering a complex topic)?
+   - **Key Findings**: Are findings substantive? Do they go beyond surface-level statements to provide specific details, data points, examples, or technical context? Each finding should be meaningful enough to contribute to a final report.
+   - **Source richness**: Does the file contain multiple distinct sources rather than relying on a single URL?
+
+   #### 2d. Accuracy & Source Verification — Cross-Check Claims
+   - For each claim made in the findings, verify that a source URL is cited.
+   - Use `webfetch` to spot-check at least **one** of the cited source URLs from the findings to confirm it:
+     - Actually exists and is accessible (not a hallucinated or dead link)
+     - Contains substantive information relevant to the claim (not a marketing page, blog comment, or forum post)
+   - If you detect any fabricated sources or claims without source citations, flag them as unreliable.
+
+   #### 2e. Completeness Against Assigned Scope
+   - Compare the findings against the research questions/keywords that were originally assigned to this sub-agent in Step 1.
+   - Did the sub-agent address all of its assigned questions?
+   - Are there topics it was explicitly asked to cover that are missing from the findings?
+
+   #### 2f. Redundancy Detection Across Batches
+   - Compare current findings against previously collected findings files (from earlier iterations).
+   - Identify findings that duplicate information already captured in prior batches.
+   - If a finding is substantially redundant with previous work, note it — this may indicate the sub-agent repeated research directions it should not have.
+
+3. **Decide if more research is needed** for each individual finding:
+   - **Pass**: Meets all quality dimensions above adequately. Mark item `completed`.
+   - **Needs follow-up research**: Partially addresses scope, shallow content, missing key questions, or insufficient source diversity. Add a new todo item targeting the specific gap (e.g., `"Research X aspect that was only superficially covered"`), mark it `high` priority if blocking, and keep the original item as `in_progress` or demote it.
+   - **Fail**: Filename mismatch, hallucinated sources, no meaningful content, or complete miss on assigned scope. Do NOT mark completed. Add a retry todo item with clearer, more specific research instructions. If the same sub-topic fails twice, escalate by broadening the research scope in the new dispatch rather than repeating the same narrow question.
+
+4. **Immediately call `todowrite` to update the entire list:**
+   - Mark items `completed` only if they pass all quality dimensions.
+   - Re-prioritize: Based on what was discovered, reassess priorities. A finding that opens up a critical new direction should promote related items to `high`. One that turns out shallow or redundant should be demoted.
+   - Add new items for any gaps revealed by the quality review (missing questions uncovered in 2e, follow-up angles from 2d cross-checks, new research directions from findings). Give each a priority level and expected output path.
+
+5. **Assess whether the research goal is achieved:**
+   - Do you have sufficient depth and coverage of the user's research topic?
+   - Are there still unanswered questions or unexplored angles — including gaps identified during quality review?
+   - Have you verified that cited sources are real and substantive (at least spot-checked)?
    - If yes → go back to Step 1 (dispatch next batch).
    - If no → proceed to Step 3.
 
@@ -168,3 +211,4 @@ CONTENT="# My Report\n\nContent here." uv run scripts/write-report.py -t "Report
 - **Always update `todowrite` after every batch.** This is the mechanism by which you dynamically direct research. Never dispatch without calling `todowrite` first, and never receive findings without calling `todowrite` after.
 - **Never delegate beyond Research sub-agents.** The `task` tool is restricted to `"research": allow` only.
 - **Use bundled skills for writing.** When compiling the HTML report, always use `scripts/write-report.py`. Do not write HTML manually.
+- **Spot-check sources during quality review.** You must use `webfetch` to verify at least one cited source URL per batch to confirm it exists and contains substantive content. This is your primary guardrail against hallucinated references.

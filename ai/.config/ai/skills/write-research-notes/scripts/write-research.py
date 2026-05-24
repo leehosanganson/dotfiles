@@ -3,22 +3,10 @@
 write-research.py — Write a research note with YAML frontmatter.
 
 Usage:
-    # Auto-project derived from slug (first part before '/'):
-    cat > /tmp/content.md << 'EOF'
-    # Kubernetes Setup
-    EOF
-    uv run scripts/write-research.py k8s-setup < /tmp/content.md
+    uv run scripts/write-research.py topic-slug --file /tmp/content.md
 
-    # Explicit project override:
-    cat > /tmp/content.md << 'EOF'
-    # Project Findings
-    EOF
-    uv run scripts/write-research.py findings -t "Project Findings" \
-      -p my-project < /tmp/content.md
-
-The script reads markdown content from the CONTENT environment variable,
-the --content flag, or stdin (in that order of precedence), prepends YAML
-frontmatter, and writes to $HOME/Documents/research/YYYYMMDD_HHMMSS-project/YYYYMMDD_HHMMSS-slug.md.
+The script reads markdown content from --file, prepends YAML frontmatter,
+and writes to $HOME/Documents/research/YYYYMMDD_HHMMSS-project/YYYYMMDD_HHMMSS-slug.md.
 """
 
 import os
@@ -31,7 +19,7 @@ from datetime import datetime
 def usage():
     prog = os.path.basename(sys.argv[0]) if len(sys.argv) > 0 else "write-research.py"
     print(
-        f"Usage: {prog} <topic-slug> [-t TITLE] [-p PROJECT] [-f FILEPATH] [--content TEXT]\n"
+        f"Usage: {prog} <topic-slug> [-t TITLE] [-p PROJECT] [-f FILEPATH] --file PATH\n"
         "\n"
         "Arguments:\n"
         "  topic-slug    URL-friendly name for the note (e.g., k8s-setup)\n"
@@ -42,24 +30,11 @@ def usage():
         "                           If not given, auto-derived from topic-slug\n"
         "                           (first part before '/' or the full slug).\n"
         "  -f, --filepath FILEPATH  Explicit output file path (overrides auto-resolution)\n"
-        "  --content TEXT           Markdown content on the command line\n"
-        "\n"
-        "Environment Variables:\n"
-        "  CONTENT    Markdown content (takes precedence over --content)\n"
+        "  -F, --file PATH          Read markdown content from this file\n"
         "\n"
         "Examples:\n"
-        f'  cat > /tmp/content.md << \'EOF\'\n'
-        f'  # Kubernetes Setup\n'
-        f'  EOF\n'
-        f'  uv run {prog} k8s-setup < /tmp/content.md\n'
-        f'    → ~/Documents/research/20260523_143000-k8s-setup.md\n'
-        f'\n'
-        f'  cat > /tmp/content.md << \'EOF\'\n'
-        f'  # Project Findings\n'
-        f'  EOF\n'
-        f'  uv run {prog} findings -t "Project Findings" \\\n'
-        f'    -p my-project < /tmp/content.md\n'
-        f'    → ~/Documents/research/20260523_143000-my-project/findings.md\n',
+        f'  uv run {prog} k8s-setup --file /tmp/content.md\n'
+        f'    → ~/Documents/research/20260523_143000-k8s-setup/20260523_143000-k8s-setup.md\n',
         file=sys.stderr,
     )
     sys.exit(1)
@@ -67,9 +42,7 @@ def usage():
 
 def slug_to_title(slug):
     """Derive a title from a topic-slug: replace separators with spaces, then title-case."""
-    # Replace _, -, / with spaces
     title = slug.replace('_', ' ').replace('-', ' ').replace('/', ' ')
-    # Title case
     return title.title()
 
 
@@ -78,16 +51,7 @@ def main():
         description="Write a research note with YAML frontmatter.",
         epilog=(
             "Examples:\n"
-            "  cat > /tmp/content.md << 'EOF'\n"
-            "  # Kubernetes Setup\n"
-            "  EOF\n"
-            "  uv run scripts/write-research.py k8s-setup < /tmp/content.md\n"
-            "\n"
-            "  cat > /tmp/content.md << 'EOF'\n"
-            "  # Project Findings\n"
-            "  EOF\n"
-            "  uv run scripts/write-research.py findings -t \"Project Findings\" \\\n"
-            "    -p my-project < /tmp/content.md\n"
+            "  uv run scripts/write-research.py k8s-setup --file /tmp/content.md\n"
         ),
     )
     parser.add_argument(
@@ -110,32 +74,36 @@ def main():
         help="Explicit output file path (overrides auto-resolution)",
     )
     parser.add_argument(
-        "--content",
-        help="Markdown content on the command line (alternative to CONTENT env var)",
+        "-F", "--file",
+        metavar="PATH",
+        help="Read markdown content from this file",
     )
 
     args = parser.parse_args()
 
     # --------------------------------------------------------------------------
-    # Resolve content source (CONTENT env var > --content flag > stdin)
+    # Resolve content source (--file only)
     # --------------------------------------------------------------------------
-    md_content = os.environ.get("CONTENT", "").strip()
+    if not args.file:
+        print(
+            "Error: --file is required.\n"
+            f"  Usage: {os.path.basename(sys.argv[0])} topic-slug --file /tmp/content.md",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
-    if not md_content and args.content:
-        md_content = args.content.strip()
-
-    if not md_content and not sys.stdin.isatty():
-        md_content = sys.stdin.read().strip()
+    try:
+        md_content = Path(args.file).read_text(encoding="utf-8").strip()
+    except FileNotFoundError:
+        print(f"Error: File not found: {args.file}", file=sys.stderr)
+        sys.exit(1)
+    except OSError as e:
+        print(f"Error: Cannot read file {args.file}: {e}", file=sys.stderr)
+        sys.exit(1)
 
     if not md_content:
         print(
-            "Error: No content provided.\n"
-            "  Use a temp file + stdin (recommended):\n"
-            "    cat > /tmp/content.md << 'EOF'\n"
-            "    # My Notes\n"
-            "    EOF\n"
-            "    uv run scripts/write-research.py my-topic < /tmp/content.md\n"
-            "  Or --content flag:     uv run scripts/write-research.py my-topic --content '# Inline'\n",
+            f"Error: File is empty: {args.file}",
             file=sys.stderr,
         )
         sys.exit(1)

@@ -3,19 +3,15 @@
 write-report.py — Generate a styled HTML report from markdown content.
 
 Usage:
-    CONTENT="# My Report" uv run scripts/write-report.py -t "Report Title"
+    uv run scripts/write-report.py -t "Report Title" --file /tmp/content.md
     # → writes to ~/Documents/research/20260523_143000-report-title.html
 
-    CONTENT="# Summary" uv run scripts/write-report.py -t "Q2 Summary" -p finance
-    # → writes to ~/Documents/research/20260523_143000-summary.html
+    uv run scripts/write-report.py -t "Q2 Summary" -p finance --file /tmp/content.md
+    # → writes to ~/Documents/research/20260523_143000-finance/20260523_143000-q2-summary.html
 
-    uv run scripts/write-report.py -t "Title" --content "# Inline" -o custom.html
-    # explicit override still works
-
-The script reads markdown content from the CONTENT environment variable,
-the --content flag, or stdin (in that order of precedence), then converts
-it to a styled HTML page.  By default output is placed in a timestamped
-session directory under ~/Documents/research/.
+The script reads markdown content from the --file flag, then converts it to a
+styled HTML page.  By default output is placed in a timestamped session
+directory under ~/Documents/research/.
 
 Output path resolution:
     1. If -o/--output is given explicitly, it bypasses auto-resolution.
@@ -173,9 +169,8 @@ def main():
         description="Generate a styled HTML report from markdown content.",
         epilog=(
             "Examples:\n"
-            '  CONTENT="# My Report" uv run scripts/write-report.py -t "My Report Title"\n'
-            '  CONTENT="# Summary" uv run scripts/write-report.py -t "Q2 Summary" -p finance\n'
-            '  uv run scripts/write-report.py -t "Title" --content "# Hello world" -o custom.html\n'
+            '  uv run scripts/write-report.py -t "My Report Title" --file /tmp/content.md\n'
+            '  uv run scripts/write-report.py -t "Q2 Summary" -p finance --file /tmp/content.md\n'
         ),
     )
     parser.add_argument(
@@ -194,29 +189,29 @@ def main():
         help="Project name for the session directory. Auto-derived from title if not provided.",
     )
     parser.add_argument(
-        "--content",
-        help="Markdown content on the command line (alternative to CONTENT env var)",
+        "-F", "--file",
+        metavar="PATH",
+        required=True,
+        help="Read markdown content from this file (required)",
     )
 
     args = parser.parse_args()
 
     # --------------------------------------------------------------------------
-    # Resolve content source (CONTENT env var > --content flag > stdin)
+    # Read content from --file
     # --------------------------------------------------------------------------
-    md_content = os.environ.get("CONTENT", "").strip()
-
-    if not md_content and args.content:
-        md_content = args.content.strip()
-
-    if not md_content and not sys.stdin.isatty():
-        md_content = sys.stdin.read().strip()
+    try:
+        md_content = open(args.file, encoding="utf-8").read().strip()
+    except FileNotFoundError:
+        print(f"Error: File not found: {args.file}", file=sys.stderr)
+        sys.exit(1)
+    except OSError as e:
+        print(f"Error: Cannot read file {args.file}: {e}", file=sys.stderr)
+        sys.exit(1)
 
     if not md_content:
         print(
-            "Error: No content provided.\n"
-            "  Use CONTENT env var:   CONTENT='# My Report' uv run scripts/write-report.py -t 'Title'\n"
-            "  Or --content flag:     uv run scripts/write-report.py -t 'Title' --content '# Inline'\n"
-            "  Or pipe via stdin:     echo '# My Report' | uv run scripts/write-report.py -t 'Title'\n",
+            f"Error: File is empty: {args.file}",
             file=sys.stderr,
         )
         sys.exit(1)
