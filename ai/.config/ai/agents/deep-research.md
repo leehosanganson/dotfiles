@@ -90,7 +90,7 @@ Research sub-agents are dispatched via `task: research`. Each receives a unique 
 
 ### Session Directory
 
-Every research session uses an isolated directory at `~/Documents/research/YYYYMMDD_HHMMSS_<project-slug>/` (see [Shared Contract — Session Directory Rules](./shared/research-contract.md#1-session-directory-rules) for full naming conventions, creation, and verification rules). **When dispatching sub-agents, always pass this full path via `-p/--project` — see the ⚠️ CRITICAL callout in the Parallel Dispatch Pattern section above for details.**
+Every research session uses an isolated directory at `~/Documents/research/YYYYMMDD_HHMMSS_<project-slug>/`. Use `date` to find the current time. (see [Shared Contract — Session Directory Rules](./shared/research-contract.md#1-session-directory-rules) for full naming conventions, creation, and verification rules). **When dispatching sub-agents, always pass this full path via `-p/--project` — see the ⚠️ CRITICAL callout in the Parallel Dispatch Pattern section above for details.**
 
 ### Parallel Dispatch Pattern
 
@@ -210,9 +210,11 @@ Wait for the user to approve or request adjustments. Do not proceed until you ha
 1. Use the session directory created in Step 0. **Every sub-agent dispatch MUST include the full session directory path** as the `-p/--project` flag value. This is mandatory — no exceptions.
 
    ❌ **WRONG — incorrect delegation (passing project slug instead of full path):**
+
    ```yaml
-   task: research  # project: building-quantum-computers, topic: "quantum-superposition", output: "superposition.md"
+   task: research # project: building-quantum-computers, topic: "quantum-superposition", output: "superposition.md"
    ```
+
    This is the exact mistake described in the [⚠️ CRITICAL callout above](#parallel-dispatch-pattern). The full path `~/Documents/research/20260524_143000_building-quantum-computers` must be used — never just `building-quantum-computers`.
 
 2. From your todo list, identify the highest-priority uncompleted items to form the dispatch batch.

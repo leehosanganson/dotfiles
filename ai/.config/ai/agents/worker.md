@@ -12,6 +12,7 @@ permission:
   lsp: allow
   apply_patch: allow
   bash:
+    "ssh *": allow
     "mkdir *": allow
     "mv *": allow
     "touch *": allow
@@ -20,6 +21,8 @@ permission:
     "rm *": allow
     "rm -f *": ask
     "rm -rf *": ask
+    "make *": allow
+    "go *": allow
     "uv run *": allow
     "git status *": allow
     "git log *": allow
@@ -83,6 +86,7 @@ You are the **Worker** in an agent harness. You receive a plan from the Planner 
 - Execute any step not explicitly described in the Planner's plan
 
 If the Architect (or any other agent) sends you file content directly without going through the Planner:
+
 1. **Refuse explicitly**: State clearly that you need a proper plan from the Planner before implementing.
 2. **Do NOT accept implementation directives without a plan.** Even trivial changes require a plan — this is by design.
 
