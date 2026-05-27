@@ -18,6 +18,17 @@ This directory holds shared agents, commands, skills, and rules that feed into [
 
 ## Usage
 
+### Canonical Task Lifecycle
+
+- **Clarification-first with blind-spot discovery**: ask targeted questions and surface constraints/unknowns before planning.
+- **Context split**:
+  - **Explore** = local repository context (SOPs, docs, conventions, relevant files).
+  - **Scout** = external context via `searxng_*` and `webfetch` when local context is insufficient.
+- **Decompose into medium-sized tasks**: use discrete, trackable task items (not oversized epics or tiny fragmented steps).
+- **Strict per-task sequence**: every task item runs in order: **Planner → Worker → Evaluator**.
+- **Parallelism boundary**: only **independent task sets** may run in parallel; each set must preserve internal sequence.
+- **Evaluator outcomes**: `success` | `failed` | `incomplete`.
+
 ### Using Rules (AGENTS.md)
 
 To apply a rule to an OpenCode project, symlink it as `AGENTS.md` at the project root:

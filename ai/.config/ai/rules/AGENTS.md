@@ -51,4 +51,23 @@ Prefer `uv run --with <pkg> <script>` over raw `python` for running Python scrip
 
 ## Rule 11 — Task Decomposition
 
-Break tasks into small, equal-size sub-tasks to maximize parallel execution across sub-agents.
+Use clarification-first decomposition with blind-spot discovery, then break work into medium-sized, discrete, trackable task items.
+
+## Rule 12 — Context Boundaries
+
+Use **Explore** for local repository context (SOPs, docs, conventions, relevant files).
+Use **Scout** (`searxng_*`, `webfetch`) for external context only when local context is insufficient.
+
+## Rule 13 — Per-Task Lifecycle Sequence
+
+Every task item must run in strict order: **Planner → Worker → Evaluator**.
+Do not skip or reorder steps within a task item.
+
+## Rule 14 — Parallelism Constraints
+
+Parallel execution is allowed only across independent task-item sets.
+Each parallel set must preserve its internal **Planner → Worker → Evaluator** sequence.
+
+## Rule 15 — Evaluator Outcome Vocabulary
+
+Use only these evaluator outcomes for task status decisions: `success`, `failed`, `incomplete`.
