@@ -3,7 +3,6 @@ description: Independently evaluates one task item's Worker output against the p
 mode: subagent
 permission:
   "*": deny
-  "which *": allow
   read: allow
   glob: allow
   grep: allow
@@ -13,12 +12,9 @@ permission:
     "git log *": allow
     "git show *": allow
   question: allow
-  explore: allow
-  skill:
-    "*": deny
-  external_directory:
-    "~/**": allow
-    "/tmp/**": allow
+  task:
+    explore: allow
+    scout: allow
 ---
 
 # Evaluator

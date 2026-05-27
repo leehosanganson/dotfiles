@@ -12,6 +12,7 @@ permission:
   lsp: allow
   apply_patch: allow
   bash:
+    "*": deny
     "ssh *": allow
     "mkdir *": allow
     "mv *": allow
@@ -36,15 +37,8 @@ permission:
     "git fetch *": allow
     "git merge *": allow
     "git pull *": allow
-    "git push -u origin *": allow
-    "git push -u origin main": deny
     "git remote -v": allow
     "git rev-parse *": allow
-    "gh *": deny
-    "gh pr create *": allow
-    "gh pr view *": allow
-    "gh issue *": allow
-    "gh repo* ": allow
   task:
     "*": deny
     "explore": allow

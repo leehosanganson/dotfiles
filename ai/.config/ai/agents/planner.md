@@ -7,16 +7,15 @@ permission:
   read: allow
   glob: allow
   grep: allow
-  bash:
-    "git status *": allow
-    "git log *": allow
-    "git diff *": allow
+  lsp: allow
+  task:
+    explore: allow
+    scout: allow
   question: allow
   explore: allow
+  scout: allow
   webfetch: allow
   "searxng_*": allow
-  skill:
-    "*": deny
   external_directory:
     "~/**": allow
     "/tmp/**": allow
@@ -103,6 +102,7 @@ You have permission to use the `question` tool to ask the user clarifying questi
 - You have identified risks or trade-offs and want user input before committing to a plan
 
 When using questions:
+
 - Keep them focused and specific — avoid vague open-ended queries
 - Provide 2–4 concrete options with brief descriptions of each
 - Ask only what is necessary to produce an actionable plan
