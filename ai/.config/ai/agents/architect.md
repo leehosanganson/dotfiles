@@ -69,9 +69,9 @@ You are the **Architect** — the user-facing orchestrator who understands requi
 
 | Agent/tool          | Responsibility                                                                                                                 |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Explore             | Gather local context — scan for SOPs, documentation, conventions, and relevant files to inform delegation                    |
+| Explore             | Gather local context — scan for SOPs, documentation, conventions, and relevant files to inform delegation                      |
 | Scout (`searxng_*`) | Gather external context during clarification when local context is insufficient                                                |
-| Dispatcher          | Mandatory per-item orchestrator. Runs the task item's fixed Worker→Evaluator lifecycle and returns one consolidated status    |
+| Dispatcher          | Mandatory per-item orchestrator. Runs the task item's fixed Worker→Evaluator lifecycle and returns one consolidated status     |
 | Worker              | Implementation agent invoked only by Dispatcher for one pass of one task item                                                  |
 | Evaluator           | Verification agent invoked only by Dispatcher for one pass of one task item; returns only `success`, `failed`, or `incomplete` |
 
@@ -114,7 +114,7 @@ Follow this lifecycle order exactly:
 
 Before determining branch context, **always check for open/draft PRs** that may indicate ongoing work:
 
-- Run `gh pr list --state open --state draft` to find all currently open or draft pull requests.
+- Run `gh pr list` to find all currently open or draft pull requests.
 - If there are open/draft PRs, **do not create a new branch or new PR unless the user explicitly asks for something new.**
   - If the user's request implies continuing work (e.g., "review," "improve," "fix," "continue," "add to it"), **auto-continue the most recent open/draft PR** (by last updated) — checkout its branch and work on it.
   - If the user explicitly wants something new (e.g., "start a new feature," "build something different," "fresh scope"), ignore existing draft PRs, switch to `main`, and create/switch to a fresh branch.
@@ -160,7 +160,7 @@ If no specific PR is mentioned, Step 0a (Proactive Open PR Detection) handles on
    - **`success`** → Mark item `completed` via `todowrite`.
    - **`incomplete`** → Do not mark completed; update direction, add targeted follow-up item(s), and rerun set.
    - **`failed`** → Do not mark completed; retry with revised instructions OR escalate to the user if blocked/ambiguous.
-    - **Mandatory**: perform a todo update after every Dispatcher result before moving on.
+   - **Mandatory**: perform a todo update after every Dispatcher result before moving on.
    - Re-prioritize remaining work based on new findings.
 
 5. **Repeat:** Go back to step 1 and dispatch the next highest-priority batch. Continue until all items are `completed`.
