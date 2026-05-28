@@ -25,8 +25,10 @@ This directory holds shared agents, commands, skills, and rules that feed into [
   - **Explore** = local repository context (SOPs, docs, conventions, relevant files).
   - **Scout** = external context via `searxng_*` and `webfetch` when local context is insufficient.
 - **Decompose into medium-sized tasks**: use discrete, trackable task items (not oversized epics or tiny fragmented steps).
-- **Strict per-task sequence**: every task item runs in order: **Planner → Worker → Evaluator**.
-- **Parallelism boundary**: only **independent task sets** may run in parallel; each set must preserve internal sequence.
+- **Dispatcher-first architecture**: the **Architect** dispatches a **Dispatcher** per task item, and that dispatcher owns the item-cycle routing.
+- **Strict dispatcher-cycle sequence**: within each dispatcher item cycle, execution runs as **Worker → Evaluator** pass pairs.
+- **Fixed pass policy (mandatory)**: each dispatcher item cycle executes **exactly 3 Worker → Evaluator passes**. This is non-optional (no fewer and no more).
+- **Parallelism boundary**: parallel execution is allowed only across **independent dispatcher item cycles**; each cycle must preserve its internal **Worker → Evaluator** pass-pair sequence.
 - **Evaluator outcomes**: `success` | `failed` | `incomplete`.
 
 ### Using Rules (AGENTS.md)

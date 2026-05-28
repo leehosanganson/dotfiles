@@ -58,16 +58,26 @@ Use clarification-first decomposition with blind-spot discovery, then break work
 Use **Explore** for local repository context (SOPs, docs, conventions, relevant files).
 Use **Scout** (`searxng_*`, `webfetch`) for external context only when local context is insufficient.
 
-## Rule 13 — Per-Task Lifecycle Sequence
+## Rule 13 — Dispatcher Item-Cycle Sequence
 
-Every task item must run in strict order: **Planner → Worker → Evaluator**.
-Do not skip or reorder steps within a task item.
+Within each dispatcher item cycle, execution must run as **Worker → Evaluator** pass pairs.
+Do not skip or reorder steps within a dispatcher item cycle.
 
-## Rule 14 — Parallelism Constraints
+## Rule 14 — Dispatcher-First Ownership
 
-Parallel execution is allowed only across independent task-item sets.
-Each parallel set must preserve its internal **Planner → Worker → Evaluator** sequence.
+The **Architect** dispatches a **Dispatcher** per task item, and that dispatcher owns item-cycle routing.
+Execution agents must not bypass dispatcher sequencing.
 
-## Rule 15 — Evaluator Outcome Vocabulary
+## Rule 15 — Parallelism Constraints
+
+Parallel execution is allowed only across independent dispatcher item cycles.
+Each parallel cycle must preserve its internal **Worker → Evaluator** pass-pair sequence.
+
+## Rule 16 — Fixed Exactly-3-Pass Policy
+
+Each dispatcher item cycle must execute **exactly 3 Worker → Evaluator passes**.
+This policy is mandatory and non-optional; do not run fewer or more passes.
+
+## Rule 17 — Evaluator Outcome Vocabulary
 
 Use only these evaluator outcomes for task status decisions: `success`, `failed`, `incomplete`.
