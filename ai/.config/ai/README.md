@@ -22,12 +22,12 @@ This directory holds shared agents, commands, skills, and rules that feed into [
 
 - **Clarification-first with blind-spot discovery**: ask targeted questions and surface constraints/unknowns before planning.
 - **Context split**:
-  - **Explore** = local repository context (SOPs, docs, conventions, relevant files).
-  - **Scout** = external context via `searxng_*` and `webfetch` when local context is insufficient.
+  - **Explore** = local repository context (SOPs, docs, conventions, relevant files) and external context gathering when needed.
+  - When local context is insufficient, **Explore** should use `searxng_*` and `webfetch` for external web research.
 - **Decompose into medium-sized tasks**: use discrete, trackable task items (not oversized epics or tiny fragmented steps).
 - **Dispatcher-first architecture**: the **Architect** dispatches a **Dispatcher** per task item, and that dispatcher owns the item-cycle routing.
 - **Strict dispatcher-cycle sequence**: within each dispatcher item cycle, execution runs as **Worker → Evaluator** pass pairs.
-- **Fixed pass policy (mandatory)**: each dispatcher item cycle executes **exactly 3 Worker → Evaluator passes**. This is non-optional (no fewer and no more).
+- **Retry pass policy (mandatory)**: each dispatcher item cycle executes **up to 3 Worker → Evaluator attempts**. Stop immediately on `success`; retry on `failed` or `incomplete` until success or attempt 3.
 - **Parallelism boundary**: parallel execution is allowed only across **independent dispatcher item cycles**; each cycle must preserve its internal **Worker → Evaluator** pass-pair sequence.
 - **Evaluator outcomes**: `success` | `failed` | `incomplete`.
 

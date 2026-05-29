@@ -4,6 +4,10 @@
   "default_agent": "architect",
   "model": "litellm/unsloth/qwen-3.6",
   "small_model": "litellm/unsloth/qwen-3.6",
+  "permission": {
+    "github_*": "allow",
+    "searxng_*": "allow"
+  },
   "compaction": {
     "auto": true,
     "prune": true,

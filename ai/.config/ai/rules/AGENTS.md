@@ -56,7 +56,7 @@ Use clarification-first decomposition with blind-spot discovery, then break work
 ## Rule 12 — Context Boundaries
 
 Use **Explore** for local repository context (SOPs, docs, conventions, relevant files).
-Use **Scout** (`searxng_*`, `webfetch`) for external context only when local context is insufficient.
+When local context is insufficient, **Explore** should use `searxng_*` and `webfetch` for external context gathering.
 
 ## Rule 13 — Dispatcher Item-Cycle Sequence
 
@@ -73,10 +73,11 @@ Execution agents must not bypass dispatcher sequencing.
 Parallel execution is allowed only across independent dispatcher item cycles.
 Each parallel cycle must preserve its internal **Worker → Evaluator** pass-pair sequence.
 
-## Rule 16 — Fixed Exactly-3-Pass Policy
+## Rule 16 — Dispatcher Retry/Pass Policy
 
-Each dispatcher item cycle must execute **exactly 3 Worker → Evaluator passes**.
-This policy is mandatory and non-optional; do not run fewer or more passes.
+Each dispatcher item cycle executes **up to 3 Worker → Evaluator attempts**.
+Stop immediately when Evaluator returns `success`; if Evaluator returns `failed` or `incomplete`, continue to the next attempt until success or attempt 3.
+Do not run a 4th (or more) attempt.
 
 ## Rule 17 — Evaluator Outcome Vocabulary
 

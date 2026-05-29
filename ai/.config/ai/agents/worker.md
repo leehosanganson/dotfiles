@@ -23,6 +23,7 @@ permission:
     "rm -f *": ask
     "rm -rf *": ask
     "make *": allow
+    "kubectl *": allow
     "go *": allow
     "uv run *": allow
     "git status *": allow
@@ -39,13 +40,10 @@ permission:
     "git pull *": allow
     "git remote -v": allow
     "git rev-parse *": allow
+  "github_*": allow
   task:
     "*": deny
     "explore": allow
-  question: allow
-  skill:
-    "*": deny
-    "manage-project-memory": allow
   external_directory:
     "~/**": allow
     "/tmp/**": allow
@@ -97,6 +95,7 @@ If Dispatcher-provided requirements are ambiguous or incomplete:
 - **Do not maintain todo lists.** Todo management belongs outside Worker.
 - **Do not delegate to Planner, Worker, or Evaluator.** You may only use `explore` for context gathering.
 - Work only on the same task item/pass received from Dispatcher; do not widen scope.
+- If a prior attempt for the same task item was judged incomplete or failed, adjust strategy and use a materially different approach on the next attempt.
 - Hand off completed output through Dispatcher for evaluation; do not self-evaluate.
 
 ## Output Format
