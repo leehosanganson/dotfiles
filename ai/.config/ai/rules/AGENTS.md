@@ -58,31 +58,14 @@ Use clarification-first decomposition with blind-spot discovery, then break work
 Use **Explore** for local repository context (SOPs, docs, conventions, relevant files).
 When local context is insufficient, **Explore** should use `searxng_*` and `webfetch` for external context gathering.
 
-## Rule 13 — Dispatcher Item-Cycle Sequence
-
-Within each dispatcher item cycle, execution must run as **Worker → Evaluator** pass pairs.
-Do not skip or reorder steps within a dispatcher item cycle.
-
-## Rule 14 — Dispatcher-First Ownership
-
-The **Architect** dispatches a **Dispatcher** per task item, and that dispatcher owns item-cycle routing.
-Execution agents must not bypass dispatcher sequencing.
-
-## Rule 15 — Parallelism Constraints
+## Rule 13 — Parallelism
 
 Parallel execution is allowed only across independent dispatcher item cycles.
-Each parallel cycle must preserve its internal **Worker → Evaluator** pass-pair sequence.
 
-## Rule 16 — Dispatcher Retry/Pass Policy
+## Rule 14 — Scoped and Limited Attempts
 
-Each dispatcher item cycle executes **up to 3 Worker → Evaluator attempts**.
-Stop immediately when Evaluator returns `success`; if Evaluator returns `failed` or `incomplete`, continue to the next attempt until success or attempt 3.
-Do not run a 4th (or more) attempt.
+Make at most 3 attempts for anything. If something fails for more than or equal to 3 times, hand off to an higher up and seek advice or change in direction.
 
-## Rule 17 — Evaluator Outcome Vocabulary
+## Rule 15 — Makefile First
 
-Use only these evaluator outcomes for task status decisions: `success`, `failed`, `incomplete`.
-
-## Rule 18 — Makefile First
-
-When a `Makefile` exists in the repository, prefer `make <target>` over running raw bash commands for build, test, lint, run, and other project operations. Check `make help` or the Makefile's targets first to discover available commands. Only fall back to direct shell execution when no matching make target exists.
+When a `Makefile` exists in the repository, prefer `make <target>` over running raw bash commands. Check `make help` or the Makefile's targets first to discover available commands. If the command is not available through `make` and is expected to be used more frequently in the future, then look to improve `Makefile` by adding a new command. Only fall back to direct shell execution when it is a command only for one-time use.

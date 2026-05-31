@@ -32,9 +32,6 @@
         "gemini/gemini-3.1-pro": {},
         "openrouter/openrouter/free": {}
       }
-    },
-    "github-copilot": {
-      "name": "GitHub Copilot"
     }
   },
   "mcp": {
