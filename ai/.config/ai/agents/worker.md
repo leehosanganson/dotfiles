@@ -15,7 +15,7 @@ permission:
     "*": deny
     "ssh *": allow
     "mkdir *": allow
-    "mv *": allow
+    "git mv *": allow
     "touch *": allow
     "echo *": allow
     "sed *": allow
