@@ -7,6 +7,7 @@ permission:
   glob: allow
   grep: allow
   bash:
+    "make *": allow
     "git status *": allow
     "git diff *": allow
     "git log *": allow

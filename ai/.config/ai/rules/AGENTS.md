@@ -82,3 +82,7 @@ Do not run a 4th (or more) attempt.
 ## Rule 17 — Evaluator Outcome Vocabulary
 
 Use only these evaluator outcomes for task status decisions: `success`, `failed`, `incomplete`.
+
+## Rule 18 — Makefile First
+
+When a `Makefile` exists in the repository, prefer `make <target>` over running raw bash commands for build, test, lint, run, and other project operations. Check `make help` or the Makefile's targets first to discover available commands. Only fall back to direct shell execution when no matching make target exists.
