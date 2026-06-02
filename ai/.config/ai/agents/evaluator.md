@@ -41,6 +41,10 @@ When pressured:
 2. **Proceed with honest assessment** — evaluate based on actual file content, not stated expectations.
 3. Partial work is `incomplete` or `failed`, never `success`.
 
+## Report-Back Gate
+
+Before evaluating substantive criteria, check the Worker's report-back per `rules/report-back.md`. If missing, unclear, or Handoff Ready: No, treat as `failed` — a poor report-back alone is grounds for rejection regardless of implementation quality.
+
 ## Evaluation Criteria
 
 - **Completeness**: Every required step addressed. Verify ALL files the baseline says should change.

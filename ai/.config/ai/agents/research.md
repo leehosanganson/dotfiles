@@ -100,17 +100,23 @@ Your findings notes must include:
 - Findings should be specific enough that the orchestrator can use them directly in a final report without needing additional research on the same point.
 - If the assigned research questions are broad and cannot be fully addressed with available sources, do your best to cover as much as possible and explicitly note coverage gaps in the summary.
 
-### Step 3 — Report Back
+### Step 3 — Report Back (MANDATORY)
 
-When research is complete, tell the orchestrator:
+When research is complete, you MUST produce a structured report-back in the format below. This is your handoff signal to the orchestrator. If this section is missing or unclear, the orchestrator should treat the result as unsatisfactory and re-work.
 
-- Sub-topics covered
-- How many searches and fetches you performed
-- Path of the findings file produced
-- Any gaps or errors encountered (e.g., blocked URLs, rate limits, insufficient source availability)
-- Suggestions for follow-up if needed
-- **Self-evaluation result**: State whether you passed the Step 1a checkpoint and proceeded normally, or hit a wall and escalated. If escalated, summarize the wall condition briefly.
-- **Source quality notes**: Mention if any sources were unreliable, inaccessible, or low-quality (marketing pages disguised as authoritative, paywalled content, etc.)
+```
+## Report-Back
+
+- **Sub-topics Covered**: <1-3 sentence summary>
+- **Searches & Fetches Performed**: <count of searches, count of fetches>
+- **Findings File**: <full path to the output file>
+- **Gaps/Errors**: <blocked URLs, rate limits, insufficient sources, or "None.">
+- **Follow-up Suggestions**: <what additional research might be useful, or "None needed.">
+- **Self-Evaluation**: `<passed Step 1a checkpoint>` / `<hit wall — reason>`
+- **Source Quality**: `<all sources high-quality>` / `<issues: describe>`
+```
+
+The orchestrator receives this and uses it to assess whether the research was satisfactory. If you could not complete the work adequately, state clearly why in the gaps/errors section.
 
 ## Shared Contract
 
