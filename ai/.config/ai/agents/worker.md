@@ -1,7 +1,7 @@
 ---
 description: Implements exactly one Dispatcher-invoked pass for a single task item, using optional Planner context when provided, then hands off pass output via Dispatcher.
 mode: subagent
-steps: 50
+steps: 100
 permission:
   "*": deny
   "which *": allow
