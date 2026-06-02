@@ -51,6 +51,5 @@
         "SEARXNG_URL": "https://searxng.homelab.leehosanganson.dev"
       }
     }
-  },
-  "plugin": ["@slkiser/opencode-quota"]
+  }
 }

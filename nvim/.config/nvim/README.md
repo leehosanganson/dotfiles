@@ -16,7 +16,7 @@ nvim/
         ├── lsp.lua           # Native LSP setup (filetype, servers, keymaps, diagnostics)
         ├── statusline.lua    # lualine
         ├── editor.lua        # treesitter, indent-blankline, lazydev
-        ├── completion.lua    # blink.cmp, blink.lib, copilot.lua, minuet-ai.nvim
+        ├── completion.lua    # blink.cmp, blink.lib, minuet-ai.nvim
         ├── telescope.lua     # telescope + fzf-native
         ├── git.lua           # gitsigns, lazygit
         ├── tools.lua         # oil, vim-tmux-navigator, conform, nvim-lint, schemastore
@@ -53,7 +53,7 @@ nvim/
 | `]d`         | n    | Next diagnostic                  |
 | `<leader>e`  | n    | Show diagnostic float            |
 | `<leader>tw` | n    | Toggle line wrap                 |
-| `<leader>ai` | n    | Toggle AI ghost text             |
+
 | `<leader>/`  | n    | Toggle comment (gcc)             |
 | `<leader>/`  | v    | Toggle comment (gc)              |
 | `<leader>lv` | n    | Manual Zathura PDF preview       |
@@ -145,27 +145,7 @@ nvim/
 | `<leader>gr` | n    | Reset hunk    |
 | `<leader>gb` | n    | Blame line    |
 
----
 
-## AI Suggestions & Completion
-
-### blink.cmp + Copilot + Minuet
-
-Ghost text (inline preview) is **disabled** in blink.cmp — Copilot renders inline suggestions natively. Minuet provides AI-powered virtual text completions.
-
-| Key     | Mode | Description                                           |
-| ------- | ---- | ----------------------------------------------------- |
-| `<C-y>` | i    | Accept blink selection, Copilot, or Minuet suggestion |
-| `<Tab>` | i    | Accept completion item (via blink.cmp default preset) |
-| `<CR>`  | i    | Confirm selection                                     |
-| `<C-j>` | i    | Trigger completion menu                               |
-| `<C-e>` | i    | Cancel / close menu                                   |
-| `<C-n>` | i    | Navigate to next item                                 |
-| `<C-p>` | i    | Navigate to previous item                             |
-
-> **Note:** Use `<leader>ai` in normal mode to toggle all AI ghost text (Copilot inline + Minuet virtual text) with a confirmation notification.
-
----
 
 ## Plugins
 
@@ -184,7 +164,6 @@ Ghost text (inline preview) is **disabled** in blink.cmp — Copilot renders inl
 | [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)                             | Fast and configurable statusline                     |
 | [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)                                 | Lua utility library (required by Telescope, LazyGit) |
 | [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons)                      | File type icons (used by Oil, lualine)               |
-| [copilot.lua](https://github.com/zbirenbaum/copilot.lua)                                 | GitHub Copilot client (headless, blink-managed)      |
 | [minuet-ai.nvim](https://github.com/milanglacier/minuet-ai.nvim)                         | AI virtual text completions via LiteLLM              |
 | [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)          | Indentation guide lines                              |
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)                              | Git change indicators in the sign column             |
