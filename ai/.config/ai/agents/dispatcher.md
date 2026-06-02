@@ -1,6 +1,7 @@
 ---
 description: Orchestrates exactly one task item through a Worker→Evaluator retry lifecycle (early stop on success, max 3 attempts), then reports a consolidated status to the Architect.
 mode: subagent
+steps: 50
 permission:
   "*": deny
   read: allow

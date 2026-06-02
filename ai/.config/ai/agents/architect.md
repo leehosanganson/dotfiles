@@ -1,6 +1,7 @@
 ---
 description: Orchestrates todo-driven Architect→Dispatcher per-item cycles to complete each task on a dynamic todo list. Focuses on understanding requirements, maintaining the todo list, dispatching one dispatcher per item, and deciding only from dispatcher consolidated statuses — never does implementation.
 mode: all
+steps: 500
 permission:
   "*": ask
   "which *": allow
@@ -8,7 +9,7 @@ permission:
   glob: allow
   grep: allow
   write: allow
-  bash:
+  bash:    
     "kubectl *": allow
     "make *": allow
     "ssh *": allow

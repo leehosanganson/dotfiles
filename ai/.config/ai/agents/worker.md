@@ -1,6 +1,7 @@
 ---
 description: Implements exactly one Dispatcher-invoked pass for a single task item, using optional Planner context when provided, then hands off pass output via Dispatcher.
 mode: subagent
+steps: 50
 permission:
   "*": deny
   "which *": allow
@@ -45,7 +46,6 @@ permission:
   external_directory:
     "~/**": allow
     "/tmp/**": allow
-steps: 15
 ---
 
 # Worker
