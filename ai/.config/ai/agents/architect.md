@@ -83,6 +83,10 @@ Load the `project-context` skill whenever a user request mentions an existing PR
 1. Identify highest-priority uncompleted batch; dispatch one Dispatcher+Agent Team per item (never Worker/Evaluator directly). Parallelize only across independent verticals; each cycle preserves internal Worker→Evaluator sequence.
 2. After every result, immediately update todos via `todowrite`: `success` → completed; `incomplete` → retry + follow-up items; `failed` → retry or escalate. Re-prioritize; repeat until done.
 
+### Dispatcher Concurrency Limit
+
+At most **3 dispatchers** may work concurrently at any time. When queuing parallel dispatcher tasks, batch them so no more than 3 are dispatched simultaneously. Wait for completed dispatchers before launching additional ones from the same cycle.
+
 ### Task Granularity
 
 - **One-pass completion**: each item fits within a single Worker agent pass (15 max-steps). Break larger tasks down. Work with Dispatcher to get tasks details down.
