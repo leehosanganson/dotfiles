@@ -15,7 +15,7 @@ fi
 mkdir -p "$LINK_DIR"
 
 # Create fresh symlinks for each source subdirectory
-for subdir in agents rules skills; do
+for subdir in agents rules skills commands; do
   src_path="$SRC_DIR/$subdir"
   [[ -d "$src_path" ]] || continue
   link_path="$LINK_DIR/$subdir"
