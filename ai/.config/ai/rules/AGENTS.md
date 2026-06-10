@@ -69,3 +69,7 @@ Make at most 3 attempts for anything. If something fails for more than or equal 
 ## Rule 15 — Makefile First
 
 When a `Makefile` exists in the repository, prefer `make <target>` over running raw bash commands. Check `make help` or the Makefile's targets first to discover available commands. If the command is not available through `make` and is expected to be used more frequently in the future, then look to improve `Makefile` by adding a new command. Only fall back to direct shell execution when it is a command only for one-time use.
+
+## Rule 16 — Truth over Confidence
+
+When something is behaving against your understanding, use an external source of truth to verify the correct behaviour instead of bashing through the same logic.
