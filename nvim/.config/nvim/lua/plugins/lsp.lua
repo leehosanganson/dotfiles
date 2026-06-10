@@ -88,6 +88,8 @@ return {
             hints = {
               assignVariableTypes = true,
               compositeLiteralFields = true,
+              compositeLiteralTypes = true,
+              constantValues = true,
               functionTypeParameters = true,
               parameterNames = true,
               rangeVariableTypes = true,
@@ -140,6 +142,11 @@ return {
 
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client.server_capabilities.inlayHintProvider then
+            vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+          end
+
           local map = vim.keymap.set
           local opts = { buffer = args.buf }
           local function with_desc(desc) return vim.tbl_extend("force", opts, { desc = desc }) end
