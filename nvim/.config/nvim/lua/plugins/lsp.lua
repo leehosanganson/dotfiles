@@ -138,7 +138,13 @@ return {
         end,
       })
 
-      vim.lsp.enable { "lua_ls", "nixd", "yamlls", "helm_ls", "jsonls", "gopls", "ts_ls" }
+      vim.lsp.config("pyright", {
+        cmd = { "pyright", "--stdio" },
+        filetypes = { "python" },
+        root_markers = { "pyproject.toml", "setup.cfg", "pyrightconfig.json", ".git" },
+      })
+
+      vim.lsp.enable { "lua_ls", "nixd", "yamlls", "helm_ls", "jsonls", "gopls", "ts_ls", "pyright" }
 
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)

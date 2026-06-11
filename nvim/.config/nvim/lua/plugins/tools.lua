@@ -31,6 +31,7 @@ return {
         go = { "gofmt" },
         javascriptreact = { "prettierd" },
         typescriptreact = { "prettierd" },
+        python = { "ruff" },
       },
     },
   },
@@ -47,6 +48,7 @@ return {
         typescript = { "eslint_d" },
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
+        python = { "ruff", "mypy" },
       }
       vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
         callback = function()
