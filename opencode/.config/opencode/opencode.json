@@ -9,6 +9,7 @@
   "model": "litellm/unsloth/qwen-3.6",
   "small_model": "litellm/unsloth/qwen-3.6",
   "permission": {
+    "skill": "allow",
     "github_*": "allow",
     "searxng_*": "allow"
   },

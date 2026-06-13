@@ -39,10 +39,6 @@ permission:
     "gh *": allow
     "git reset --hard*": deny
     "git rebase *": deny
-  task:
-    "*": deny
-    "explore": allow
-    "dispatcher": allow
   skill:
     "*": deny
     "project-context": allow
