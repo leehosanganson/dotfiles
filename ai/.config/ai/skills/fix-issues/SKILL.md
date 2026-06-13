@@ -1,5 +1,7 @@
 ---
-description: Review ./docs/to-fix.md and implement fixes until they are addressed.
+name: fix-issues
+description: >-
+  Review ./docs/to-fix.md and implement fixes until they are addressed to a professional level. Use whenever you need to resolve documented code issues from a review. Loads on-demand during fix cycles.
 ---
 
 Review the [./docs/to-fix.md] and implement fixes until the issues are addressed to a professional level.
