@@ -40,9 +40,6 @@ permission:
     "git remote -v": allow
     "git rev-parse *": allow
   "github_*": allow
-  task:
-    "*": deny
-    "explore": allow
   external_directory:
     "~/**": allow
     "/tmp/**": allow
