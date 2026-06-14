@@ -7,7 +7,6 @@ permission:
   read: allow
   glob: allow
   grep: allow
-  question: allow
   task:
     "*": deny
     "worker": allow
