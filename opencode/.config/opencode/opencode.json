@@ -25,7 +25,8 @@
       "options": {
         "baseURL": "https://litellm.homelab.leehosanganson.dev",
         "apiKey": "{file:~/.config/sops-nix/secrets/litellm-api-key}",
-        "timeout": false,
+        "timeout": 600000,
+        "chunkTimeout": 60000,
         "setCacheKey": true
       },
       "models": {
