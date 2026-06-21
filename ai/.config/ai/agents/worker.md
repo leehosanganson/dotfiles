@@ -25,6 +25,7 @@ permission:
     "kubectl *": allow
     "go *": allow
     "uv run *": allow
+    "docker *": allow
     "git status *": allow
     "git log *": allow
     "git diff *": allow

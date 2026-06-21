@@ -16,6 +16,7 @@ permission:
     "ssh *": allow
     "uv run *": allow
     "go *": allow
+    "docker *": allow
     "xargs *": allow
     "sort *": allow
     "git status *": allow
@@ -108,20 +109,34 @@ Evaluator should validates these gates as well. A pass with insufficient or miss
 
 ## Output Format (MANDATORY)
 
-After all task items are completed, report back to Architect in this exact format:
+Report format for caller at the end of the iteration.
 
 ```
-## Task Completed
+## Dispatcher Report
 
-### What was done
-<Summary from Worker/Evaluator cycles across all task items>
+### Task Item
+
+<one-sentence restatement>
 
 ### Pass Reports
-- <Task 1>: <success|failed|incomplete> (attempts: N)
-- <Task 2>: <success|failed|incomplete> (attempts: N)
 
-### Files Changed
-- <file path>
+<Executed pass blocks only, in order>
+
+### Final Consolidated Status
+
+**success|failed|incomplete**
+
+### Consolidation Trace
+
+- Attempts executed: <1|2|3>
+- Pass outcomes: [<p1>[, <p2>[, <p3>]]]
+- Stop reason: <success-on-pass-N | max-attempts-reached>
+- Rule applied: <early-success | final-outcome-at-attempt-3>
+
+### Architect Handoff
+
+- Status: <success|failed|incomplete>
+- Minimum Next Action: <required on failed/incomplete; else "None.">
 ```
 
 If any item remains `failed` due to a blocker, present the report and request clarification.

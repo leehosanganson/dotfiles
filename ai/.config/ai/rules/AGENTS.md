@@ -60,7 +60,7 @@ When local context is insufficient, **Explore** should use `searxng_*` and `webf
 
 ## Rule 13 — Parallelism
 
-Parallel execution is allowed only across independent dispatcher item cycles.
+Parallel execution by spawning multiple sub agents at the same time.
 
 ## Rule 14 — Scoped and Limited Attempts
 
