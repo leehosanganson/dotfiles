@@ -5,7 +5,7 @@
     "rules/bash-tool-usage.md",
     "rules/report-back.md"
   ],
-  "default_agent": "architect",
+  "default_agent": "main",
   "model": "litellm/unsloth/qwen-3.6",
   "small_model": "litellm/unsloth/qwen-3.6",
   "permission": {
