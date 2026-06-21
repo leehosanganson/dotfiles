@@ -9,7 +9,7 @@ This directory holds shared agents, commands, skills, and rules that feed into [
 | Feature | Purpose          | When to Use                     | Directory                             |
 | ------- | ---------------- | ------------------------------- | ------------------------------------- |
 | Rules   | AGENTS.md        | Applicable to all contexts      | `~/.config/opencode/rules/`           |
-| Agent   | Unified entry    | Single user-facing agent        | `~/.config/opencode/agents/main.md`   |
+| Agent   | Domain entry     | Switch between 3 primary agents | `~/.config/opencode/agents/{name}.md` |
 | Command | Specified prompt | Executing specific operations   | `~/.config/opencode/commands/`        |
 | Skill   | Domain container | Load on-demand capabilities     | `~/.config/opencode/skills/{Domain}/` |
 | Tools   | CLI commands     | Automating repetitive tasks     | `~/.config/opencode/tools/`           |
@@ -18,45 +18,31 @@ This directory holds shared agents, commands, skills, and rules that feed into [
 
 ## Usage
 
-### Workflow — Single Entry Point
+### Workflow — 3 Primary Agents
 
-You interact with **Main** (`agents/main.md`) as your sole entry point. Main receives your goals, classifies each task by domain (coding, research, content), dispatches the appropriate team lead, and maintains a unified todo list across all domains. Independent tasks are dispatched concurrently; dependent tasks run sequentially. You never interact with sub-agents directly.
+You switch directly between **three primary agents**, each handling a distinct domain. You decide which agent to invoke based on your current goal:
 
-#### Agent Teams
+#### Agent Overview
 
-- Coding Team (`Architect` leads `Worker`s + `Evaluator`s)
-- Research Team (`DeepResearcher` leads `Researcher`s)
-- Content Creation Team (`ContentCreator` leads `BlogWriter`s and `PostWriter`s)
+| Agent              | Domain   | Responsibility                                     |
+| ------------------ | -------- | -------------------------------------------------- |
+| **Architect**      | Coding   | Manages Worker→Evaluator cycles for code tasks     |
+| **ContentCreator** | Content  | Orchestrates post-writer and blog-writer pipelines |
+| **DeepResearcher** | Research | Directs Research sub-agents and compiles findings  |
 
-#### Role of Main and Team Leads
+Each agent accepts goals directly from you, decomposes them into manageable tasks, dispatches sub-agents, and reports back outcomes. You interact with each agent independently — no classifier or router sits between you and the agents.
 
-Main works with Team Leads — `Architect`, `DeepResearcher`, and `ContentCreator` — to maintain a unified To Do List. The list is directed between Main and the User. Each Team Lead dispatches its own Team Members to complete Task items. Main and all Team Leads can use `Explore` to gain context about repositories both locally and externally via tools such as `Grep`, `searxng_*`, and `webfetch`.
+#### Architect (Coding)
 
-Main works with the User to create a general direction of what needs to be done by asking targeted questions and surfacing constraints/unknowns before planning. Team Leads receive task scope from Main, decompose into medium-sized tasks where each is discrete, trackable, and non-trivial, and then orchestrate the work cycle with their own respective team members.
+Manages coding tasks by breaking goals into discrete task items, dispatching teams of Worker and Evaluator to implement changes and verify correctness. Each task can allow retry of max 3 attempts, validates Definition of Done gates, and decides from Evaluator outcomes whether iterations are needed. Sub-agents: `Worker`, `Evaluator`.
 
-- `Architect` leads `Worker`s and `Evaluator`s to make sure tasks are completed up to specifications and standards. Orchestrates retry cycles (max 3 attempts per item), validates report-backs and Definition of Done gates, and decides from Evaluator outcomes whether iterations are needed.
+#### ContentCreator (Content)
 
-- `DeepResearcher` leads `Researcher`s to gather information from multiple sources, synthesize findings, and verify accuracy. Gives instructions to Researchers to investigate specific areas, then compiles a comprehensive report for Main and the User.
+Receives topics or drafts, analyzes publication strategy, orchestrates publishing pipelines to `post-writer` and `blog-writer` sub-agents. Handles dual-publishing (Medium + LinkedIn), filename coordination, context assembly, and quality verification. You approve the publishing plan before any writing begins.
 
-- `ContentCreator` leads `BlogWriter`s and `PostWriter`s to generate engaging content. Gives instructions to writers to create drafts, then reviews them for tone, style, and accuracy before finalizing.
+#### DeepResearcher (Research)
 
-Each Team Lead can initiate multiple Team Members as sub-agents in parallel to execute tasks by dispatching them simultaneously. This allows for efficient parallel processing and reduces the overall time to complete complex tasks.
-
-#### Role of Each Team Member
-
-Coding Team
-
-- `Worker`: Executes changes and operations via code and commands.
-- `Evaluator`: Evaluates the current state against the desired state from the Architect by reporting `success` / `failed` / `incomplete`. Evaluation is required for Architect to report back to Main.
-
-Research Team
-
-- `Researcher`: Gathers information externally via web search tools and dynamically finds relevant information according to instructions.
-
-Content Creation Team
-
-- `BlogWriter`: Creates long-form, in-depth articles. Focuses on structure, flow, and depth of information.
-- `PostWriter`: Creates short-form, concise posts for social media or quick updates. Focuses on brevity, impact, and engagement.
+Takes research goals and produces comprehensive HTML reports by dynamically directing Research sub-agents across parallel batches with dynamic reprioritization. Creates isolated session directories, conducts multi-dimensional quality review of findings, spot-checks source URLs, and compiles synthesized reports using the `write-report` skill. Sub-agent: `Research`.
 
 ### Using Rules (AGENTS.md)
 
