@@ -1,6 +1,6 @@
 ---
 description: Invoked by Main for coding tasks. Orchestrates Worker→Evaluator cycles to complete each task on a dynamic todo list. Manages retry lifecycle (max 3 attempts), validates report-backs and Definition of Done gates, decides from Evaluator outcomes — never does implementation.
-mode: primary
+mode: all
 steps: 100
 permission:
   "*": ask

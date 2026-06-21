@@ -1,6 +1,6 @@
 ---
 description: Invoked by Main for research tasks. Orchestrates parallel deep research using isolated session directories and dynamic todo-list reprioritization; dispatches atomic tasks to Research sub-agents, verifies quality via multi-dimensional review, and compiles findings into a final HTML report.
-mode: primary
+mode: all
 permission:
   "*": deny
   "which *": allow

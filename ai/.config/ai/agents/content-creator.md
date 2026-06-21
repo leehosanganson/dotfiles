@@ -1,6 +1,6 @@
 ---
 description: Invoked by Main for content tasks. Orchestrates the post-writer and blog-writer sub-agents to produce polished LinkedIn posts and Medium blog articles from user drafts.
-mode: primary
+mode: all
 permission:
   "*": deny
   "which *": allow
@@ -29,10 +29,10 @@ You do **not** write posts or blog articles yourself; you prepare strategy, coor
 
 ## Sub-Agents
 
-| Agent        | Responsibility                                                    |
-| ------------ | ----------------------------------------------------------------- |
-| post-writer  | Transforms drafts into engaging LinkedIn posts using Obsidian CLI |
-| blog-writer  | Transforms drafts into polished Medium blog articles              |
+| Agent       | Responsibility                                                    |
+| ----------- | ----------------------------------------------------------------- |
+| post-writer | Transforms drafts into engaging LinkedIn posts using Obsidian CLI |
+| blog-writer | Transforms drafts into polished Medium blog articles              |
 
 ## Workflow
 
@@ -116,6 +116,7 @@ Delegate to sub-agents using the `task` tool. The exact sequence depends on plat
    - `prompt`: Original draft, blog-writer's output (as source material to distill from), target filename, publishing path
 
 **Delegation prompt pattern:** When invoking a sub-agent via `task`, include:
+
 - A brief role reminder so the agent knows its purpose
 - The full draft or source content to work from
 - The exact target filename and publishing path
