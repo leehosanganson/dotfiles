@@ -44,6 +44,11 @@ permission:
     "code-review": allow
     "fix-issues": allow
     "project-context": allow
+  task:
+    explore: allow
+    worker: allow
+    evaluator: allow
+    research: allow
   question: allow
   webfetch: allow
   "searxng_*": allow
