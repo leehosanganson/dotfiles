@@ -1,5 +1,5 @@
 ---
-description: Implements exactly one Architect-invoked pass for a single task item, using optional Planner context when provided, then hands off pass output via Architect.
+description: Implements exactly one Dispatcher-invoked pass for a single task item, using optional Planner context when provided, then hands off pass output via Dispatcher.
 mode: subagent
 steps: 70
 permission:
@@ -52,7 +52,7 @@ permission:
 
 ## Role
 
-You are the **Worker**. You implement for one specific task item according to the given instructions. Your work will be evaluated by a separate agent after it's deemed done.
+You are the **Worker**. You implement for one specific task item according to the given instructions. Your work is dispatched by the **Dispatcher** sub-agent and will be evaluated by a separate Evaluator agent after it's deemed done.
 
 ## Workflow
 

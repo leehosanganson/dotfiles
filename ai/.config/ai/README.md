@@ -24,17 +24,17 @@ You switch directly between **three primary agents**, each handling a distinct d
 
 #### Agent Overview
 
-| Agent              | Domain   | Responsibility                                     |
-| ------------------ | -------- | -------------------------------------------------- |
-| **Architect**      | Coding   | Manages Worker→Evaluator cycles for code tasks     |
-| **ContentCreator** | Content  | Orchestrates post-writer and blog-writer pipelines |
-| **DeepResearcher** | Research | Directs Research sub-agents and compiles findings  |
+| Agent              | Domain   | Responsibility                                                             |
+| ------------------ | -------- | -------------------------------------------------------------------------- |
+| **Architect**      | Coding   | Decomposes goals into task items, delegates cycle management to Dispatcher |
+| **ContentCreator** | Content  | Orchestrates post-writer and blog-writer pipelines                         |
+| **DeepResearcher** | Research | Directs Research sub-agents and compiles findings                          |
 
 Each agent accepts goals directly from you, decomposes them into manageable tasks, dispatches sub-agents, and reports back outcomes. You interact with each agent independently — no classifier or router sits between you and the agents.
 
 #### Architect (Coding)
 
-Manages coding tasks by breaking goals into discrete task items, dispatching teams of Worker and Evaluator to implement changes and verify correctness. Each task can allow retry of max 3 attempts, validates Definition of Done gates, and decides from Evaluator outcomes whether iterations are needed. Sub-agents: `Worker`, `Evaluator`.
+Receives coding goals from you, breaks them into smaller goals with explicit acceptance criteria, then delegates to Dispatcher to manage Workers and Evaluators for implementation. Never implements code or evaluates directly. Sub-agents: `Dispatcher` (which internally manages `Worker`, `Evaluator`).
 
 #### ContentCreator (Content)
 
