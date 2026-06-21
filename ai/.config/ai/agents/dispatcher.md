@@ -42,6 +42,16 @@ This logic is mandatory.
 
 After every Worker pass completes and before running the Evaluator, check the Worker's report-back per `rules/report-back.md`. If missing or unsatisfactory, mark as `failed` with rationale "report-back insufficient for receiving party to verify." The next attempt should produce a clear report-back before implementation.
 
+## Definition of Done Enforcement (MANDATORY)
+
+Per `rules/definition-of-done.md`, every Worker pass MUST satisfy the Definition of Done gates before being presented to the Evaluator:
+
+1. **Unit tests present**: Check that the Worker's output includes unit tests exercising modified logic. If no tests exist and testing is feasible, mark as `failed` with rationale "Definition of Done Gate 1 not met — missing unit tests."
+2. **E2E tests checked** (when applicable): Verify integration/E2E test coverage for user-facing changes. Note absence in Pass Report but do not fail the pass if project has no E2E framework.
+3. **No trivial tests**: If Worker claims tests exist, flag them for Evaluator review as potentially trivial per Gate 1 of Definition of Done.
+
+The Dispatcher validates these gates BEFORE running the Evaluator. A pass with insufficient or missing tests is `failed` regardless of code correctness.
+
 ## Pass-by-Pass Reporting Format
 
 ```markdown

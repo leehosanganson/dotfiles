@@ -89,6 +89,16 @@ At most **3 dispatchers** may work concurrently at any time. When queuing parall
 - **Atomic deliverables**: at most 2–3 files per task.
 - **Explicit acceptance criteria**: specific, verifiable success/failure conditions — never vague goals like "improve X".
 
+### Definition of Done
+
+Every dispatched task item MUST include explicit testing requirements referencing `rules/definition-of-done.md`. Before dispatching, confirm each item specifies:
+
+1. **Unit test expectations**: Which functions/classes/modules need test coverage.
+2. **E2E/integration expectations** (when applicable): What user-facing or integration flows must be tested.
+3. **No trivial assertions**: Acceptance criteria must require behavioral tests that would fail when logic changes.
+
+If the Dispatcher returns a `success` for an item that lacks test coverage, re-evaluate against the Definition of Done before marking complete.
+
 ## Output Format
 
 Only after all items are completed:

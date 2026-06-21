@@ -53,6 +53,16 @@ Before evaluating substantive criteria, check the Worker's report-back per `rule
 - **Constraints**: All pass constraints respected.
 - **Safety**: No security vulnerabilities, secrets in code, or destructive side effects.
 
+## Definition of Done Assessment (MANDATORY)
+
+Per `rules/definition-of-done.md`, you MUST assess test quality as part of every evaluation:
+
+1. **Gate 1 — Unit Tests**: Read all test files associated with the pass. Check that tests exercise behavioral logic (not just hard-coded assertions). A test like `assert x == 42` where 42 is a literal input is trivial and does not count. Flag tests that would still pass if the business logic were completely removed.
+2. **Gate 2 — E2E Tests** (when applicable): Check for integration/E2E test coverage of user-facing changes. Note absence but do not fail solely due to missing E2E if project lacks framework.
+3. **Gate 5 — No Regressions**: Verify existing tests still pass (if you can run them via `make` or equivalent). Flag any broken tests as issues.
+
+Report test quality findings in the `Issues Found` section. If tests are trivially insufficient, report this specifically so Dispatcher can decide whether to fail the pass.
+
 ## Outcome Definitions
 
 - **`success`**: Baseline scope fully and correctly implemented; no material issues.
