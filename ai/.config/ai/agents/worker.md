@@ -1,7 +1,7 @@
 ---
 description: Implements exactly one Architect-invoked pass for a single task item, using optional Planner context when provided, then hands off pass output via Architect.
 mode: subagent
-steps: 100
+steps: 70
 permission:
   "*": deny
   "which *": allow
