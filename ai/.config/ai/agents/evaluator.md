@@ -43,7 +43,7 @@ When pressured:
 
 ## Report-Back Gate
 
-Before evaluating substantive criteria, check the Worker's report-back per `rules/report-back.md`. If missing, unclear, or Handoff Ready: No, treat as `failed` — a poor report-back alone is grounds for rejection regardless of implementation quality.
+Before evaluating substantive criteria, check the Worker's report-back. It MUST include: Completed summary (1–3 sentences), Files Changed list, Scope Status (`fully completed` / `partially done — what remains: X` / `blocked — reason`), Handoff Ready (Yes/No). If missing, unclear, or Handoff Ready: No, treat as `failed`.
 
 ## Evaluation Criteria
 
@@ -55,11 +55,11 @@ Before evaluating substantive criteria, check the Worker's report-back per `rule
 
 ## Definition of Done Assessment (MANDATORY)
 
-Per `rules/definition-of-done.md`, you MUST assess test quality as part of every evaluation:
+You MUST assess test quality as part of every evaluation:
 
-1. **Gate 1 — Unit Tests**: Read all test files associated with the pass. Check that tests exercise behavioral logic (not just hard-coded assertions). A test like `assert x == 42` where 42 is a literal input is trivial and does not count. Flag tests that would still pass if the business logic were completely removed.
-2. **Gate 2 — E2E Tests** (when applicable): Check for integration/E2E test coverage of user-facing changes. Note absence but do not fail solely due to missing E2E if project lacks framework.
-3. **Gate 5 — No Regressions**: Verify existing tests still pass (if you can run them via `make` or equivalent). Flag any broken tests as issues.
+1. **Unit Tests**: Read all test files associated with the pass. Check that tests exercise behavioral logic (not just hard-coded assertions). A test like `assert x == 42` where 42 is a literal input is trivial and does not count. Flag tests that would still pass if business logic were removed.
+2. **E2E Tests** (when applicable): Check for integration/E2E test coverage of user-facing changes. Note absence but do not fail solely due to missing E2E if project lacks framework.
+3. **No Regressions**: Verify existing tests still pass (if you can run them via `make` or equivalent). Flag any broken tests as issues.
 
 Report test quality findings in the `Issues Found` section. If tests are trivially insufficient, report this specifically so Architect can decide whether to fail the pass.
 

@@ -83,15 +83,15 @@ This logic is mandatory.
 
 ## Report-Back Validation
 
-After every Worker pass completes and before running the Evaluator, check the Worker's report-back per `rules/report-back.md`. If missing or unsatisfactory, treat as `failed` with rationale "report-back insufficient for receiving party to verify." The next attempt should produce a clear report-back before implementation.
+After every Worker pass completes and before running the Evaluator, check the Worker's report-back. It MUST include: Completed summary (1–3 sentences), Files Changed list, Scope Status (`fully completed` / `partially done — what remains: X` / `blocked — reason`), Handoff Ready (Yes/No). If missing or unsatisfactory, treat as `failed` with rationale "report-back insufficient for receiving party to verify." The next attempt should produce a clear report-back before implementation.
 
 ## Definition of Done Enforcement (MANDATORY)
 
-Per `rules/definition-of-done.md`, every Worker pass MUST satisfy the Definition of Done gates before being presented to the Evaluator:
+Every Worker pass MUST satisfy all gates before being presented to the Evaluator:
 
-1. **Unit tests present**: Check that the Worker's output includes unit tests exercising modified logic. If no tests exist and testing is feasible, mark as `failed` with rationale "Definition of Done Gate 1 not met — missing unit tests."
+1. **Unit tests present**: Check the Worker's output includes unit tests exercising modified logic. If no tests exist and testing is feasible, mark as `failed` with rationale "Definition of Done Gate 1 not met — missing unit tests."
 2. **E2E tests checked** (when applicable): Verify integration/E2E test coverage for user-facing changes. Note absence but do not fail the pass if project has no E2E framework.
-3. **No trivial tests**: If Worker claims tests exist, flag them for Evaluator review as potentially trivial per Gate 1 of Definition of Done.
+3. **No trivial tests**: If Worker claims tests exist, flag them for Evaluator review as potentially trivial — a test like `assert x == 42` where 42 is a literal input does not count.
 
 You validate these gates BEFORE running the Evaluator. A pass with insufficient or missing tests is `failed` regardless of code correctness.
 
@@ -103,13 +103,13 @@ You validate these gates BEFORE running the Evaluator. A pass with insufficient 
 
 ## Definition of Done (Per-Item)
 
-Every dispatched task item MUST include explicit testing requirements referencing `rules/definition-of-done.md`. Before dispatching, confirm each item specifies:
+Every dispatched task item MUST include explicit testing requirements. Before dispatching, confirm each item specifies:
 
 1. **Unit test expectations**: Which functions/classes/modules need test coverage.
 2. **E2E/integration expectations** (when applicable): What user-facing or integration flows must be tested.
 3. **No trivial assertions**: Acceptance criteria must require behavioral tests that would fail when logic changes.
 
-If the Evaluator returns a `success` for an item that lacks test coverage, re-evaluate against the Definition of Done before marking complete.
+If the Evaluator returns `success` for an item lacking test coverage, re-evaluate against Definition of Done before marking complete.
 
 ## Output Format
 

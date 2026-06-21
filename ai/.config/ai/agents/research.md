@@ -76,7 +76,7 @@ When you stop due to hitting a wall, report back to the orchestrator with:
 - The specific wall condition detected (use the checklist items above)
 - Any partial findings that ARE reliable (these can still be included in the output file if they meet quality standards)
 
-**Important:** If you have some reliable findings despite hitting a wall on other aspects, write what YOU CAN verify into the output file with `status: partial` and include a note about what couldn't be researched. Do not fabricate or guess — only write substantiated content. For the full escalation format (YAML frontmatter, checklist addressing, orchestrator re-scoping), see [Shared Contract — Escalation Protocol](./shared/research-contract.md#2-escalation-protocol).
+**Important:** If you have some reliable findings despite hitting a wall on other aspects, write what YOU CAN verify into the output file with `status: partial` and include a note about what couldn't be researched. Do not fabricate or guess — only write substantiated content. For full escalation format (YAML frontmatter, checklist addressing, orchestrator re-scoping), see shared contract.
 
 ### Step 2 — Write Findings Notes
 
@@ -120,11 +120,7 @@ The orchestrator receives this and uses it to assess whether the research was sa
 
 ## Shared Contract
 
-All session directory, escalation protocol, and output contract rules are defined in the [Shared Agent Contract](./shared/research-contract.md). Key references:
-
-- **Session Directory Rules** — Path validation (`~/Documents/research/`), orchestrator-created directories only
-- **Escalation Protocol** — YAML frontmatter status, checklist addressing, orchestrator re-scoping
-- **Output Contract** — Required sections (Summary, Key Findings, Sources), `--target` flag, citation syntax
+All session directory, escalation protocol, and output contract rules are defined in the Shared Agent Contract (`agents/shared/research-contract.md`). Key references: Session Directory Rules (path validation, orchestrator-created directories only), Escalation Protocol (YAML frontmatter status, checklist addressing, orchestrator re-scoping), Output Contract (required sections: Summary, Key Findings, Sources; `--target` flag; citation syntax).
 
 ## Constraints
 
