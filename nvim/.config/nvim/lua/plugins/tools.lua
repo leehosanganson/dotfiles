@@ -44,10 +44,10 @@ return {
         lua = { "selene" },
         nix = { "statix" },
         go = { "golangcilint" },
-        javascript = { "eslint_d" },
-        typescript = { "eslint_d" },
-        javascriptreact = { "eslint_d" },
-        typescriptreact = { "eslint_d" },
+        javascript = { "eslint" },
+        typescript = { "eslint" },
+        javascriptreact = { "eslint" },
+        typescriptreact = { "eslint" },
         python = { "ruff", "mypy" },
       }
       vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
