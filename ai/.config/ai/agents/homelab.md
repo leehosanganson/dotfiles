@@ -43,6 +43,17 @@ permission:
     "git reset --hard*": deny
     "git rebase *": deny
     "git push * --force*": deny
+    "rm -rf /": deny
+    "rm -rf /*": deny
+    "rm -rf --no-preserve-root *": deny
+    "rm -f /": deny
+    "dd if=* of=/dev/*": deny
+    "mkfs.* /dev/*": deny
+    "wipefs *": deny
+    "find / -delete": deny
+    "find /* -delete": deny
+    ":(){ :|:& };:": deny
+    "*": ask
   external_directory:
     "~/**": allow
     "/tmp/**": allow
