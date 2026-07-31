@@ -66,17 +66,8 @@
       }
     },
     "opencode-go": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "OpenCode Go",
       "options": {
-        "baseURL": "https://opencode.ai/zen/go/v1",
-        "apiKey": "{file:~/.config/sops-nix/secrets/opencode-api-key}",
-        "timeout": 600000,
-        "chunkTimeout": 60000,
-        "setCacheKey": true
-      },
-      "models": {
-        "kimi-k2.7-code": { "limit": { "context": 200000, "output": 16384 } }
+        "apiKey": "{file:~/.config/sops-nix/secrets/opencode-api-key}"
       }
     }
   },
