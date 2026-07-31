@@ -26,7 +26,7 @@ Inside the directory create:
 ## Research Loop
 
 1. **Plan** — break the question into sub-questions or topics.
-2. **Search** — use `explore`, built-in subagents such as `scout`/`general`, `searxng_*` search, and `webfetch` to gather sources.
+2. **Search** — use `explore`, relevant subagents, `searxng_*` search, and `webfetch` to gather sources.
 3. **Verify** — cross-check key claims across at least two independent sources when possible. Prefer primary sources, official docs, and reputable publications.
 4. **Synthesize** — distill findings into bullets, comparisons, or a narrative.
 5. **Cite** — attach a source link to every claim: `[source](url)`.

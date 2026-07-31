@@ -2,8 +2,8 @@
 name: raise-pr
 description: >-
   Raise a pull request using conventional commit style and gh CLI.
-  Use only when the task has been fully implemented, committed, and the user or
-  Architect requests raising a PR or needs one created as part of the completion
+  Use only when the task has been fully implemented, committed, and the user
+  requests raising a PR or needs one created as part of the completion
   flow. Not for general git operations — only for the final PR-raising step.
 ---
 
@@ -131,10 +131,6 @@ gh pr view --json url --jq '.url'
 ```
 
 If `gh` is unavailable, instruct the user to construct the URL themselves (see fallback above).
-
-## Access Control
-
-**This skill is restricted to the Architect agent only.** Dispatcher, Worker, Evaluator, and Explore agents MUST NOT load or invoke this skill. Only the Architect may call `skill(raise-pr)` and execute PR-raising procedures.
 
 ## Error Handling & Edge Cases
 

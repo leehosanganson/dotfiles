@@ -47,4 +47,4 @@ Write a short Project Context Note (a few bullets) covering:
 - Any active branch/PR context if already resolved
 - Open questions to ask the user before proceeding, if any
 
-Keep the note brief. The Architect and Worker agents will use it to make context-aware decisions.
+Keep the note brief. The invoking agent will use it to make context-aware decisions.

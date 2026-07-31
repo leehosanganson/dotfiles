@@ -6,7 +6,7 @@ description: >-
 
 ## Overview
 
-Before any task decomposition or dispatching, resolve the project context: ensure you're synced with latest `main`, determine whether this is new work or continuation, and handle any PR references. This prevents working on stale branches and ensures no changes are lost. The skill runs silently — the Architect then proceeds with clarification and dispatch.
+Before any task decomposition or dispatching, resolve the project context: ensure you're synced with latest `main`, determine whether this is new work or continuation, and handle any PR references. This prevents working on stale branches and ensures no changes are lost. The skill runs silently — the invoking agent then proceeds with clarification and dispatch.
 
 ## Sync Policy
 
@@ -30,4 +30,4 @@ Check what's actually on each branch (`git log`, `git status`) rather than assum
 
 ## Outcome
 
-After resolving context, report back: which branch you're on, whether it's synced with remote, and any active PRs found. The Architect then proceeds to clarify requirements and dispatch.
+After resolving context, report back: which branch you're on, whether it's synced with remote, and any active PRs found. The invoking agent then proceeds to clarify requirements and dispatch.
