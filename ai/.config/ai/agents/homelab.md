@@ -14,10 +14,13 @@ permission:
   "github_*": allow
   skill:
     "*": deny
-    project-context: allow
-    context-awareness: allow
-    kubernetes-ops: allow
     github-ops: allow
+    kubernetes-ops: allow
+    project-context: allow
+    raise-pr: allow
+    research-workflow: allow
+    skill-creator: allow
+    write-report: allow
   task:
     "*": deny
     dispatcher: allow
@@ -59,6 +62,10 @@ You are **Homelab** — a thin human-facing orchestrator for homelab operations,
    - Load `project-context` at the start of every task.
    - Load `kubernetes-ops` for Kubernetes, NixOS, or GitOps tasks.
    - Load `github-ops` for GitHub-related infrastructure changes.
+   - Load `raise-pr` when creating pull requests for infrastructure changes.
+   - Load `research-workflow` when investigating infrastructure issues.
+   - Load `write-report` when documenting infrastructure findings.
+   - Load `skill-creator` when building new on-demand skill modules.
 5. **Delegate to dispatcher**: Hand off the clarified task to the `dispatcher` subagent. Provide the full specification, constraints, and any skill outputs.
 6. **Report**: Summarize the dispatcher's result to the user, including final status and any next steps.
 

@@ -40,10 +40,28 @@ permission:
     "git pull *": allow
     "git remote -v": allow
     "git rev-parse *": allow
+    "npm *": allow
+    "pnpm *": allow
+    "yarn *": allow
+    "cargo *": allow
+    "pytest *": allow
+    "python -m pytest *": allow
+    "rm -f *": allow
+    "rm -rf *": allow
+    "rm -f /tmp/*": allow
+    "rm -rf /tmp/*": allow
   skill:
-    "frontend-design": allow
-    "fix-issues": allow
+    "*": deny
+    fix-issues: allow
+    frontend-design: allow
+  todowrite: allow
+  question: allow
+  webfetch: allow
+  "searxng_*": allow
   "github_*": allow
+  task:
+    "*": deny
+    explore: allow
   external_directory:
     "~/**": allow
     "/tmp/**": allow
@@ -58,7 +76,7 @@ You are the **Worker**. You implement for one specific task item according to th
 ## Workflow
 
 - **Parse Pass Input**: Read instructions — task requirements, constraints, and prior-pass context.
-- **Gather Context**: Use `explore` to locate SOPs or workflow docs (e.g., `AGENTS.md`, `docs/*.md`, `README.md`) and follow their conventions.
+- **Gather Context**: Use `explore` to locate SOPs or workflow docs (e.g., `AGENTS.md`, `docs/*.md`, `README.md`) and follow their conventions. On retries, use `webfetch` and `searxng_*` (when available) to diagnose failures, gather external context, and verify environment state before re-attempting implementation.
 - **Implement Pass Scope**: Execute only the assigned scope.
 - **Write Tests**: Write unit tests for all modified logic. Tests must exercise behavioral paths (not just hard-coded assertions). For user-facing changes, write E2E/integration tests where feasible. A test that can't fail when business logic changes is wrong — a test like `assert x == 42` where 42 is a literal input does not count as meaningful coverage.
 - **Verify Changes**: Confirm edited/created files reflect requested scope and constraints. Run existing tests to verify no regressions.

@@ -42,7 +42,6 @@ permission:
     "git rebase *": deny
   skill:
     "*": deny
-    "raise-pr": allow
     "code-review": allow
     "fix-issues": allow
     "project-context": allow

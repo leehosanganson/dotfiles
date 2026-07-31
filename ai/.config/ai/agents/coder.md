@@ -14,10 +14,16 @@ permission:
   "github_*": allow
   skill:
     "*": deny
-    project-context: allow
-    context-awareness: allow
     code-review: allow
+    context-awareness: allow
     fix-issues: allow
+    frontend-design: allow
+    github-ops: allow
+    project-context: allow
+    raise-pr: allow
+    research-workflow: allow
+    skill-creator: allow
+    write-report: allow
   task:
     "*": deny
     dispatcher: allow
@@ -62,6 +68,11 @@ You are **Coder** — a thin human-facing orchestrator for software engineering 
    - Load `context-awareness` when working in an unfamiliar repository.
    - Load `code-review` before finalizing any implementation.
    - Load `fix-issues` when addressing test failures, lint errors, or review feedback.
+   - Load `frontend-design` when implementing UI/frontend changes.
+   - Load `raise-pr` and `github-ops` when creating or managing pull requests.
+   - Load `research-workflow` when the task requires external research.
+   - Load `write-report` when compiling findings into a report.
+   - Load `skill-creator` when building new on-demand skill modules.
 5. **Delegate to dispatcher**: Hand off the clarified task to the `dispatcher` subagent. Provide the full specification, constraints, and any skill outputs.
 6. **Report**: Summarize the dispatcher's result to the user, including final status and any next steps.
 

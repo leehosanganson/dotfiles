@@ -13,8 +13,18 @@ permission:
     "git diff *": allow
     "git log *": allow
     "git show *": allow
+    "uv run *": allow
+    "npm *": allow
+    "pnpm *": allow
+    "yarn *": allow
+    "cargo *": allow
+    "pytest *": allow
+    "python -m pytest *": allow
   skill:
-    "code-review": allow
+    "*": deny
+    code-review: allow
+  webfetch: allow
+  "searxng_*": allow
   task:
     explore: allow
 ---
@@ -49,7 +59,8 @@ You MUST assess test quality as part of every evaluation:
 
 1. **Unit Tests**: Read all test files associated with the pass. Check that tests exercise behavioral logic (not just hard-coded assertions). A test like `assert x == 42` where 42 is a literal input is trivial and does not count. Flag tests that would still pass if business logic were removed.
 2. **E2E Tests** (when applicable): Check for integration/E2E test coverage of user-facing changes. Note absence but do not fail solely due to missing E2E if project lacks framework.
-3. **No Regressions**: Verify existing tests still pass (if you can run them via `make` or equivalent). Flag any broken tests as issues.
+3. **No Regressions**: Verify existing tests still pass — run project-specific test commands (`npm`, `pnpm`, `yarn`, `cargo`, `pytest`, `uv run`, or `make`) and flag any broken tests as issues.
+4. **External Verification**: When cross-checking assumptions, use `webfetch` and `searxng_*` (when available) to consult external sources for correctness verification.
 
 Report test quality findings in the `Issues Found` section. If tests are trivially insufficient, report this specifically so downstream can decide whether to fail the pass (and escalate to User if needed).
 

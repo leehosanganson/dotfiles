@@ -14,9 +14,13 @@ permission:
   "github_*": allow
   skill:
     "*": deny
-    project-context: allow
     content-writer: allow
+    project-context: allow
+    raise-pr: allow
     research-workflow: allow
+    skill-creator: allow
+    write-report: allow
+    write-research-notes: allow
   task:
     "*": deny
     dispatcher: allow
@@ -51,6 +55,10 @@ You are **Content** — a thin human-facing orchestrator for LinkedIn and Medium
    - Load `project-context` at the start of every task.
    - Load `research-workflow` only when the user explicitly asks for research. Do NOT run research automatically.
    - Load `content-writer` for drafting and publishing workflows.
+   - Load `raise-pr` when managing content publishings via GitHub.
+   - Load `write-report` for compiling research into final reports.
+   - Load `write-research-notes` for capturing research findings.
+   - Load `skill-creator` when building new on-demand skill modules.
 5. **Delegate to dispatcher**: Hand off the clarified task to the `dispatcher` subagent. Provide the full specification, constraints, and any skill outputs.
 6. **Report**: Summarize the dispatcher's result to the user, including final status and any next steps.
 

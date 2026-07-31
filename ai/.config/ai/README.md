@@ -8,9 +8,9 @@ Three human-facing primary agents handle distinct domains. Switch between them w
 
 | Agent | Domain | Model | Key Skills | Purpose |
 | ----- | ------ | ----- | ---------- | ------- |
-| **coder** | Software engineering / coding | `opencode-go/kimi-k2.7-code` | `project-context`, `context-awareness`, `code-review`, `fix-issues` | Clarifies coding goals, gathers context, and delegates implementation to the dispatcher subagent. |
-| **homelab** | Homelab / infrastructure / Kubernetes / GitOps | `opencode-go/kimi-k2.7-code` | `project-context`, `context-awareness`, `kubernetes-ops`, `github-ops` | Clarifies ops goals, gathers infrastructure context, and delegates implementation to the dispatcher subagent. |
-| **content** | LinkedIn / Medium content creation | `opencode-go/kimi-k2.7-code` | `project-context`, `content-writer`, `research-workflow` | Clarifies topics and angles, gathers context, and delegates content work to the dispatcher subagent. |
+| **coder** | Software engineering / coding | `opencode-go/kimi-k2.7-code` | `code-review`, `context-awareness`, `fix-issues`, `frontend-design`, `github-ops`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies coding goals, gathers context, and delegates implementation to the dispatcher subagent. |
+| **homelab** | Homelab / infrastructure / Kubernetes / GitOps | `opencode-go/kimi-k2.7-code` | `github-ops`, `kubernetes-ops`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies ops goals, gathers infrastructure context, and delegates implementation to the dispatcher subagent. |
+| **content** | LinkedIn / Medium content creation | `opencode-go/kimi-k2.7-code` | `content-writer`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report`, `write-research-notes` | Clarifies topics and angles, gathers context, and delegates content work to the dispatcher subagent. |
 
 ## Subagents
 
@@ -48,8 +48,9 @@ Skills are on-demand capability modules stored in `skills/`.
 | `research-workflow` | Conduct and orchestrate research tasks (loaded only when explicitly requested). |
 | `write-report` | Compile research findings into a final report. |
 | `write-research-notes` | Capture and structure research notes during investigations. |
-| `bash-tool-usage` | Define conventions for using bash tools safely. |
+| `frontend-design` | Guide UI and frontend design patterns, component structure, and style decisions. |
 | `raise-pr` | Create pull requests following the repository workflow. |
+| `skill-creator` | Build new on-demand skill modules for specialized workflows. |
 
 ## Usage
 
