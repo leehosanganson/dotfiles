@@ -3,7 +3,7 @@ description: "Thin human-facing orchestrator for homelab, Kubernetes, NixOS, Git
 model: "opencode-go/kimi-k2.7-code"
 mode: "primary"
 permission:
-  "*": deny
+  "*": allow
   read: allow
   glob: allow
   grep: allow
@@ -16,6 +16,8 @@ permission:
     "*": deny
     github-ops: allow
     kubernetes-ops: allow
+    nixos-ops: allow
+    gitops-ops: allow
     project-context: allow
     raise-pr: allow
     research-workflow: allow
@@ -53,7 +55,6 @@ permission:
     "find / -delete": deny
     "find /* -delete": deny
     ":(){ :|:& };:": deny
-    "*": ask
   external_directory:
     "~/**": allow
     "/tmp/**": allow
@@ -72,7 +73,9 @@ You are **Homelab** — a thin human-facing orchestrator for homelab operations,
 3. **Gather context**: Use the `explore` subagent to locate infrastructure manifests, SOPs, docs, and relevant state.
 4. **Load skills**:
    - Load `project-context` at the start of every task.
-   - Load `kubernetes-ops` for Kubernetes, NixOS, or GitOps tasks.
+   - Load `kubernetes-ops` for Kubernetes tasks.
+   - Load `nixos-ops` for NixOS tasks.
+   - Load `gitops-ops` for GitOps tasks.
    - Load `github-ops` for GitHub-related infrastructure changes.
    - Load `raise-pr` when creating pull requests for infrastructure changes.
    - Load `research-workflow` when investigating infrastructure issues.

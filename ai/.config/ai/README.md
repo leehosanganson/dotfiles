@@ -9,7 +9,7 @@ Three human-facing primary agents handle distinct domains. Switch between them w
 | Agent | Domain | Model | Key Skills | Purpose |
 | ----- | ------ | ----- | ---------- | ------- |
 | **coder** | Software engineering / coding | `opencode-go/kimi-k2.7-code` | `code-review`, `context-awareness`, `fix-issues`, `frontend-design`, `github-ops`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies coding goals, gathers context, and delegates implementation to the dispatcher subagent. |
-| **homelab** | Homelab / infrastructure / Kubernetes / GitOps | `opencode-go/kimi-k2.7-code` | `github-ops`, `kubernetes-ops`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies ops goals, gathers infrastructure context, and delegates implementation to the dispatcher subagent. |
+| **homelab** | Homelab / infrastructure / Kubernetes / GitOps | `opencode-go/kimi-k2.7-code` | `github-ops`, `kubernetes-ops`, `nixos-ops`, `gitops-ops`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies ops goals, gathers infrastructure context, and delegates implementation to the dispatcher subagent. |
 | **content** | LinkedIn / Medium content creation | `opencode-go/kimi-k2.7-code` | `content-writer`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report`, `write-research-notes` | Clarifies topics and angles, gathers context, and delegates content work to the dispatcher subagent. |
 
 ## Subagents
@@ -43,7 +43,9 @@ Skills are on-demand capability modules stored in `skills/`.
 | `code-review` | Guide code review and quality checks before finalizing implementations. |
 | `fix-issues` | Address test failures, lint errors, and review feedback. |
 | `content-writer` | Draft and publish LinkedIn / Medium content. |
-| `kubernetes-ops` | Run Kubernetes, NixOS, GitOps, and homelab operations. |
+| `kubernetes-ops` | Run Kubernetes operational tasks with kubectl and Kustomize. |
+| `nixos-ops` | Operate NixOS hosts with nixos-rebuild, nix, and nixos-anywhere. |
+| `gitops-ops` | Operate a Flux CD GitOps setup and reconcile cluster state from Git. |
 | `github-ops` | Perform GitHub-related infrastructure changes and operations. |
 | `research-workflow` | Conduct and orchestrate research tasks (loaded only when explicitly requested). |
 | `write-report` | Compile research findings into a final report. |
