@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # Directories
-SRC_DIR="/home/ansonlee/dotfiles/ai/.config/ai"
-LINK_DIR="/home/ansonlee/.config/opencode"
+SRC_DIR="/Users/ansonlee/.dotfiles/ai/.config/ai"
+LINK_DIR="/Users/ansonlee/.config/opencode"
 
 # Verify source directory exists
 if [[ ! -d "$SRC_DIR" ]]; then
@@ -15,7 +15,7 @@ fi
 mkdir -p "$LINK_DIR"
 
 # Create fresh symlinks for each source subdirectory
-for subdir in agents rules skills commands; do
+for subdir in agents rules skills; do
   src_path="$SRC_DIR/$subdir"
   [[ -d "$src_path" ]] || continue
   link_path="$LINK_DIR/$subdir"

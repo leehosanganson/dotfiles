@@ -1,55 +1,76 @@
 # AI Configuration for OpenCode
 
-This directory holds shared agents, commands, skills, and rules that feed into [OpenCode](https://github.com/opencode-ai/opencode). All files are stored in `~/.dotfiles/ai/.config/ai/` and symlinked into `~/.config/opencode/`.
+This directory holds shared agents, skills, and rules for the OpenCode agentic setup. All files live in `~/.dotfiles/ai/.config/ai/` and are symlinked into `~/.config/opencode/` so OpenCode can load them.
 
----
+## Primary Agents
 
-## Agents, Skills, Commands, Rules
+Three human-facing primary agents handle distinct domains. Switch between them with the OpenCode TUI using the `Tab` key.
 
-| Feature | Purpose          | When to Use                     | Directory                             |
-| ------- | ---------------- | ------------------------------- | ------------------------------------- |
-| Rules   | AGENTS.md        | Applicable to all contexts      | `~/.config/opencode/rules/`           |
-| Agent   | Domain entry     | Switch between 3 primary agents | `~/.config/opencode/agents/{name}.md` |
-| Command | Specified prompt | Executing specific operations   | `~/.config/opencode/commands/`        |
-| Skill   | Domain container | Load on-demand capabilities     | `~/.config/opencode/skills/{Domain}/` |
-| Tools   | CLI commands     | Automating repetitive tasks     | `~/.config/opencode/tools/`           |
+| Agent | Domain | Model | Key Skills | Purpose |
+| ----- | ------ | ----- | ---------- | ------- |
+| **coder** | Software engineering / coding | `opencode-go/kimi-k2.7-code` | `project-context`, `context-awareness`, `code-review`, `fix-issues` | Clarifies coding goals, gathers context, and delegates implementation to the dispatcher subagent. |
+| **homelab** | Homelab / infrastructure / Kubernetes / GitOps | `opencode-go/kimi-k2.7-code` | `project-context`, `context-awareness`, `kubernetes-ops`, `github-ops` | Clarifies ops goals, gathers infrastructure context, and delegates implementation to the dispatcher subagent. |
+| **content** | LinkedIn / Medium content creation | `opencode-go/kimi-k2.7-code` | `project-context`, `content-writer`, `research-workflow` | Clarifies topics and angles, gathers context, and delegates content work to the dispatcher subagent. |
 
----
+## Subagents
+
+### Custom subagents
+
+Custom subagents implement the implementation and evaluation loop:
+
+- **dispatcher** — Receives clarified tasks from primary agents, breaks them into passes, and assigns each pass to a Worker.
+- **worker** — Executes one implementation pass for a single task item, producing code or file changes.
+- **evaluator** — Reviews the Worker's output against the task's acceptance criteria.
+
+The canonical retry loop is **Worker → Evaluator**. If the evaluator finds issues, the dispatcher routes the feedback back to the Worker for another attempt, up to a maximum of 3 attempts. The loop stops early as soon as a pass succeeds.
+
+### Built-in subagents
+
+OpenCode provides lightweight built-in subagents that run on the small model (`litellm/unsloth/qwen-3.6`):
+
+- **explore** — Used for local repository context gathering (docs, conventions, relevant files).
+- **general** — Used for general tasks that do not need a domain-specific primary agent.
+- **scout** — Used for scouting and lightweight exploration.
+
+## Skills
+
+Skills are on-demand capability modules stored in `skills/`.
+
+| Skill | Purpose |
+| ----- | ------- |
+| `project-context` | Load project-specific context and conventions at the start of every task. |
+| `context-awareness` | Gather repository context when working in unfamiliar codebases. |
+| `code-review` | Guide code review and quality checks before finalizing implementations. |
+| `fix-issues` | Address test failures, lint errors, and review feedback. |
+| `content-writer` | Draft and publish LinkedIn / Medium content. |
+| `kubernetes-ops` | Run Kubernetes, NixOS, GitOps, and homelab operations. |
+| `github-ops` | Perform GitHub-related infrastructure changes and operations. |
+| `research-workflow` | Conduct and orchestrate research tasks (loaded only when explicitly requested). |
+| `write-report` | Compile research findings into a final report. |
+| `write-research-notes` | Capture and structure research notes during investigations. |
+| `bash-tool-usage` | Define conventions for using bash tools safely. |
+| `raise-pr` | Create pull requests following the repository workflow. |
 
 ## Usage
 
-### Workflow — 3 Primary Agents
+Switch primary agents from the OpenCode TUI using the `Tab` key.
 
-You switch directly between **three primary agents**, each handling a distinct domain. You decide which agent to invoke based on your current goal:
+The canonical lifecycle for any task is:
 
-#### Agent Overview
+```
+clarify → todo → context → skill → dispatcher → evaluator loop
+```
 
-| Agent              | Domain   | Responsibility                                                             |
-| ------------------ | -------- | -------------------------------------------------------------------------- |
-| **Architect**      | Coding   | Decomposes goals into task items, delegates cycle management to Dispatcher |
-| **ContentCreator** | Content  | Orchestrates post-writer and blog-writer pipelines                         |
-| **DeepResearcher** | Research | Directs Research sub-agents and compiles findings                          |
-
-Each agent accepts goals directly from you, decomposes them into manageable tasks, dispatches sub-agents, and reports back outcomes. You interact with each agent independently — no classifier or router sits between you and the agents.
-
-#### Architect (Coding)
-
-Receives coding goals from you, breaks them into smaller goals with explicit acceptance criteria, then delegates to Dispatcher to manage Workers and Evaluators for implementation. Never implements code or evaluates directly. Sub-agents: `Dispatcher` (which internally manages `Worker`, `Evaluator`).
-
-#### ContentCreator (Content)
-
-Receives topics or drafts, analyzes publication strategy, orchestrates publishing pipelines to `post-writer` and `blog-writer` sub-agents. Handles dual-publishing (Medium + LinkedIn), filename coordination, context assembly, and quality verification. You approve the publishing plan before any writing begins.
-
-#### DeepResearcher (Research)
-
-Takes research goals and produces comprehensive HTML reports by dynamically directing Research sub-agents across parallel batches with dynamic reprioritization. Creates isolated session directories, conducts multi-dimensional quality review of findings, spot-checks source URLs, and compiles synthesized reports using the `write-report` skill. Sub-agent: `Research`.
-
-### Using Rules (AGENTS.md)
-
-To use these files with OpenCode, create symlinks from your dotfiles source to `~/.config/opencode/`. Run all the following commands once:
+Symlink this configuration into `~/.config/opencode/`:
 
 ```bash
 ln -s ~/.dotfiles/ai/.config/ai/agents ~/.config/opencode/agents
-ln -s ~/.dotfiles/ai/.config/ai/commands ~/.config/opencode/commands
 ln -s ~/.dotfiles/ai/.config/ai/skills ~/.config/opencode/skills
+ln -s ~/.dotfiles/ai/.config/ai/rules ~/.config/opencode/rules
 ```
+
+Only `agents`, `skills`, and `rules` are symlinked; there is no `commands` symlink.
+
+## Rules
+
+Global agent rules live in `rules/` and are referenced from `opencode.json`.

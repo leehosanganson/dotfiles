@@ -1,18 +1,50 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "instructions": ["rules/AGENTS.md", "rules/bash-tool-usage.md"],
-  "default_agent": "main",
+  "default_agent": "coder",
   "model": "litellm/unsloth/qwen-3.6",
   "small_model": "litellm/unsloth/qwen-3.6",
+  "subagent_depth": 2,
   "permission": {
     "skill": "allow",
     "github_*": "allow",
-    "searxng_*": "allow"
+    "searxng_*": "allow",
+    "bash": {
+      "kubectl *": "allow",
+      "ssh *": "allow",
+      "make *": "allow",
+      "uv run *": "allow",
+      "go *": "allow",
+      "docker *": "allow",
+      "git *": "allow",
+      "gh *": "allow",
+      "nix *": "allow",
+      "terraform *": "allow",
+      "ansible *": "allow",
+      "helm *": "allow",
+      "k9s *": "allow",
+      "rm -f *": "ask",
+      "rm -rf *": "ask",
+      "git reset --hard*": "deny",
+      "git rebase *": "deny",
+      "git push * --force*": "deny"
+    }
   },
   "compaction": {
     "auto": true,
     "prune": true,
     "reserved": 16384
+  },
+  "agents": {
+    "coder": { "model": "opencode-go/kimi-k2.7-code" },
+    "homelab": { "model": "opencode-go/kimi-k2.7-code" },
+    "content": { "model": "opencode-go/kimi-k2.7-code" },
+    "dispatcher": { "model": "litellm/unsloth/qwen-3.6" },
+    "worker": { "model": "litellm/unsloth/qwen-3.6" },
+    "evaluator": { "model": "litellm/unsloth/qwen-3.6" },
+    "explore": { "model": "litellm/unsloth/qwen-3.6" },
+    "general": { "model": "litellm/unsloth/qwen-3.6" },
+    "scout": { "model": "litellm/unsloth/qwen-3.6" }
   },
   "provider": {
     "litellm": {
@@ -26,17 +58,26 @@
         "setCacheKey": true
       },
       "models": {
-        "unsloth/qwen-3.6": {
-          "limit": {
-            "context": 100000,
-            "output": 16384
-          }
-        },
+        "unsloth/qwen-3.6": { "limit": { "context": 100000, "output": 16384 } },
         "gemini/gemini-2.5-flash-lite": {},
         "gemini/gemini-3.1-pro": {},
         "openrouter/openrouter/free": {},
         "gemini/gemini-3.1-flash-lite-preview": {},
         "gemini/gemini-3-flash-preview": {}
+      }
+    },
+    "opencode-go": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenCode Go",
+      "options": {
+        "baseURL": "https://opencode.ai/zen/go/v1",
+        "apiKey": "{file:~/.config/sops-nix/secrets/opencode-api-key}",
+        "timeout": 600000,
+        "chunkTimeout": 60000,
+        "setCacheKey": true
+      },
+      "models": {
+        "kimi-k2.7-code": { "limit": { "context": 200000, "output": 16384 } }
       }
     }
   },
