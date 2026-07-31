@@ -1,7 +1,7 @@
 ---
 description: "Thin human-facing orchestrator for software engineering and coding tasks."
 model: "opencode-go/kimi-k2.7-code"
-mode: "agent"
+mode: "primary"
 permission:
   "*": deny
   read: allow

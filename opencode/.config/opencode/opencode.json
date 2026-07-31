@@ -4,7 +4,6 @@
   "default_agent": "coder",
   "model": "litellm/unsloth/qwen-3.6",
   "small_model": "litellm/unsloth/qwen-3.6",
-  "subagent_depth": 2,
   "permission": {
     "skill": "allow",
     "github_*": "allow",
@@ -35,7 +34,7 @@
     "prune": true,
     "reserved": 16384
   },
-  "agents": {
+  "agent": {
     "coder": { "model": "opencode-go/kimi-k2.7-code" },
     "homelab": { "model": "opencode-go/kimi-k2.7-code" },
     "content": { "model": "opencode-go/kimi-k2.7-code" },

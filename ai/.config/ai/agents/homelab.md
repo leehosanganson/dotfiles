@@ -1,7 +1,7 @@
 ---
 description: "Thin human-facing orchestrator for homelab, Kubernetes, NixOS, GitOps, and infrastructure tasks."
 model: "opencode-go/kimi-k2.7-code"
-mode: "agent"
+mode: "primary"
 permission:
   "*": deny
   read: allow
