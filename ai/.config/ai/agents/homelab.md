@@ -31,6 +31,7 @@ permission:
     "helm *": allow
     "k9s *": allow
     "nix *": allow
+    "nixos*": allow
     "make *": allow
     "docker *": allow
     "terraform *": allow
