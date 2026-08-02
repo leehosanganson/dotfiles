@@ -24,6 +24,7 @@ permission:
     research-workflow: allow
     skill-creator: allow
     write-report: allow
+    diagnose-issues: allow
   task:
     "*": deny
     dispatcher: allow
