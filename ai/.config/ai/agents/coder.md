@@ -28,6 +28,8 @@ permission:
     "*": deny
     dispatcher: allow
     explore: allow
+    worker: allow
+    evaluator: allow
   bash:
     "uv run *": allow
     "go *": allow
