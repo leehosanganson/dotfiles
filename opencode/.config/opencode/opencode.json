@@ -1,8 +1,12 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "instructions": ["rules/AGENTS.md", "rules/bash-tool-usage.md"],
+  "instructions": [
+    "rules/AGENTS.md",
+    "rules/bash-tool-usage.md",
+    "rules/web-search.md"
+  ],
   "default_agent": "coder",
-  "model": "litellm/unsloth/qwen-3.6",
+  "model": "openrouter/deepseek-v4-flash",
   "small_model": "litellm/unsloth/qwen-3.6",
   "permission": {
     "skill": "allow",
@@ -19,7 +23,6 @@
       "gh *": "allow",
       "nix *": "allow",
       "terraform *": "allow",
-      "ansible *": "allow",
       "helm *": "allow",
       "k9s *": "allow",
       "rm -f *": "ask",
@@ -35,9 +38,9 @@
     "reserved": 16384
   },
   "agent": {
-    "coder": { "model": "opencode-go/kimi-k2.7-code" },
-    "homelab": { "model": "opencode-go/kimi-k2.7-code" },
-    "content": { "model": "opencode-go/kimi-k2.7-code" },
+    "coder": { "model": "openrouter/deepseek-v4-flash" },
+    "homelab": { "model": "openrouter/deepseek-v4-flash" },
+    "content": { "model": "openrouter/deepseek-v4-flash" },
     "dispatcher": { "model": "litellm/unsloth/qwen-3.6" },
     "worker": { "model": "litellm/unsloth/qwen-3.6" },
     "evaluator": { "model": "litellm/unsloth/qwen-3.6" },
@@ -58,11 +61,9 @@
       },
       "models": {
         "unsloth/qwen-3.6": { "limit": { "context": 100000, "output": 16384 } },
-        "gemini/gemini-2.5-flash-lite": {},
-        "gemini/gemini-3.1-pro": {},
-        "openrouter/openrouter/free": {},
-        "gemini/gemini-3.1-flash-lite-preview": {},
-        "gemini/gemini-3-flash-preview": {}
+        "gemini/gemini-3.5-flash-lite": {},
+        "gemini/gemini-3.6-flash": {},
+        "openrouter/deepseek-v4-flash": {}
       }
     },
     "opencode-go": {

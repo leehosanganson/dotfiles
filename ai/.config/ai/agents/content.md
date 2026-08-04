@@ -1,6 +1,5 @@
 ---
 description: "Thin human-facing orchestrator for LinkedIn and Medium content creation."
-model: "opencode-go/kimi-k2.7-code"
 mode: "primary"
 permission:
   "*": deny
