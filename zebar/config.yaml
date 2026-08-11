@@ -1,9 +1,0 @@
-# =============================================================================
-# Zebar configuration - managed by the dotfiles repo.
-# This file is symlinked into place by setup-windows.ps1
-# (target: %USERPROFILE%\.glzr\zebar\config.yaml).
-#
-# Zebar also looks for a `widgets/` directory beside this file.
-# Placeholder only - replace with your real Zebar config when ready.
-# Reference: https://glzr-io.github.io/zebar/
-# =============================================================================
