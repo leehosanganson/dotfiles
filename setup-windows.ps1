@@ -94,10 +94,6 @@ function New-Link {
             Write-Host "  $Link already points at the repo config. Skipping." -ForegroundColor Green
             return
         }
-        $backup = "$Link.backup-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
-        Write-Host "  Moving existing '$Link' to '$backup'..." -ForegroundColor Yellow
-        try { Move-Item -LiteralPath $Link -Destination $backup -Force }
-        catch { Write-Host "[ERROR] Could not back up '$Link': $($_.Exception.Message)" -ForegroundColor Red; exit 1 }
     }
     try {
         New-Item -ItemType SymbolicLink -Path $Link -Target $Target -ErrorAction Stop | Out-Null
@@ -115,22 +111,22 @@ Write-Host "`n==> Installing apps" -ForegroundColor Magenta
 $apps = @(
     @{ Name = 'GlazeWM';        Winget = 'glzr-io.GlazeWM';        Choco = 'glazewm'       },
     @{ Name = 'Zebar';          Winget = 'glzr-io.Zebar';          Choco = 'zebar'         },
-    @{ Name = 'Claude Desktop'; Winget = 'Anthropic.Claude';       Choco = 'claude-desktop' },
+    @{ Name = 'Claude Desktop'; Winget = 'Anthropic.Claude';       Choco = 'claude' },
     @{ Name = 'Claude Code';    Winget = 'Anthropic.ClaudeCode';   Choco = 'claude-code'    }
 )
 
-if (Test-Command 'winget') {
-    Write-Host "winget detected - using it as the primary installer." -ForegroundColor Green
+if (Test-Command 'choco') {
+    Write-Host "Using Chocolatey." -ForegroundColor Yellow
+    foreach ($a in $apps) {
+        Invoke-Install -Name $a.Name -Find "choco list --local-only $($a.Choco)" `
+            -Match $a.Choco -InstallCmd @('choco', 'install', $a.Choco, '-y', '--no-progress')
+    }
+} elseif (Test-Command 'winget') {
+    Write-Host "Using winget" -ForegroundColor Green
     foreach ($a in $apps) {
         Invoke-Install -Name $a.Name -Find "winget list --id $($a.Winget) --accept-source-agreements" `
             -Match $a.Winget -InstallCmd @('winget', 'install', '--id', $a.Winget,
             '--accept-source-agreements', '--accept-package-agreements', '--silent')
-    }
-} elseif (Test-Command 'choco') {
-    Write-Host "winget unavailable - falling back to Chocolatey." -ForegroundColor Yellow
-    foreach ($a in $apps) {
-        Invoke-Install -Name $a.Name -Find "choco list --local-only $($a.Choco)" `
-            -Match $a.Choco -InstallCmd @('choco', 'install', $a.Choco, '-y', '--no-progress')
     }
 } else {
     Write-Host "[ERROR] Neither winget nor Chocolatey is available." -ForegroundColor Red
