@@ -1,0 +1,8 @@
+# =============================================================================
+# GlazeWM configuration - managed by the dotfiles repo.
+# This file is symlinked into place by setup-windows.ps1
+# (target: %USERPROFILE%\.glzr\glazewm\config.yaml).
+#
+# Placeholder only - replace with your real GlazeWM config when ready.
+# Reference: https://glzr-io.github.io/glazewm/configuration/configuration.html
+# =============================================================================
