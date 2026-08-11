@@ -37,17 +37,17 @@
     "prune": true,
     "reserved": 16384
   },
-  "agent": {
-    "coder": { "model": "openrouter/deepseek-v4-flash" },
-    "homelab": { "model": "openrouter/deepseek-v4-flash" },
-    "content": { "model": "openrouter/deepseek-v4-flash" },
-    "dispatcher": { "model": "litellm/unsloth/qwen-3.6" },
-    "worker": { "model": "litellm/unsloth/qwen-3.6" },
-    "evaluator": { "model": "litellm/unsloth/qwen-3.6" },
-    "explore": { "model": "litellm/unsloth/qwen-3.6" },
-    "general": { "model": "litellm/unsloth/qwen-3.6" },
-    "scout": { "model": "litellm/unsloth/qwen-3.6" }
-  },
+  // "agent": {
+  //   "coder": { "model": "openrouter/deepseek-v4-flash" },
+  //   "homelab": { "model": "openrouter/deepseek-v4-flash" },
+  //   "content": { "model": "openrouter/deepseek-v4-flash" },
+  //   "dispatcher": { "model": "litellm/unsloth/qwen-3.6" },
+  //   "worker": { "model": "litellm/unsloth/qwen-3.6" },
+  //   "evaluator": { "model": "litellm/unsloth/qwen-3.6" },
+  //   "explore": { "model": "litellm/unsloth/qwen-3.6" },
+  //   "general": { "model": "litellm/unsloth/qwen-3.6" },
+  //   "scout": { "model": "litellm/unsloth/qwen-3.6" }
+  // },
   "provider": {
     "litellm": {
       "npm": "@ai-sdk/openai-compatible",

@@ -3,58 +3,43 @@ description: Orchestrates Worker and Evaluator to complete tasks.
 mode: subagent
 steps: 200
 permission:
-  "*": deny
-  "which *": allow
+  "*": allow
   read: allow
   glob: allow
   grep: allow
   write: allow
   edit: allow
-  bash:
-    "kubectl *": allow
-    "make *": allow
-    "ssh *": allow
-    "uv run *": allow
-    "go *": allow
-    "docker *": allow
-    "xargs *": allow
-    "sort *": allow
-    "git status *": allow
-    "git log *": allow
-    "git diff *": allow
-    "git show *": allow
-    "git branch *": allow
-    "git rev-parse *": allow
-    "git remote -v": allow
-    "git add *": allow
-    "git commit *": allow
-    "git stash *": allow
-    "git checkout *": allow
-    "git switch *": allow
-    "git fetch *": allow
-    "git merge *": allow
-    "git pull *": allow
-    "git push *": allow
-    "git push * --force*": deny
-    "git push *main*": deny
-    "gh *": allow
-    "git reset --hard*": deny
-    "git rebase *": deny
+  question: allow
+  webfetch: allow
+  "searxng_*": allow
+  todowrite: allow
+  doom_loop: deny
   skill:
     "*": deny
     "code-review": allow
     "fix-issues": allow
     "project-context": allow
   task:
+    "*": deny
     explore: allow
     research: allow
     worker: allow
     evaluator: allow
-  question: allow
-  webfetch: allow
-  "searxng_*": allow
-  todowrite: allow
-  doom_loop: deny
+  bash:
+    "git reset --hard*": deny
+    "git rebase *": deny
+    "git push * --force*": deny
+    "git push *main*": deny
+    "rm -rf /": deny
+    "rm -rf /*": deny
+    "rm -rf --no-preserve-root *": deny
+    "rm -f /": deny
+    "dd if=* of=/dev/*": deny
+    "mkfs.* /dev/*": deny
+    "wipefs *": deny
+    "find / -delete": deny
+    "find /* -delete": deny
+    ":(){ :|:& };:": deny
   external_directory:
     "~/**": allow
     "/tmp/**": allow
