@@ -1,11 +1,11 @@
 <#
 .SYNOPSIS
-    Setup GlazeWM, Zebar, Claude Desktop and Claude Code on Windows, then
-    symlink the GlazeWM & Zebar configs from this dotfiles repo.
+    Setup GlazeWM, Zebar, Claude Desktop, Claude Code, Obsidian and Neovim on
+    Windows, then symlink the GlazeWM & Zebar configs from this dotfiles repo.
 
 .DESCRIPTION
     - Self-elevates with admin rights if needed.
-    - Installs all four apps via winget (fallback: Chocolatey), skipping any
+    - Installs all six apps via winget (fallback: Chocolatey), skipping any
       already installed. Exits 1 if no installer is available or an install fails.
     - Symlinks only GlazeWM & Zebar configs (Claude apps are install-only).
         $env:USERPROFILE\.glzr\glazewm  ->  <repo>\glazewm
@@ -112,7 +112,9 @@ $apps = @(
     @{ Name = 'GlazeWM';        Winget = 'glzr-io.GlazeWM';        Choco = 'glazewm'       },
     @{ Name = 'Zebar';          Winget = 'glzr-io.Zebar';          Choco = 'zebar'         },
     @{ Name = 'Claude Desktop'; Winget = 'Anthropic.Claude';       Choco = 'claude' },
-    @{ Name = 'Claude Code';    Winget = 'Anthropic.ClaudeCode';   Choco = 'claude-code'    }
+    @{ Name = 'Claude Code';    Winget = 'Anthropic.ClaudeCode';   Choco = 'claude-code'    },
+    @{ Name = 'Obsidian';       Winget = 'Obsidian.Obsidian';      Choco = 'obsidian'       },
+    @{ Name = 'Neovim';         Winget = 'Neovim.Neovim';          Choco = 'neovim'         }
 )
 
 if (Test-Command 'choco') {
