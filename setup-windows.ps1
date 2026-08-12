@@ -1,15 +1,17 @@
 <#
 .SYNOPSIS
     Setup GlazeWM, Zebar, Claude Desktop, Claude Code, Obsidian and Neovim on
-    Windows, then symlink the GlazeWM & Zebar configs from this dotfiles repo.
+    Windows, then symlink the GlazeWM, Zebar & bash configs from this dotfiles repo.
 
 .DESCRIPTION
     - Self-elevates with admin rights if needed.
     - Installs all six apps via winget (fallback: Chocolatey), skipping any
       already installed. Exits 1 if no installer is available or an install fails.
-    - Symlinks only GlazeWM & Zebar configs (Claude apps are install-only).
-        $env:USERPROFILE\.glzr\glazewm  ->  <repo>\glazewm
-        $env:USERPROFILE\.glzr\zebar     ->  <repo>\zebar
+    - Symlinks only GlazeWM, Zebar & bash configs (Claude apps are install-only).
+        $env:USERPROFILE\.glzr\glazewm     ->  <repo>\glazewm
+        $env:USERPROFILE\.glzr\zebar       ->  <repo>\zebar
+        $env:USERPROFILE\.bashrc           ->  <repo>\bash\.bashrc
+        $env:USERPROFILE\.bash_profile     ->  <repo>\bash\.bash_profile
 
 .EXAMPLE
     .\setup-windows.ps1
@@ -159,6 +161,21 @@ foreach ($cfg in @(
     New-Link -Link $cfg.Link -Target $cfg.Repo
 }
 
+# --- 2b. Symlink bash configs (live directly in $env:USERPROFILE) -----------
+$bashrcCfg      = Join-Path $RepoRoot 'bash\.bashrc'
+$bashProfileCfg = Join-Path $RepoRoot 'bash\.bash_profile'
+
+foreach ($cfg in @(
+    @{ Link = Join-Path $env:USERPROFILE '.bashrc';       Repo = $bashrcCfg },
+    @{ Link = Join-Path $env:USERPROFILE '.bash_profile'; Repo = $bashProfileCfg }
+)) {
+    if (-not (Test-Path -LiteralPath $cfg.Repo)) {
+        Write-Host "[ERROR] Repo config file not found: '$($cfg.Repo)'." -ForegroundColor Red
+        exit 1
+    }
+    New-Link -Link $cfg.Link -Target $cfg.Repo
+}
+
 # --- 3. Done ----------------------------------------------------------------
-Write-Host "`nDone! Apps installed and GlazeWM/Zebar configs symlinked." -ForegroundColor Green
+Write-Host "`nDone! Apps installed and GlazeWM/Zebar/bash configs symlinked." -ForegroundColor Green
 Write-Host "Restart the apps (or the machine) to pick up the new config." -ForegroundColor Yellow
