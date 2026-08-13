@@ -111,12 +111,13 @@ function New-Link {
 Write-Host "`n==> Installing apps" -ForegroundColor Magenta
 
 $apps = @(
-    @{ Name = 'GlazeWM';        Winget = 'glzr-io.GlazeWM';        Choco = 'glazewm'       },
-    @{ Name = 'Zebar';          Winget = 'glzr-io.Zebar';          Choco = 'zebar'         },
-    @{ Name = 'Claude Desktop'; Winget = 'Anthropic.Claude';       Choco = 'claude' },
-    @{ Name = 'Claude Code';    Winget = 'Anthropic.ClaudeCode';   Choco = 'claude-code'    },
-    @{ Name = 'Obsidian';       Winget = 'Obsidian.Obsidian';      Choco = 'obsidian'       },
-    @{ Name = 'Neovim';         Winget = 'Neovim.Neovim';          Choco = 'neovim'         }
+    @{ Name = 'GlazeWM';        Winget = 'glzr-io.GlazeWM';        	Choco = 'glazewm'       },
+    @{ Name = 'Zebar';          Winget = 'glzr-io.Zebar';          	Choco = 'zebar'        	},
+    @{ Name = 'Claude Desktop'; Winget = 'Anthropic.Claude';       	Choco = 'claude' 	},
+    @{ Name = 'Claude Code';    Winget = 'Anthropic.ClaudeCode';   	Choco = 'claude-code'   },
+    @{ Name = 'Obsidian';       Winget = 'Obsidian.Obsidian';      	Choco = 'obsidian'      },
+    @{ Name = 'Neovim';         Winget = 'Neovim.Neovim';          	Choco = 'neovim'	},	
+    @{ Name = 'Fira Code'; 	Winget = 'nerdfonts.firacode';		Choco = 'firacode'	}
 )
 
 if (Test-Command 'choco') {
