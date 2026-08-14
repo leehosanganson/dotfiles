@@ -5,8 +5,9 @@
 # Reload this file after editing.
 alias src='source ~/.bashrc'
 
-# Claude Code CLI.
+# Alias
 alias cc='claude'
-
-# Kubernetes.
 alias k='kubectl'
+alias lg='lazygit'
+alias vim='nvim'
+alias v='nvim'

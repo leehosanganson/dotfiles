@@ -117,7 +117,9 @@ $apps = @(
     @{ Name = 'Claude Code';    Winget = 'Anthropic.ClaudeCode';   	Choco = 'claude-code'   },
     @{ Name = 'Obsidian';       Winget = 'Obsidian.Obsidian';      	Choco = 'obsidian'      },
     @{ Name = 'Neovim';         Winget = 'Neovim.Neovim';          	Choco = 'neovim'	},	
-    @{ Name = 'Fira Code'; 	Winget = 'nerdfonts.firacode';		Choco = 'firacode'	}
+    @{ Name = 'Fira Code'; 	Winget = 'nerdfonts.firacode';		Choco = 'firacode'	},
+    @{ Name = 'Azure CLI'; 	Winget = 'Microsoft.AzureCLI';		Choco = 'azure-cli'	},
+    @{ Name = 'Lazygit'; 	Winget = 'JesseDuffield.lazygit';	Choco = 'lazygit'	}
 )
 
 if (Test-Command 'choco') {
