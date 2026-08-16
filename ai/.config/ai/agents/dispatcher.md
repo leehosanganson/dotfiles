@@ -41,7 +41,7 @@ permission:
     "find /* -delete": deny
     ":(){ :|:& };:": deny
   external_directory:
-    "~/**": allow
+    "$HOME/**": allow
     "/tmp/**": allow
 ---
 
