@@ -52,7 +52,7 @@ return {
           end_point = "https://litellm.homelab.leehosanganson.dev/v1/chat/completions",
           api_key = "LITELLM_API_KEY",
           name = "LiteLLM",
-          model = "unsloth/qwen-3.6",
+          model = "unsloth/qwen-3.8",
           stream = true,
           optional = { max_tokens = 256, stop = { "\n" } },
         },
