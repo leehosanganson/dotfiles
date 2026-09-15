@@ -8,6 +8,13 @@ local function is_latex_project()
   return true
 end
 
+local function get_view_method()
+  local os_name = vim.uv.os_uname().sysname
+  local view_method = "zathura"
+  if os_name == "Darwin" then view_method = "general" end
+  return view_method
+end
+
 return {
   {
     "lervag/vimtex",
@@ -26,7 +33,7 @@ return {
           "-file-line-error",
         },
       }
-      vim.g.vimtex_view_method = "zathura"
+      vim.g.vimtex_view_method = get_view_method()
       vim.g.vimtex_quickfix_mode = 0
 
       vim.api.nvim_create_autocmd("FileType", {
