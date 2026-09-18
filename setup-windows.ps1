@@ -119,7 +119,9 @@ $apps = @(
     @{ Name = 'Neovim';         Winget = 'Neovim.Neovim';          	Choco = 'neovim'	},	
     @{ Name = 'Fira Code'; 	Winget = 'nerdfonts.firacode';		Choco = 'firacode'	},
     @{ Name = 'Azure CLI'; 	Winget = 'Microsoft.AzureCLI';		Choco = 'azure-cli'	},
-    @{ Name = 'Lazygit'; 	Winget = 'JesseDuffield.lazygit';	Choco = 'lazygit'	}
+    @{ Name = 'jq'; 	Winget = 'jqlang.jq';		Choco = 'jq'	},
+    @{ Name = 'Lazygit'; 	Winget = 'JesseDuffield.lazygit';	Choco = 'lazygit'	},
+    @{ Name = 'fzf'; 	Winget = 'junegunn.fzf';		Choco = 'fzf'	}
 )
 
 if (Test-Command 'choco') {
