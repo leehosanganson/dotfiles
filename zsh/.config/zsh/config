@@ -40,26 +40,14 @@ eval "$(zoxide init zsh)"
 # Alias 
 # For a full list of active aliases, run `alias`.
 alias ls="ls --color=auto"
-alias vim="nvim"
 alias zshconfig="nvim ~/.zshrc"
-alias k="kubectl"
 alias oc="AI_SKILL_DIR=$HOME/.config/ai/skills opencode"
+
+# Shared shell tools (aliases + functions) also used by Git Bash.
+[ -f ~/.config/bash-tools/tools.sh ] && source ~/.config/bash-tools/tools.sh
 
 # fcd - find directory
 alias fcd='cd "$(find . -type d | fzf)"'
-
-# Lazygit - 'q' to quit at selected directory, 'shift-q' to quit normally
-lg()
-{
-    export LAZYGIT_NEW_DIR_FILE=~/.lazygit/newdir
-
-    lazygit "$@"
-
-    if [ -f $LAZYGIT_NEW_DIR_FILE ]; then
-            cd "$(cat $LAZYGIT_NEW_DIR_FILE)"
-            rm -f $LAZYGIT_NEW_DIR_FILE > /dev/null
-    fi
-}
 
 # direnv
 eval "$(direnv hook zsh)"

@@ -12,6 +12,7 @@
         $env:USERPROFILE\.glzr\zebar       ->  <repo>\zebar
         $env:USERPROFILE\.bashrc           ->  <repo>\bash\.bashrc
         $env:USERPROFILE\.bash_profile     ->  <repo>\bash\.bash_profile
+        $env:USERPROFILE\.config\bash-tools\tools.sh ->  <repo>\bash-tools\.config\bash-tools\tools.sh
 
 .EXAMPLE
     .\setup-windows.ps1
@@ -169,10 +170,18 @@ foreach ($cfg in @(
 # --- 2b. Symlink bash configs (live directly in $env:USERPROFILE) -----------
 $bashrcCfg      = Join-Path $RepoRoot 'bash\.bashrc'
 $bashProfileCfg = Join-Path $RepoRoot 'bash\.bash_profile'
+$bashToolsCfg   = Join-Path $RepoRoot 'bash-tools\.config\bash-tools\tools.sh'
+
+$bashToolsRoot = Join-Path $env:USERPROFILE '.config\bash-tools'
+if (-not (Test-Path -LiteralPath $bashToolsRoot)) {
+    Write-Host "Creating parent directory: $bashToolsRoot" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path $bashToolsRoot -Force | Out-Null
+}
 
 foreach ($cfg in @(
     @{ Link = Join-Path $env:USERPROFILE '.bashrc';       Repo = $bashrcCfg },
-    @{ Link = Join-Path $env:USERPROFILE '.bash_profile'; Repo = $bashProfileCfg }
+    @{ Link = Join-Path $env:USERPROFILE '.bash_profile'; Repo = $bashProfileCfg },
+    @{ Link = Join-Path $env:USERPROFILE '.config\bash-tools\tools.sh'; Repo = $bashToolsCfg }
 )) {
     if (-not (Test-Path -LiteralPath $cfg.Repo)) {
         Write-Host "[ERROR] Repo config file not found: '$($cfg.Repo)'." -ForegroundColor Red
