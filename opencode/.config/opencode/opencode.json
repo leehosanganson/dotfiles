@@ -6,10 +6,10 @@
     "rules/web-search.md"
   ],
   "default_agent": "coder",
-  "model": "openrouter/deepseek-v4-flash",
-  "small_model": "openrouter/deepseek-v4-flash",
+  "subagent_depth": 2,
+  "model": "openrouter/gpt-5.6-luna",
+  "small_model": "unsloth/qwen-3.8",
   "permission": {
-    "skill": "allow",
     "github_*": "allow",
     "searxng_*": "allow",
     "bash": {
@@ -37,17 +37,6 @@
     "prune": true,
     "reserved": 16384
   },
-  // "agent": {
-  //   "coder": { "model": "openrouter/deepseek-v4-flash" },
-  //   "homelab": { "model": "openrouter/deepseek-v4-flash" },
-  //   "content": { "model": "openrouter/deepseek-v4-flash" },
-  //   "dispatcher": { "model": "litellm/unsloth/qwen-3.6" },
-  //   "worker": { "model": "litellm/unsloth/qwen-3.6" },
-  //   "evaluator": { "model": "litellm/unsloth/qwen-3.6" },
-  //   "explore": { "model": "litellm/unsloth/qwen-3.6" },
-  //   "general": { "model": "litellm/unsloth/qwen-3.6" },
-  //   "scout": { "model": "litellm/unsloth/qwen-3.6" }
-  // },
   "provider": {
     "litellm": {
       "npm": "@ai-sdk/openai-compatible",
@@ -60,7 +49,7 @@
         "setCacheKey": true
       },
       "models": {
-        "unsloth/qwen-3.8": { "limit": { "context": 32768, "output": 5096 } },
+        "unsloth/qwen-3.8": { "limit": { "context": 60000, "output": 5096 } },
         "openrouter/deepseek-v4-flash": {},
         "openrouter/gpt-5.6-luna": {}
       }
