@@ -20,5 +20,6 @@
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:pi-web-access"
   ],
-  "defaultThinkingLevel": "medium"
+  "defaultThinkingLevel": "medium",
+  "hideThinkingBlock": true
 }

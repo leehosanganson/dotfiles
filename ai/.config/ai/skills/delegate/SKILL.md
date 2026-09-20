@@ -17,6 +17,30 @@ their assigned vertical slice.
 Invoke it as `/delegate` through OpenCode's native skill loader. This is a skill
 module, not a command file; do not create or depend on a commands symlink.
 
+## Dispatch: actually spawn a sub-agent — do not inline the work
+
+The sections below describe a *workflow*, not the invocation. The main thread
+**must call a lower-level agent for each slice**; it must not implement the slice
+itself and then merely "report" it. Use the sub-ordinance mechanism your harness
+exposes:
+
+- **pi (this harness)**: call the `subagent` tool. Modes:
+  - single slice → `subagent { agent: "<name>", task: "<brief>" }`
+  - independent slices → `subagent { tasks: [ { agent, task }, ... ] }` (parallel)
+  - dependent slices → `subagent { chain: [ { agent, task }, ... ] }`, replacing
+    `{previous}` in a later `task` with the prior step's final output.
+  - In this repo the discoverable sub-agents are: `worker` (focused
+    implementation pass), `evaluator` (reviews a worker pass), and `coder` /
+    `homelab` / `content` (domain orchestrators, used when a slice itself needs
+    planning/delegation). The canonical loop: `worker` implements, `evaluator`
+    reviews, and on findings forward feedback back to `worker` (up to 3 passes).
+- **OpenCode / Claude Code**: delegate via the harness's native sub-agent spawn
+  (the Task / sub-agent tool) targeting the same markdown-defined agents.
+
+If no sub-agent spawn capability is available, state that explicitly and do the
+work in the main thread, but flag that delegation was unavailable — do not
+silently inline it while claiming the skill was honored.
+
 ## Before Delegating
 
 1. Read the repository instructions, relevant documentation, and the files that
