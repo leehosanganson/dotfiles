@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "servers": [
+    {
+      "id": "nixd",
+      "enabled": true,
+      "include": ["**/*.nix"],
+      "rootMarkers": ["flake.nix", "flake.lock"],
+      "bin": "nixd",
+      "args": [],
+      "cwd": "{root}",
+      "languageIdByExtension": { ".nix": "nix" },
+      "startupTimeoutMs": 45000,
+      "diagnosticsWaitMs": 1500
+    },
+    {
+      "id": "yaml-language-server",
+      "enabled": true,
+      "include": ["**/*.yaml", "**/*.yml"],
+      "rootMarkers": [".git"],
+      "bin": "yaml-language-server",
+      "args": ["--stdio"],
+      "cwd": "{root}",
+      "languageIdByExtension": {
+        ".yaml": "yaml",
+        ".yml": "yaml"
+      },
+      "startupTimeoutMs": 45000,
+      "diagnosticsWaitMs": 1500
+    }
+  ]
+}

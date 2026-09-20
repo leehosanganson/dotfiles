@@ -2,11 +2,23 @@
   "lastChangelogVersion": "0.83.0",
   "theme": "dark",
   "defaultProvider": "litellm",
-  "defaultModel": "litellm/openrouter/deepseek-v4-flash",
+  "defaultModel": "openrouter/deepseek-v4-flash",
   "defaultProjectTrust": "ask",
   "enabledModels": [
-    "litellm/unsloth/qwen-3.8",
-    "litellm/openrouter/deepseek-v4-flash",
-    "litellm/openrouter/gpt-5.6-luna"
-  ]
+    "unsloth/qwen-3.8",
+    "openrouter/deepseek-v4-flash",
+    "openrouter/gpt-5.6-luna"
+  ],
+  "powerline": {
+    "preset": "minimal",
+    "welcome": false,
+    "workingVibes": false
+  },
+  "packages": [
+    "npm:pi-lsp",
+    "npm:pi-powerline-footer",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-web-access"
+  ],
+  "defaultThinkingLevel": "medium"
 }

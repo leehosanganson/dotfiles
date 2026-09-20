@@ -1,0 +1,26 @@
+{
+  "searxngBaseUrl": "https://searxng.homelab.leehosanganson.dev",
+  "webSearch": {
+    "enabled": true,
+    "allowedProviders": ["searxng"]
+  },
+  "searchRouting": {
+    "providers": ["searxng"],
+    "fallbackOn": ["network"]
+  },
+  "fetchRouting": {
+    "providers": ["http"],
+    "allowRemoteHostedProviders": false
+  },
+  "allowBrowserCookies": false,
+  "githubClone": {
+    "enabled": true,
+    "clonePath": "/tmp/pi-github-repos"
+  },
+  "tools": {
+    "webSearch": { "enabled": true },
+    "sourceCheck": { "enabled": true },
+    "fetchContent": { "enabled": true },
+    "getSearchContent": { "enabled": true }
+  }
+}
