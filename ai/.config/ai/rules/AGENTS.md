@@ -1,4 +1,4 @@
-# Opencode Rules
+# Rules
 
 ## Rule 1 - Think Before Coding
 

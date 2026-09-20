@@ -28,6 +28,7 @@ permission:
     "gh *": allow
     "rg *": allow
     "jq *": allow
+    "pi *": allow
     "xargs *": allow
     "sort *": allow
     "sed *": allow

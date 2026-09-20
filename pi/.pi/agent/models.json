@@ -1,0 +1,35 @@
+{
+  "providers": {
+    "litellm": {
+      "baseUrl": "https://litellm.leehosanganson.dev/v1",
+      "api": "openai-completions",
+      "apiKey": "!tr -d '\\r\\n' < \"$HOME/.config/sops-nix/secrets/litellm-api-key\"",
+      "models": [
+        {
+          "id": "unsloth/qwen-3.8",
+          "name": "unsloth/qwen-3.8",
+          "reasoning": false,
+          "input": ["text"],
+          "contextWindow": 60000,
+          "maxTokens": 5096
+        },
+        {
+          "id": "openrouter/deepseek-v4-flash",
+          "name": "openrouter/deepseek-v4-flash",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 128000,
+          "maxTokens": 8192
+        },
+        {
+          "id": "openrouter/gpt-5.6-luna",
+          "name": "openrouter/gpt-5.6-luna",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 128000,
+          "maxTokens": 8192
+        }
+      ]
+    }
+  }
+}
