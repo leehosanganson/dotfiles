@@ -1,9 +1,11 @@
 ---
-description: Implements exactly one Dispatcher-invoked pass for a single task item, using optional Planner context when provided, then hands off pass output via Dispatcher.
+description: Implements one delegated task item within the assigned scope and reports the completed work.
 mode: subagent
 steps: 70
 permission:
   "*": deny
+  skill:
+    "*": allow
   "which *": allow
   read: allow
   write: allow
@@ -50,10 +52,6 @@ permission:
     "rm -rf *": allow
     "rm -f /tmp/*": allow
     "rm -rf /tmp/*": allow
-  skill:
-    "*": deny
-    fix-issues: allow
-    frontend-design: allow
   todowrite: allow
   question: allow
   webfetch: allow
@@ -71,7 +69,7 @@ permission:
 
 ## Role
 
-You are the **Worker**. You implement for one specific task item according to the given instructions. Your work is dispatched by the **Dispatcher** sub-agent and will be evaluated by a separate Evaluator agent after it's deemed done.
+You are the **Worker**. You implement one specific delegated task item according to the given instructions. Your work may be evaluated by another subagent after it is complete.
 
 ## Workflow
 

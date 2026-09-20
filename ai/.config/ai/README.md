@@ -6,27 +6,26 @@ This directory holds shared agents, skills, and rules for the OpenCode agentic s
 
 Three human-facing primary agents handle distinct domains. Switch between them with the OpenCode TUI using the `Tab` key.
 
-| Agent | Domain | Model | Key Skills | Purpose |
+| Agent | Domain | Model configuration | Key Skills | Purpose |
 | ----- | ------ | ----- | ---------- | ------- |
-| **coder** | Software engineering / coding | `opencode-go/kimi-k2.7-code` | `code-review`, `context-awareness`, `fix-issues`, `frontend-design`, `github-ops`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies coding goals, gathers context, and delegates implementation to the dispatcher subagent. |
-| **homelab** | Homelab / infrastructure / Kubernetes / GitOps | `opencode-go/kimi-k2.7-code` | `github-ops`, `kubernetes-ops`, `nixos-ops`, `gitops-ops`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies ops goals, gathers infrastructure context, and delegates implementation to the dispatcher subagent. |
-| **content** | LinkedIn / Medium content creation | `opencode-go/kimi-k2.7-code` | `content-writer`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report`, `write-research-notes` | Clarifies topics and angles, gathers context, and delegates content work to the dispatcher subagent. |
+| **coder** | Software engineering / coding | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | `code-review`, `context-awareness`, `delegate`, `diagnose-issues`, `fix-issues`, `frontend-design`, `github-ops`, `plan`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies coding goals, gathers context, and delegates implementation work. |
+| **homelab** | Homelab / infrastructure / Kubernetes / GitOps | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | `delegate`, `diagnose-issues`, `github-ops`, `gitops-ops`, `kubernetes-ops`, `nixos-ops`, `plan`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies ops goals, gathers context, and delegates implementation work. |
+| **content** | LinkedIn / Medium content creation | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | `content-writer`, `delegate`, `plan`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report`, `write-research-notes` | Clarifies topics and angles, gathers context, and delegates implementation work. |
 
 ## Subagents
 
 ### Custom subagents
 
-Custom subagents implement the implementation and evaluation loop:
+Custom subagents support implementation and evaluation:
 
-- **dispatcher** — Receives clarified tasks from primary agents, breaks them into passes, and assigns each pass to a Worker.
 - **worker** — Executes one implementation pass for a single task item, producing code or file changes.
 - **evaluator** — Reviews the Worker's output against the task's acceptance criteria.
 
-The canonical retry loop is **Worker → Evaluator**. If the evaluator finds issues, the dispatcher routes the feedback back to the Worker for another attempt, up to a maximum of 3 attempts. The loop stops early as soon as a pass succeeds.
+The canonical retry loop is **Worker → Evaluator**. If the evaluator finds issues, delegate the feedback back to the Worker for another attempt, up to a maximum of 3 attempts. The loop stops early as soon as a pass succeeds.
 
 ### Built-in subagents
 
-OpenCode provides lightweight built-in subagents that run on the small model (`litellm/unsloth/qwen-3.6`):
+OpenCode provides built-in subagents that follow OpenCode's model inheritance and default behavior unless a model is explicitly configured for a subagent. The `small_model` setting may be configured for lightweight tasks, but it should not be treated as controlling any particular built-in subagent:
 
 - **explore** — Used for local repository context gathering (docs, conventions, relevant files).
 - **general** — Used for general tasks that do not need a domain-specific primary agent.
@@ -36,12 +35,17 @@ OpenCode provides lightweight built-in subagents that run on the small model (`l
 
 Skills are on-demand capability modules stored in `skills/`.
 
+Through OpenCode's native skill mechanism, all skills are available to all primary agents and subagents by default. No `permission.skill` allowlists are required; load the skill that matches the current task rather than treating the lists below as agent-specific restrictions.
+
 | Skill | Purpose |
 | ----- | ------- |
 | `project-context` | Load project-specific context and conventions at the start of every task. |
 | `context-awareness` | Gather repository context when working in unfamiliar codebases. |
 | `code-review` | Guide code review and quality checks before finalizing implementations. |
 | `fix-issues` | Address test failures, lint errors, and review feedback. |
+| `delegate` | Coordinate independently scoped implementation work across agents. |
+| `plan` | Turn clarified requests into actionable plans with acceptance criteria and verification. |
+| `diagnose-issues` | Investigate and diagnose issues before implementation or remediation. |
 | `content-writer` | Draft and publish LinkedIn / Medium content. |
 | `kubernetes-ops` | Run Kubernetes operational tasks with kubectl and Kustomize. |
 | `nixos-ops` | Operate NixOS hosts with nixos-rebuild, nix, and nixos-anywhere. |
@@ -54,15 +58,21 @@ Skills are on-demand capability modules stored in `skills/`.
 | `raise-pr` | Create pull requests following the repository workflow. |
 | `skill-creator` | Build new on-demand skill modules for specialized workflows. |
 
+## Delegate workflow
+
+Use `/plan` to clarify the request, identify constraints and acceptance criteria, and turn the work into concrete task items. Use `/delegate` to hand those task items to the appropriate implementation and evaluation agents. The delegate may ask for clarification when the scope or success criteria are ambiguous.
+
+For implementation work, the normal flow is:
+
+```
+/plan → context → skill → /delegate → Worker → Evaluator
+```
+
+The Worker makes the scoped changes, and the Evaluator independently checks them against the acceptance criteria. Iterate through the delegate workflow when evaluation finds issues; stop when the work is verified or clearly blocked.
+
 ## Usage
 
 Switch primary agents from the OpenCode TUI using the `Tab` key.
-
-The canonical lifecycle for any task is:
-
-```
-clarify → todo → context → skill → dispatcher → evaluator loop
-```
 
 Symlink this configuration into `~/.config/opencode/`:
 
