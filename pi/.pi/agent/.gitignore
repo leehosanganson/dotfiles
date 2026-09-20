@@ -1,1 +1,3 @@
 web-search-cache
+# runtime state written by the agents extension (per-machine active agent)
+agents-active.json
