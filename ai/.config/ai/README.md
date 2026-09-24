@@ -8,7 +8,7 @@ Three human-facing primary agents handle distinct domains. Switch between them w
 
 | Agent | Domain | Model configuration | Key Skills | Purpose |
 | ----- | ------ | ----- | ---------- | ------- |
-| **coder** | Software engineering / coding | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | `code-review`, `context-awareness`, `delegate`, `diagnose-issues`, `fix-issues`, `frontend-design`, `github-ops`, `plan`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies coding goals, gathers context, and delegates implementation work. |
+| **coder** | Software engineering / coding | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | `code-review`, `delegate`, `diagnose-issues`, `fix-issues`, `frontend-design`, `github-ops`, `plan`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies coding goals, gathers context, and delegates implementation work. |
 | **homelab** | Homelab / infrastructure / Kubernetes / GitOps | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | `delegate`, `diagnose-issues`, `github-ops`, `gitops-ops`, `kubernetes-ops`, `nixos-ops`, `plan`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies ops goals, gathers context, and delegates implementation work. |
 | **content** | LinkedIn / Medium content creation | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | `content-writer`, `delegate`, `plan`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report`, `write-research-notes` | Clarifies topics and angles, gathers context, and delegates implementation work. |
 
@@ -39,8 +39,7 @@ Through OpenCode's native skill mechanism, all skills are available to all prima
 
 | Skill | Purpose |
 | ----- | ------- |
-| `project-context` | Load project-specific context and conventions at the start of every task. |
-| `context-awareness` | Gather repository context when working in unfamiliar codebases. |
+| `project-context` | Gather project conventions and repository context, and report branch/PR state read-only at task start or in unfamiliar codebases. |
 | `code-review` | Guide code review and quality checks before finalizing implementations. |
 | `fix-issues` | Address test failures, lint errors, and review feedback. |
 | `delegate` | Coordinate independently scoped implementation work across agents. |
