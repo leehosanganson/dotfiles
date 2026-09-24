@@ -2,12 +2,12 @@
   "lastChangelogVersion": "0.83.0",
   "theme": "dark",
   "defaultProvider": "litellm",
-  "defaultModel": "openrouter/deepseek-v4-flash",
+  "defaultModel": "openrouter/gpt-6-luna",
   "defaultProjectTrust": "ask",
   "enabledModels": [
-    "unsloth/qwen-3.8",
     "openrouter/deepseek-v4-flash",
-    "openrouter/gpt-5.6-luna"
+    "openrouter/gpt-6-luna",
+    "unsloth/qwen-3.8"
   ],
   "powerline": {
     "preset": "minimal",
