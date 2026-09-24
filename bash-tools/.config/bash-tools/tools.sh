@@ -55,24 +55,46 @@ gw() {
 
 # cn - pick a Claude plan or analysis doc and open it in VS Code.
 cn() {
-  local dirs d list target
+  local dirs list target editor
   dirs=("$HOME/.claude/plans" "$HOME/.claude/analysis")
-  for d in "${dirs[@]}"; do mkdir -p "$d"; done
-  list=$(for d in "${dirs[@]}"; do find "$d" -maxdepth 1 -type f 2>/dev/null; done)
+
+  for d in "${dirs[@]}"; do
+    [[ -d "$d" ]] || mkdir -p "$d";
+  done
+
+  list=$(find "${dirs[@]}" -maxdepth 1 -type f 2>/dev/null)
+
   if [ -z "$list" ]; then
-    echo "cn: no files under ~/.claude/plans or ~/.claude/analysis" >&2
+    echo "cn: no files under specified directories" >&2
     return 1
   fi
-  if [ "$1" = "--list" ]; then printf '%s\n' "$list"; return 0; fi
-  if ! command -v fzf >/dev/null 2>&1; then
+
+  if [ "$1" = "--list" ]; then
+    printf '%s\n' "$list"
+    return 0
+  fi
+
+  if [[ -z "$(type -p fzf)" ]]; then
     echo "cn: fzf not installed (choco install fzf)" >&2
     return 1
   fi
+
+  # 4. Use fzf's internal preview capability instead of launching 'head' hundreds of times
   target=$(printf '%s\n' "$list" | fzf --select-1 --exit-0 --reverse --height=60% \
-    --prompt='claude doc> ' --query="${1:-}" --preview='head -60 {}')
-  [ -n "$target" ] || return 1
-  # --reuse-window targets the VS Code window this terminal is running in.
-  code --reuse-window "$target"
+    --prompt='docs> ' \
+    --query="${1:-}" \
+    --preview='fzf --preview-window=up:60% {}' \
+    --preview-window='right:60%:wrap')
+
+  [[ -n "$target" ]] || return 1
+
+  if [[ "$EDITOR" == *code* ]]; then
+    editor="$EDITOR --reuse-window"
+  else
+    editor=$EDITOR
+  fi
+
+  $editor "$target"
 }
 
 # Lazygit - 'q' to quit at selected directory, 'shift-q' to quit normally
