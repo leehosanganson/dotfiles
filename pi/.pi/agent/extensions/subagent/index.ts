@@ -34,6 +34,7 @@ const MAX_PARALLEL_TASKS = 8;
 const MAX_CONCURRENCY = 4;
 const COLLAPSED_ITEM_COUNT = 10;
 const PER_TASK_OUTPUT_CAP = 50 * 1024;
+const SUBAGENT_CHILD_ENV = "PI_SUBAGENT_CHILD";
 
 function formatTokens(count: number): string {
 	if (count < 1000) return count.toString();
@@ -334,6 +335,7 @@ async function runSingleAgent(
 			const invocation = getPiInvocation(args);
 			const proc = spawn(invocation.command, invocation.args, {
 				cwd: cwd ?? defaultCwd,
+				env: { ...process.env, [SUBAGENT_CHILD_ENV]: "1" },
 				shell: false,
 				stdio: ["ignore", "pipe", "pipe"],
 			});
@@ -458,6 +460,9 @@ const SubagentParams = Type.Object({
 });
 
 export default function (pi: ExtensionAPI) {
+	// Child Pi processes launched here must not register subagent again; the parent remains enabled.
+	if (process.env[SUBAGENT_CHILD_ENV] === "1") return;
+
 	pi.registerTool({
 		name: "subagent",
 		label: "Subagent",
