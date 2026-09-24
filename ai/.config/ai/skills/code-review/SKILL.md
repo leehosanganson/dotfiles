@@ -11,3 +11,4 @@ Review every single changed file in the current work, and then create a [./docs/
 - Judge and criticise whether the changes are NEEDED and expandable without changing the scope of the work
 - Follow repository standard and best practices, by following the README.md, CONTRIBUTING.md, and other related documentation
 - Focus only on changed files, and follow on whatever the user wants to focus on
+- Keep `docs/to-fix.md` as a temporary review artifact for the follow-up fix cycle. Remove it after all findings are resolved, and never stage or commit it. If findings remain unresolved, keep it only while fixes are in progress; it must still be removed before commit or finalization.
