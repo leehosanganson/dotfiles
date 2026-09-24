@@ -3,7 +3,7 @@
   "theme": "dark",
   "defaultProvider": "litellm",
   "defaultModel": "openrouter/gpt-6-luna",
-  "defaultProjectTrust": "ask",
+  "defaultProjectTrust": "true",
   "enabledModels": [
     "openrouter/deepseek-v4-flash",
     "openrouter/gpt-6-luna",
