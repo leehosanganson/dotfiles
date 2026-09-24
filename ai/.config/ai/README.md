@@ -6,20 +6,23 @@ This directory holds shared agents, skills, and rules for the OpenCode agentic s
 
 Three human-facing primary agents handle distinct domains. Switch between them with the OpenCode TUI using the `Tab` key.
 
-| Agent | Domain | Model configuration | Key Skills | Purpose |
-| ----- | ------ | ----- | ---------- | ------- |
-| **coder** | Software engineering / coding | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | `code-review`, `delegate`, `diagnose-issues`, `fix-issues`, `frontend-design`, `github-ops`, `plan`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies coding goals, gathers context, and delegates implementation work. |
-| **homelab** | Homelab / infrastructure / Kubernetes / GitOps | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | `delegate`, `diagnose-issues`, `github-ops`, `gitops-ops`, `kubernetes-ops`, `nixos-ops`, `plan`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report` | Clarifies ops goals, gathers context, and delegates implementation work. |
-| **content** | LinkedIn / Medium content creation | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | `content-writer`, `delegate`, `plan`, `project-context`, `raise-pr`, `research-workflow`, `skill-creator`, `write-report`, `write-research-notes` | Clarifies topics and angles, gathers context, and delegates implementation work. |
+| Agent | Domain | Model configuration | Purpose |
+| ----- | ------ | ----- | ------- |
+| **coder** | Software engineering / coding | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | Clarifies coding goals, gathers context, and delegates implementation work. |
+| **homelab** | Homelab / infrastructure / Kubernetes / GitOps | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | Clarifies ops goals, gathers context, and delegates implementation work. |
+| **content** | LinkedIn / Medium content creation | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | Clarifies topics and angles, gathers context, and delegates implementation work. |
 
 ## Subagents
 
 ### Custom subagents
 
-Custom subagents support implementation and evaluation:
+Custom subagents support focused repository exploration, implementation, and evaluation:
 
+- **explorer** — Read-only, narrowly explores repository files and documents based on the caller's interest, returning concise findings and open questions.
 - **worker** — Executes one implementation pass for a single task item, producing code or file changes.
 - **evaluator** — Reviews the Worker's output against the task's acceptance criteria.
+
+The custom explorer is a focused, caller-directed repository reader. OpenCode's built-in **explore** and **scout** remain available for their general-purpose local context gathering and lightweight scouting behavior; use the custom explorer when a constrained, read-only investigation with a concise findings report is preferred.
 
 The canonical retry loop is **Worker → Evaluator**. If the evaluator finds issues, delegate the feedback back to the Worker for another attempt, up to a maximum of 3 attempts. The loop stops early as soon as a pass succeeds.
 
