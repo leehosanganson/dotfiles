@@ -53,8 +53,8 @@ gw() {
   cd "$target" || return 1
 }
 
-# cn - pick a Claude plan or analysis doc and open it in VS Code.
-cn() {
+# ctx - list AI documents and context
+ctx() {
   local dirs list target editor
   dirs=("$HOME/.claude/plans" "$HOME/.claude/analysis")
 
@@ -81,19 +81,22 @@ cn() {
 
   # 4. Use fzf's internal preview capability instead of launching 'head' hundreds of times
   target=$(printf '%s\n' "$list" | fzf --select-1 --exit-0 --reverse --height=60% \
-    --prompt='docs> ' \
+    -d '[/\\\\]' \
+    --with-nth='-2..-1' \
+    --prompt='Context> ' \
     --query="${1:-}" \
-    --preview='fzf --preview-window=up:60% {}' \
-    --preview-window='right:60%:wrap')
+    --preview='cat {}' \
+    --preview-window='right:70%:wrap')
 
   [[ -n "$target" ]] || return 1
 
   if [[ "$EDITOR" == *code* ]]; then
-    editor="$EDITOR --reuse-window"
+    editor="code --reuse-window"
   else
     editor=$EDITOR
   fi
 
+  echo Opening $target
   $editor "$target"
 }
 
