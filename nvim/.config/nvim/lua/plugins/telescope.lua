@@ -9,6 +9,15 @@ return {
     keys = {
       { "<leader>ff", desc = "Find files" },
       { "<leader>fg", "<cmd>Telescope live_grep<CR>", desc = "Live grep" },
+      {
+        "<leader>fG",
+        function()
+          require("telescope.builtin").live_grep {
+            additional_args = function() return { "--hidden" } end,
+          }
+        end,
+        desc = "Live grep hidden files",
+      },
       { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Find buffers" },
       { "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "Help tags" },
       { "<leader>fw", desc = "Grep word under cursor" },
