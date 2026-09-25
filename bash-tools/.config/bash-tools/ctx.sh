@@ -1,15 +1,33 @@
 # ctx - list AI documents and context.
 ctx() {
-  local dirs list target editor d
-  dirs=("$HOME/.claude/plans" "$HOME/.claude/analysis")
+  local dirs list target editor d file_path modified created filename
+  dirs=("$HOME/.claude/plans" "$HOME/.claude/analysis" "$HOME/Documents/research" "$HOME/Documents/analysis")
 
   for d in "${dirs[@]}"; do
     [ -d "$d" ] || mkdir -p "$d"
   done
 
-  list=$(find "${dirs[@]}" -maxdepth 1 -type f 2>/dev/null)
+  list=$(find "${dirs[@]}" -type f -print0 2>/dev/null |
+    while IFS= read -r -d '' file_path; do
+      if modified=$(stat -c %Y -- "$file_path" 2>/dev/null); then
+        :
+      else
+        modified=$(stat -f %Sm -t %s "$file_path" 2>/dev/null) || modified=0
+      fi
+      if created=$(stat -c %W -- "$file_path" 2>/dev/null); then
+        :
+      else
+        created=$(stat -f %B "$file_path" 2>/dev/null) || created=0
+      fi
+      [[ $modified =~ ^[0-9]+$ ]] || modified=0
+      [[ $created =~ ^[0-9]+$ ]] || created=0
+      filename=${file_path##*/}
+      printf '%s\t%s\t%s\t%s\n' "$modified" "$created" "$filename" "$file_path"
+    done |
+    LC_ALL=C sort -t $'\t' -k1,1nr -k2,2nr -k3,3r -k4,4r |
+    cut -f4-)
   if [ -z "$list" ]; then
-    echo "cn: no files under specified directories" >&2
+    echo "ctx: no files under specified directories" >&2
     return 1
   fi
 
