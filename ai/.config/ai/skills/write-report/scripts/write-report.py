@@ -1,16 +1,10 @@
 #!/usr/bin/env python3
 """
-write-report.py — Generate a styled HTML report from markdown content.
+Generate a styled HTML report from markdown content.
 
-Usage:
-    uv run scripts/write-report.py -t "Report Title" --project myproject --content /tmp/content.md [--target report.html]
-
-The script reads markdown content from the --content flag, converts it to a
-styled HTML page, and writes it to the specified target path (or auto-resolves
-to ~/Documents/research/<project>/report.html when omitted).
-
-Required arguments: --title, --project, --content
-Optional argument:  --target (defaults to ~/Documents/research/<project>/report.html)
+Without --target, reports are saved as
+~/Documents/research/reports/YYYYMMDD_<slug>.html. The slug comes from
+--slug, then --project, then --title.
 """
 
 import os
@@ -19,6 +13,7 @@ import html
 import re
 import argparse
 from datetime import datetime
+from urllib.parse import urlsplit
 
 
 def escape(text):
@@ -27,23 +22,38 @@ def escape(text):
 
 
 def convert_inline(text):
-    """Convert inline markdown (bold, code)."""
-    text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
-    text = re.sub(r'__(.*?)__', r'<strong>\1</strong>', text)
-    text = re.sub(r'`(.*?)`', r'<code>\1</code>', text)
-    return text
+    """Render a small safe subset of inline markdown."""
+    pattern = re.compile(
+        r'`([^`]+)`|\[([^\]]+)\]\(([^)\s]+)\)|\*\*(.+?)\*\*|__(.+?)__'
+    )
+    output = []
+    last = 0
+    for match in pattern.finditer(text):
+        output.append(escape(text[last:match.start()]))
+        code, label, url, bold, underscore_bold = match.groups()
+        if code is not None:
+            output.append(f"<code>{escape(code)}</code>")
+        elif label is not None:
+            scheme = urlsplit(url).scheme.lower()
+            if scheme in ("http", "https", "mailto"):
+                output.append(
+                    f'<a href="{escape(url)}" rel="noopener noreferrer">'
+                    f'{escape(label)}</a>'
+                )
+            else:
+                output.append(escape(match.group(0)))
+        else:
+            output.append(f"<strong>{escape(bold or underscore_bold)}</strong>")
+        last = match.end()
+    output.append(escape(text[last:]))
+    return ''.join(output)
 
 
 def convert_markdown(md):
     """Convert a subset of markdown to HTML.
 
-    Supports:
-    - Headings (#, ##, ###)
-    - Bold (**text**)
-    - Inline code (`code`)
-    - Code blocks (``` ... ```)
-    - Unordered lists (- item)
-    - Paragraphs (double newlines)
+    Supports headings, bold, inline code, safe HTTP(S)/mailto links, fenced
+    code blocks, unordered lists, and paragraphs. Raw HTML is always escaped.
     """
     lines = md.split('\n')
     output = []
@@ -123,8 +133,8 @@ def main():
         description="Generate a styled HTML report from markdown content.",
         epilog=(
             "Examples:\n"
-            '  uv run scripts/write-report.py -t "My Report Title" --project myproj --content /tmp/content.md\n'
-            '  uv run scripts/write-report.py -t "My Report Title" --project myproj --content /tmp/content.md --target ~/Documents/report.html\n'
+            '  uv run scripts/write-report.py -t "My Report Title" --content /tmp/content.md\n'
+            '  uv run scripts/write-report.py -t "My Report Title" --content /tmp/content.md --target /absolute/path/report.html\n'
         ),
     )
     parser.add_argument(
@@ -136,18 +146,22 @@ def main():
         "--target",
         default=None,
         metavar="PATH",
-        help="Output file path (optional; defaults to ~/Documents/research/<project>/report.html)",
+        help="Absolute output file path (optional; parent directories are created)",
     )
     parser.add_argument(
         "-p", "--project",
-        required=True,
-        help="Project name (required; used for default output path resolution)",
+        help="Optional project name used as the default filename slug",
     )
     parser.add_argument(
         "--content",
         metavar="PATH",
         required=True,
         help="Read markdown content from this file (required)",
+    )
+
+    parser.add_argument(
+        "--slug",
+        help="Optional filename slug; defaults to --project or the report title",
     )
 
     args = parser.parse_args()
@@ -160,15 +174,20 @@ def main():
         sys.exit(1)
 
     # --------------------------------------------------------------------------
-    # Resolve target path (auto-create directory, default to project-based path)
+    # Resolve target path
     # --------------------------------------------------------------------------
     if args.target is None:
         home = os.environ.get("HOME", os.path.expanduser("~"))
-        target_dir = os.path.join(home, "Documents", "research", args.project)
-        args.target = os.path.join(target_dir, "report.html")
+        target_dir = os.path.join(home, "Documents", "research", "reports")
+        slug_source = args.slug or args.project or args.title
+        slug = re.sub(r"[^a-z0-9]+", "-", slug_source.lower()).strip("-") or "report"
+        date_prefix = datetime.now().strftime("%Y%m%d")
+        args.target = os.path.join(target_dir, f"{date_prefix}_{slug}.html")
+    elif not os.path.isabs(args.target):
+        print("Error: --target must be an absolute path", file=sys.stderr)
+        sys.exit(1)
 
-        # Auto-create the directory structure
-        os.makedirs(target_dir, exist_ok=True)
+    os.makedirs(os.path.dirname(args.target), exist_ok=True)
 
     # --------------------------------------------------------------------------
     # Read content from --content
@@ -344,8 +363,12 @@ def main():
     # --------------------------------------------------------------------------
     # Write to explicit target path
     # --------------------------------------------------------------------------
-    with open(args.target, "w", encoding="utf-8") as f:
-        f.write(html_output)
+    try:
+        with open(args.target, "w", encoding="utf-8") as f:
+            f.write(html_output)
+    except OSError as e:
+        print(f"Error: Cannot write file {args.target}: {e}", file=sys.stderr)
+        sys.exit(1)
 
     print(args.target)
 

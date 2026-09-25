@@ -78,7 +78,7 @@ Save the test commands in a small script at `<issue>/diagnose.sh` so they are re
 
 ## Phase 3 — Research
 
-Use the research skill (`research-workflow`) or web search to find:
+Use the research skill (`research`) or web search to find:
 
 - Official documentation for the component at fault.
 - Recent GitHub issues, discussions, or changelogs mentioning the same symptom.

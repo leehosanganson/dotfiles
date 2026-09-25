@@ -53,9 +53,9 @@ Through OpenCode's native skill mechanism, all skills are available to all prima
 | `nixos-ops` | Operate NixOS hosts with nixos-rebuild, nix, and nixos-anywhere. |
 | `gitops-ops` | Operate a Flux CD GitOps setup and reconcile cluster state from Git. |
 | `github-ops` | Perform GitHub-related infrastructure changes and operations. |
-| `research-workflow` | Conduct and orchestrate research tasks (loaded only when explicitly requested). |
+| `research` | Coordinate research across local and external materials and synthesize verified session artifacts (loaded only when explicitly requested). |
 | `write-report` | Compile research findings into a final report. |
-| `write-research-notes` | Capture and structure research notes during investigations. |
+| `write-notes` | Capture and structure research notes during investigations. |
 | `frontend-design` | Guide UI and frontend design patterns, component structure, and style decisions. |
 | `raise-pr` | Create pull requests following the repository workflow. |
 | `skill-creator` | Build new on-demand skill modules for specialized workflows. |
