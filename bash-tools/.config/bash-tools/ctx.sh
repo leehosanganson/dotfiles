@@ -1,14 +1,41 @@
 # ctx - list AI documents and context.
 ctx() {
-  local dirs list target editor d file_path modified created filename
+  local dirs list target editor d file_path modified created filename create_defaults=0
   dirs=("$HOME/.claude/plans" "$HOME/.claude/analysis" "$HOME/Documents/research" "$HOME/Documents/analysis")
+  [ "$#" -eq 0 ] && create_defaults=1
+
+  if [ "$#" -gt 0 ]; then
+    if [ "$#" -gt 1 ]; then
+      echo "Usage: ctx [directory]" >&2
+      return 2
+    fi
+    dirs=("$1")
+  fi
 
   for d in "${dirs[@]}"; do
-    [ -d "$d" ] || mkdir -p "$d"
+    if [ "$create_defaults" -eq 1 ]; then
+      [ -d "$d" ] || mkdir -p "$d"
+    elif [ ! -d "$d" ]; then
+      echo "ctx: directory does not exist: $d" >&2
+      return 1
+    fi
   done
 
-  list=$(find "${dirs[@]}" -type f -print0 2>/dev/null |
+  list=$(
+    for d in "${dirs[@]}"; do
+      if git -C "$d" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        while IFS= read -r -d '' file_path; do
+          [ -f "$d/$file_path" ] && printf '%s\0' "$d/$file_path"
+        done < <(git -C "$d" ls-files --cached --others --exclude-standard -z -- .)
+      else
+        find "$d" -type f -print0 2>/dev/null
+      fi
+    done |
     while IFS= read -r -d '' file_path; do
+      case "$file_path" in
+        *.[tT][xX][tT]|*.[mM][dD]|*.[hH][tT][mM][lL]) ;;
+        *) continue ;;
+      esac
       if modified=$(stat -c %Y -- "$file_path" 2>/dev/null); then
         :
       else
@@ -31,11 +58,6 @@ ctx() {
     return 1
   fi
 
-  if [ "${1:-}" = "--list" ]; then
-    printf '%s\n' "$list"
-    return 0
-  fi
-
   if ! command -v fzf >/dev/null 2>&1; then
     echo "cn: fzf not installed (choco install fzf)" >&2
     return 1
@@ -45,7 +67,6 @@ ctx() {
     -d '[/\\\\]' \
     --with-nth='-2..-1' \
     --prompt='Context> ' \
-    --query="${1:-}" \
     --preview='cat {}' \
     --preview-window='right:70%:wrap')
 
