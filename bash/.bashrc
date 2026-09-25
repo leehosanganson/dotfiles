@@ -15,6 +15,8 @@ export PATH=$PATH:"/c/Program Files/Microsoft SDKs/Azure/CLI2/wbin"
 export EDITOR='code --wait'
 export VISUAL="$EDITOR"
 
+export DOCKER_SQL_MOUNT_PATH='/d/DockerMount/SQL'
+
 # Autocomplete
 if ! [ -f ~/.git-completion.bash ]; then
   curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash
