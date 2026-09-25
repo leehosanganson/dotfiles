@@ -12,7 +12,7 @@
         $env:USERPROFILE\.glzr\zebar       ->  <repo>\zebar
         $env:USERPROFILE\.bashrc           ->  <repo>\bash\.bashrc
         $env:USERPROFILE\.bash_profile     ->  <repo>\bash\.bash_profile
-        $env:USERPROFILE\.config\bash-tools\tools.sh ->  <repo>\bash-tools\.config\bash-tools\tools.sh
+        $env:USERPROFILE\.config\bash-tools       ->  <repo>\bash-tools\.config\bash-tools
 
 .EXAMPLE
     .\setup-windows.ps1
@@ -167,21 +167,37 @@ foreach ($cfg in @(
     New-Link -Link $cfg.Link -Target $cfg.Repo
 }
 
-# --- 2b. Symlink bash configs (live directly in $env:USERPROFILE) -----------
+# --- 2b. Symlink bash configs ------------------------------------------------
 $bashrcCfg      = Join-Path $RepoRoot 'bash\.bashrc'
 $bashProfileCfg = Join-Path $RepoRoot 'bash\.bash_profile'
-$bashToolsCfg   = Join-Path $RepoRoot 'bash-tools\.config\bash-tools\tools.sh'
+$bashToolsCfg   = Join-Path $RepoRoot 'bash-tools\.config\bash-tools'
 
-$bashToolsRoot = Join-Path $env:USERPROFILE '.config\bash-tools'
-if (-not (Test-Path -LiteralPath $bashToolsRoot)) {
-    Write-Host "Creating parent directory: $bashToolsRoot" -ForegroundColor Yellow
-    New-Item -ItemType Directory -Path $bashToolsRoot -Force | Out-Null
+$configRoot = Join-Path $env:USERPROFILE '.config'
+if (-not (Test-Path -LiteralPath $configRoot)) {
+    Write-Host "Creating parent directory: $configRoot" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path $configRoot -Force | Out-Null
 }
+
+if (-not (Test-Path -LiteralPath $bashToolsCfg -PathType Container)) {
+    Write-Host "[ERROR] Repo config dir not found: '$bashToolsCfg'." -ForegroundColor Red
+    exit 1
+}
+
+$bashToolsLink = Join-Path $configRoot 'bash-tools'
+if (Test-Path -LiteralPath $bashToolsLink) {
+    $existingBashTools = Get-Item -LiteralPath $bashToolsLink -Force
+    if ($existingBashTools -is [System.IO.DirectoryInfo] -and -not $existingBashTools.LinkType) {
+        $backupName = '{0}.backup-{1}' -f $existingBashTools.Name, [guid]::NewGuid().ToString('N')
+        $backupPath = Join-Path $configRoot $backupName
+        Rename-Item -LiteralPath $bashToolsLink -NewName $backupName -ErrorAction Stop
+        Write-Host "  Preserved existing bash-tools directory as '$backupPath'." -ForegroundColor Yellow
+    }
+}
+New-Link -Link $bashToolsLink -Target $bashToolsCfg
 
 foreach ($cfg in @(
     @{ Link = Join-Path $env:USERPROFILE '.bashrc';       Repo = $bashrcCfg },
-    @{ Link = Join-Path $env:USERPROFILE '.bash_profile'; Repo = $bashProfileCfg },
-    @{ Link = Join-Path $env:USERPROFILE '.config\bash-tools\tools.sh'; Repo = $bashToolsCfg }
+    @{ Link = Join-Path $env:USERPROFILE '.bash_profile'; Repo = $bashProfileCfg }
 )) {
     if (-not (Test-Path -LiteralPath $cfg.Repo)) {
         Write-Host "[ERROR] Repo config file not found: '$($cfg.Repo)'." -ForegroundColor Red
