@@ -13,7 +13,7 @@ description: >-
 
 For substantive coding tasks, unfamiliar repositories, or relevant branch/PR context:
 
-1. Resolve `scripts/project-context.sh` relative to this skill's directory and run it with the target repository as the working directory.
+1. Get the absolute directory containing this `SKILL.md` and assign it to `skill_dir` (for example, `skill_dir=/absolute/path/to/project-context`). With the target repository as the current working directory, run `bash "$skill_dir/scripts/project-context.sh"`. Do not resolve the script path relative to the target repository or change directories to the skill directory.
 2. Read the most relevant project documentation and conventions. Stop once you have enough context to plan safely; filenames and script output are pointers, not substitutes for reading relevant guidance.
 3. Report a concise project note with confirmed facts and unknowns, covering project type, relevant language/framework, test/build commands, conventions, branch/upstream/working-tree status, relevant PR state, and decisions needed.
 
