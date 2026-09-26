@@ -2,26 +2,36 @@
 name: project-context
 description: >-
   Gathers project conventions and concise repository context before work begins,
-  especially in unfamiliar codebases, and reports current branch and PR state.
-  Use at task start, when entering an unfamiliar repository, or when branch/PR
-  context matters. It never syncs or switches branches automatically.
+  and reports current branch and PR state. Use this whenever entering any
+  repository to start a substantive coding task, when the repository is
+  unfamiliar, when starting a new or returning task before project conventions
+  have been gathered, or whenever branch or PR context matters. Do not invoke
+  it for simple isolated questions or one-step tasks where repository context is
+  irrelevant. It never syncs or switches branches automatically.
 ---
 
 ## Overview
 
-Before planning or changing files, build a concise picture of the project and
-report the current local branch and pull-request context. Use the bundled
-read-only summary script for an initial snapshot, then read the most relevant
-project documentation and conventions. Stop once you have enough context to
-plan safely; do not assume a branch, sync state, or PR should be continued
-without the user's direction.
+When starting a substantive coding task in a repository, entering an unfamiliar
+repository, starting or returning to a task before its conventions have been
+gathered, or when branch/PR context matters, resolve
+`scripts/project-context.sh` relative to the loaded project-context skill's
+directory and run it with the target repository as the command's working
+directory before planning or editing. Build a concise picture of the project
+and report the current local branch and pull-request context,
+then read the most relevant project documentation and conventions. Stop once
+you have enough context to plan safely; do not assume a branch, sync state, or
+PR should be continued without the user's direction. Skip this for simple
+isolated questions or one-step tasks where repository context is irrelevant.
 
 ## Safe project snapshot
 
-Run `scripts/project-context.sh` from the repository. It inspects local Git
-metadata and, when available, queries open pull requests with `gh pr list`. It
-does not fetch, pull, checkout, or modify repository or GitHub state. Report any
-missing tools or failed inspections rather than filling gaps with assumptions.
+Resolve `scripts/project-context.sh` relative to the loaded project-context
+skill's directory, then run it with the target repository as the command's
+working directory. It inspects local Git metadata and, when available, queries
+open pull requests with `gh pr list`. It does not fetch, pull, checkout, or
+modify repository or GitHub state. Report any missing tools or failed
+inspections rather than filling gaps with assumptions.
 
 ## Discovery checklist
 
