@@ -58,7 +58,7 @@ Through OpenCode's native skill mechanism, all skills are available to all prima
 | `write-notes` | Capture and structure research notes during investigations. |
 | `frontend-design` | Guide UI and frontend design patterns, component structure, and style decisions. |
 | `raise-pr` | Create pull requests following the repository workflow. |
-| `skill-creator` | Build new on-demand skill modules for specialized workflows. |
+| `create-skill` | Create or revise agent skills and evaluate their behavior when requested. |
 
 ## Delegate workflow
 

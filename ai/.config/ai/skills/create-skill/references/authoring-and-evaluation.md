@@ -5,7 +5,7 @@ Use only the sections needed for the current request. Adapt the process to avail
 ## Authoring
 
 1. **Define the job.** Establish what the skill should help an agent accomplish, when it should trigger, what success looks like, and any safety or scope boundaries. Reuse details already clear from the conversation; ask only for missing decisions that affect the result.
-2. **Inspect before editing.** Read the existing skill and check the skill directory for referenced resources. Preserve established conventions and names. Do not add pointers to files, scripts, tools, or dependencies that are not present or confirmed available.
+2. **Inspect before editing.** Read the existing skill and check the skill directory for referenced resources. Preserve established conventions and names unless the user requests a rename. Do not add pointers to files, scripts, tools, or dependencies that are not present or confirmed available.
 3. **Draft the trigger description.** State the specific positive use cases and a few meaningful near-miss exclusions. Keep it concise and distinguish invoking the skill from asking about, discussing, or doing adjacent work.
 4. **Write actionable instructions.** Prefer a short workflow that explains decisions and expected outcomes over generic reminders. Include only constraints needed to make behavior reliable. Put detailed material in references only when it is useful for a conditional workflow; point to it from the skill with a clear condition.
 5. **Check the result.** Confirm frontmatter is valid, referenced files exist, instructions agree with available resources, and the skill stays focused. Keep `SKILL.md` below 500 lines.
