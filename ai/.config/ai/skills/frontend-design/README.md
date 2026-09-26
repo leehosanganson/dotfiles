@@ -4,7 +4,10 @@ Generates distinctive, production-grade frontend interfaces that avoid generic A
 
 ## What It Does
 
-This skill is automatically used for frontend work. Creates production-ready code with:
+Use this skill when creating frontend UI or substantially redesigning an interface
+and a deliberate visual direction is needed. It does not apply to backend-only work
+or small code fixes that do not affect the interface. It guides production-ready UI
+with:
 
 - Bold aesthetic choices
 - Distinctive typography and color palettes

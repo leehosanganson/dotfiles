@@ -1,14 +1,16 @@
 ---
 name: code-review
 description: >-
-  Review every single changed file in the current work, and then create a [./docs/to-fix.md] with the issues needed to be fixed. Use whenever you need to review code changes and document issues. Loads on-demand during code review cycles.
+  Review changed code files and record actionable findings in ./docs/to-fix.md.
+  Use after implementation when the user requests a code review or review
+  findings for follow-up. Do not use to implement fixes, review unchanged code,
+  or discuss code without a change set; use fix-issues to resolve documented
+  findings.
 ---
 
-Review every single changed file in the current work, and then create a [./docs/to-fix.md] with the issues needed to be fixed.
+Review every changed file in scope and create or update `docs/to-fix.md` with actionable issues.
 
-- Summarise what has been changed and what is the change in behaviour
-- All changes should be following the language convention and obvious to readers
-- Judge and criticise whether the changes are NEEDED and expandable without changing the scope of the work
-- Follow repository standard and best practices, by following the README.md, CONTRIBUTING.md, and other related documentation
-- Focus only on changed files, and follow on whatever the user wants to focus on
-- Keep `docs/to-fix.md` as a temporary review artifact for the follow-up fix cycle. Remove it after all findings are resolved, and never stage or commit it. If findings remain unresolved, keep it only while fixes are in progress; it must still be removed before commit or finalization.
+- Summarize the change and its behavioral impact.
+- Check correctness, necessity, readability, scope, and repository conventions. Read the relevant README, contribution guidance, and other project documentation.
+- Focus on changed files and the user's review priorities. Report findings with enough context to fix them; do not silently broaden the requested scope.
+- Keep `docs/to-fix.md` as a temporary follow-up artifact. Remove it once all findings are resolved and before commit or finalization. Keep it only while fixes are in progress; never stage or commit it.

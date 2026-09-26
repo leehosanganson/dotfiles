@@ -1,56 +1,30 @@
 ---
 name: nixos-ops
 description: >-
-  Operate NixOS hosts safely with nixos-rebuild, nix, and nixos-anywhere. Load this skill when the user asks to reconfigure, upgrade, install, rollback, or troubleshoot a NixOS system. Use it for day-to-day operations, not for initial install or disaster recovery.
+  Reconfigure, upgrade, install, roll back, or troubleshoot NixOS hosts using Nix
+  and NixOS tools, including explicitly requested `nixos-anywhere` installs. Do
+  not use for Kubernetes or Flux/GitOps operations, `nixos-install`, or disaster
+  recovery.
 ---
 
-## Overview
+## Operating rules
 
-NixOS is declarative and atomic. Always validate changes before activation, keep previous generations available, and roll back if anything breaks. Use flakes and lock files for reproducible operations.
+- Validate before activation: use `nix flake check` for flakes or `nixos-rebuild build` otherwise.
+- Prefer `nixos-rebuild test` before switching so the previous generation remains available if the change fails.
+- Keep prior generations until the new configuration is verified. Never run `nix-collect-garbage -d` before confirming stability.
+- Do not format disks or run `nixos-install` over an existing system without explicit user confirmation.
+- For remote installation, confirm the target host and expected data destruction before using `nixos-anywhere`.
 
-## Safety Rules
+## Edit and activate configuration
 
-- Prefer `nixos-rebuild test` before `nixos-rebuild switch` so you can boot the previous generation if the new one fails.
-- Run `nix flake check` (if using flakes) or `nixos-rebuild build` before switching.
-- Never garbage-collect old generations (`nix-collect-garbage -d`) until you have confirmed the new configuration works.
-- Never run destructive commands like disk formatting or `nixos-install` over an existing system without explicit user confirmation.
-- For remote installs, use `nixos-anywhere` and confirm the target host and expected data destruction.
+1. Locate the relevant `configuration.nix`, `flake.nix`, or host module.
+2. Make the smallest change that meets the request.
+3. Validate with `nix flake check` or `nixos-rebuild build --flake .#<host>`.
+4. Test with `nixos-rebuild test --flake .#<host>`.
+5. If the test succeeds and the user authorized activation, switch with `nixos-rebuild switch --flake .#<host>`.
+6. Verify the affected service or setting.
 
-## Common Workflows
-
-### Edit the configuration
-
-1. Locate the relevant file (`configuration.nix`, `flake.nix`, or a host module).
-2. Make the smallest change that achieves the goal.
-3. Validate: `nix flake check` or `nixos-rebuild build --flake .#<host>`.
-4. Test: `nixos-rebuild test --flake .#<host>`.
-5. Switch: `nixos-rebuild switch --flake .#<host>`.
-6. Verify the service or setting works.
-
-### Roll back
-
-- Reboot and select the previous generation in the bootloader.
-- Or run `nixos-rebuild switch --rollback`.
-
-### Garbage collection
-
-Only after confirming the current generation is stable:
-
-```bash
-nix-collect-garbage -d
-```
-
-### Remote install
-
-Use `nixos-anywhere` for installing NixOS on a remote host from a flake:
-
-```bash
-nixos-anywhere --flake .#<host> root@<target>
-```
-
-Confirm the target host and that any data destruction is expected.
-
-### Inspect state
+## Inspect state
 
 ```bash
 nixos-rebuild list-generations
@@ -59,20 +33,25 @@ nixos-option <option.name>
 systemctl status <service>
 ```
 
-## Best Practices
+## Roll back
 
-- Keep `hardware-configuration.nix` generated; do not hand-edit it.
-- Commit changes before rebuilding so you can revert the config or lock file.
-- Pin inputs in `flake.lock` and update deliberately.
-- Use `nixos-enter` to chroot into an installed NixOS system for rescue.
+Use `nixos-rebuild switch --rollback`, or reboot and select the previous generation in the bootloader. Confirm with the user before initiating a rollback that may disrupt active services.
 
-## Escalation
+## Remote install
 
-Ask the user before:
+For an explicitly requested remote install:
+
+```bash
+nixos-anywhere --flake .#<host> root@<target>
+```
+
+Confirm the host and expected data destruction first.
+
+## Ask before
 
 - Reformatting disks or running `nixos-install`.
-- Changing bootloader, kernel, or networking settings that could lock you out.
-- Garbage-collecting all generations.
-- Any action that could cause downtime.
+- Changing bootloader, kernel, or networking settings that could lock out the host.
+- Garbage-collecting generations.
+- Taking any action that could cause downtime.
 
-When in doubt, describe the planned command and its impact, then wait for approval.
+Keep `hardware-configuration.nix` generated rather than hand-editing it. Pin flake inputs in `flake.lock` and update them deliberately. Use `nixos-enter` to chroot into an installed system for rescue.

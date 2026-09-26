@@ -1,13 +1,15 @@
 ---
 name: write-report
 description: >-
-  Generate styled HTML reports and summaries from markdown. Use whenever a user
-  asks for a report, summary, briefing, writeup, or an HTML export.
+  Render Markdown findings as a styled HTML report. Use when the user requests a
+  report, briefing, summary, writeup, or HTML export; don't use to conduct new
+  research or create standalone Markdown notes.
 ---
 
-## Usage
+## Workflow
 
-Write the report content to a Markdown file, then run:
+Write non-empty report content to a Markdown file, preferably under `/tmp`, then
+run the bundled renderer and check its printed output path:
 
 ```bash
 uv run "$AI_SKILL_DIR/write-report/scripts/write-report.py" \
@@ -15,37 +17,15 @@ uv run "$AI_SKILL_DIR/write-report/scripts/write-report.py" \
   --content /tmp/content.md
 ```
 
-The script prints the output path. By default it creates
-`~/Documents/research/reports/` and writes
-`YYYYMMDD_<slug>.html`. The slug is derived from `--slug` when supplied,
-otherwise `--project`, otherwise `--title`; characters other than lowercase
-letters and digits become hyphens. For example, `Q2 Planning Meeting` becomes
-`q2-planning-meeting`.
+By default the report is saved in `~/Documents/research/reports/` as
+`YYYYMMDD_<slug>.html`. The slug uses `--slug`, then `--project`, then `--title`;
+`--project` only affects the default filename.
 
-`--project` is optional and only affects the default filename slug; it does not
-change the output directory. You can also provide `--slug` without project or
-research-specific context.
-
-## Explicit output path
-
-Use `--target` to write to an explicit absolute path. The script creates missing
-parent directories, including when writing a research-session artifact:
-
-```bash
-uv run "$AI_SKILL_DIR/write-report/scripts/write-report.py" \
-  --title "Alpha Findings" \
-  --content /tmp/content.md \
-  --target /absolute/path/to/research-session/report.html
-```
-
-Relative `--target` values are rejected. Do not pass `~` expecting shell
-expansion inside the argument; use an absolute path instead.
-
-## Content and safety
+Use `--target /absolute/path/to/report.html` for an exact output path. The
+renderer creates missing parent directories and rejects relative target paths.
+When writing a research-session artifact, pass its explicit absolute path.
 
 The renderer supports headings, bold, inline code, fenced code blocks, unordered
-lists, paragraphs, and clickable HTTP(S)/mailto Markdown links. It escapes raw
-HTML and does not make unsupported or unsafe link schemes clickable.
-
-The input Markdown file must exist and contain non-whitespace content. Check the
-printed output path after a successful run.
+lists, paragraphs, and clickable HTTP(S)/mailto links. It escapes raw HTML and
+leaves unsafe link schemes unclickable; author content within those supported
+Markdown features.

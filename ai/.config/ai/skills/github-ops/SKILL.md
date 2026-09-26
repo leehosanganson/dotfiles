@@ -1,64 +1,41 @@
 ---
 name: github-ops
 description: >-
-  Manage GitHub issues, PRs, comments, and reviews. Load this skill when the user asks to create, update, review, comment on, or merge GitHub issues and pull requests. It verifies repository context first and follows safe defaults: no force-push, no merges without passing checks unless the user explicitly overrides, and no closing issues without confirmation.
+  Manage GitHub issues and existing pull requests, including comments, reviews,
+  updates, and merges, using `gh` or available GitHub tools. Use raise-pr when
+  creating a pull request is the final delivery step. Do not use for local code
+  changes or infrastructure operations; use the relevant skill instead.
 ---
 
-## Overview
+## Before acting
 
-Carry out GitHub repository operations on behalf of the user. Start by confirming the repository and current branch context, then perform the requested action with the least privilege necessary. Use `gh` CLI or `github_*` MCP tools depending on what is available and authenticated.
-
-## Permissions
-
-Before acting, verify:
-
-1. **Repository context** — which repo (`owner/repo`) and which branch/PR this applies to.
-2. **Authentication** — `gh auth status` or the availability of `github_*` tools.
-3. **User intent** — whether the user wants you to act directly or just draft the change.
-
-If repo context is unclear, run `gh repo view` or read the local `.git/config`. If no tool is authenticated, ask the user before proceeding.
+Confirm the repository, relevant branch or issue/PR, authentication, and whether the user wants direct action or a draft. Check `gh auth status` or available `github_*` tools. If repository context is unclear, inspect `.git/config` or run `gh repo view`. Ask before proceeding if required tools are unauthenticated.
 
 ## Workflows
 
 ### Create an issue
 
-1. Gather title, body, labels, and assignees.
-2. Use `gh issue create` or the equivalent MCP tool.
-3. Report the issue number and URL.
+Gather the title, body, labels, and assignees, then use `gh issue create` or the equivalent tool. Report the issue number and URL.
 
 ### Update a PR description
 
-1. Identify the PR via URL, number, or current branch (`gh pr view`).
-2. Draft the updated description.
-3. Confirm with the user before editing.
-4. Apply with `gh pr edit <pr> --body-file ...` or equivalent.
+Identify the PR by URL, number, or current branch. Draft the description and confirm with the user before editing. Use `gh pr edit <pr> --body-file <file>` or an equivalent tool.
 
 ### Review a PR
 
-1. Check out the PR branch if needed (`gh pr checkout <pr>`).
-2. Read the diff (`gh pr diff <pr>`).
-3. Leave review comments or a summary review.
-4. If approving, ensure the user explicitly asked for approval; otherwise leave a comment review.
+Read the diff with `gh pr diff <pr>`. Check out the PR branch only if needed to review it. Leave comments or a summary review. Approve only when the user explicitly asked for approval; otherwise submit a comment review.
 
 ### Comment on an issue or PR
 
-1. Identify the issue/PR.
-2. Draft the comment.
-3. Post with `gh issue comment <number>` or `gh pr comment <number>`.
-4. Report the comment URL.
+Identify the issue or PR, prepare the comment, post it with `gh issue comment <number>` or `gh pr comment <number>`, and report its URL.
 
 ### Merge a PR
 
-1. Verify checks are passing: `gh pr checks <pr>`.
-2. Confirm merge strategy (merge, squash, rebase) with the user.
-3. Merge only after the user confirms.
-4. Report the merge commit and post-merge state.
+Check `gh pr checks <pr>`, confirm the merge strategy with the user, and merge only after confirmation. Report the merge commit and resulting state.
 
 ## Safety
 
-- Never force-push.
-- Never merge without checks passing unless the user explicitly says to override.
-- Never close an issue or PR without confirmation.
-- Never delete branches or tags without confirmation.
-- Prefer drafting edits and showing them to the user before applying.
-- When using `gh`, keep commands single-purpose and avoid chaining.
+- Never force-push, delete branches or tags, or close issues or PRs without explicit confirmation.
+- Never merge without passing checks unless the user explicitly overrides this requirement.
+- Draft edits and show them to the user before applying.
+- Keep `gh` commands single-purpose; do not chain unrelated operations.

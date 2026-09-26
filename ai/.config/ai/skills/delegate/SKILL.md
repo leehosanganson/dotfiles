@@ -1,120 +1,35 @@
 ---
 name: delegate
 description: >-
-  Coordinates multi-agent implementation work by splitting a goal into independent
-  vertical slices, delegating them in parallel where safe, and integrating and
-  verifying the resulting changes for the caller.
+  Coordinate implementation work that can be split into independently scoped
+  agent tasks; delegate the slices, reconcile their changes, and verify the
+  integrated result. Use when the user has approved multi-agent work with
+  clear task boundaries. Do not use for a single bounded task, planning without
+  implementation, or when no sub-agent capability is available.
 ---
 
-## Overview
+## Dispatch
 
-Use this skill when a task contains multiple implementation slices that can be
-worked on independently. This is the preferred coordination model for replacing
-ad-hoc or purely sequential dispatch: the caller owns decomposition,
-contracts, integration, reconciliation, and the final report; subagents own only
-their assigned vertical slice.
+Use the harness's native sub-agent tool to delegate each slice. Do not implement a slice in the caller and claim it was delegated.
 
-Invoke it as `/delegate` through OpenCode's native skill loader. This is a skill
-module, not a command file; do not create or depend on a commands symlink.
+- Use parallel dispatch only for independent slices; use sequential dispatch when a slice depends on an earlier result.
+- In this repository, `worker` implements focused tasks and `evaluator` reviews them. Use `coder`, `homelab`, or `content` only when a slice itself requires domain planning or delegation.
+- If no sub-agent tool is available, state that delegation is unavailable. Proceed inline only when appropriate and report the limitation.
 
-## Dispatch: actually spawn a sub-agent — do not inline the work
+## Before dispatch
 
-The sections below describe a *workflow*, not the invocation. The main thread
-**must call a lower-level agent for each slice**; it must not implement the slice
-itself and then merely "report" it. Use the sub-ordinance mechanism your harness
-exposes:
+1. Read project instructions, relevant documentation, architecture, and conventions.
+2. Clarify ambiguities; state assumptions and measurable success criteria.
+3. Split the approved scope into independently testable vertical slices. Include interface, implementation, and tests in each slice where applicable.
+4. Give each sub-agent a brief with the goal, context, exact scope and exclusions, dependencies, acceptance criteria, verification, permitted files, assumptions, and risks.
+5. Identify overlapping files and shared decisions. Assign one owner or serialize conflicting work.
 
-- **pi (this harness)**: call the `subagent` tool. Modes:
-  - single slice → `subagent { agent: "<name>", task: "<brief>" }`
-  - independent slices → `subagent { tasks: [ { agent, task }, ... ] }` (parallel)
-  - dependent slices → `subagent { chain: [ { agent, task }, ... ] }`, replacing
-    `{previous}` in a later `task` with the prior step's final output.
-  - In this repo the discoverable sub-agents are: `worker` (focused
-    implementation pass), `evaluator` (reviews a worker pass), and `coder` /
-    `homelab` / `content` (domain orchestrators, used when a slice itself needs
-    planning/delegation). The canonical loop: `worker` implements, `evaluator`
-    reviews, and on findings forward feedback back to `worker` (up to 3 passes).
-- **OpenCode / Claude Code**: delegate via the harness's native sub-agent spawn
-  (the Task / sub-agent tool) targeting the same markdown-defined agents.
+## Integrate and verify
 
-If no sub-agent spawn capability is available, state that explicitly and do the
-work in the main thread, but flag that delegation was unavailable — do not
-silently inline it while claiming the skill was honored.
+After each group completes:
 
-## Before Delegating
-
-1. Read the repository instructions, relevant documentation, and the files that
-   define the current architecture and conventions.
-2. State assumptions and clarify ambiguous requirements rather than guessing.
-3. Define success criteria and split the work into independently testable,
-   end-to-end vertical slices. A slice should include the relevant interface,
-   implementation, and tests—not merely a layer such as “edit models.”
-4. For every slice, write a task brief containing:
-   - context and the user/product goal;
-   - exact scope and explicit out-of-scope items;
-   - dependencies and shared interfaces;
-   - acceptance criteria and required verification;
-   - files or areas the subagent may change;
-   - known risks, assumptions, and likely conflicts.
-
-## Parallel Subagent Workflow
-
-- Dispatch independent slices in parallel using separate subagents. Include the
-  full context, scope, constraints, acceptance criteria, and test expectations in
-  each prompt; do not make a subagent infer the contract from another slice.
-- Keep dependent slices sequential. If slice B needs an output or interface from
-  slice A, finish and verify A first, then pass the relevant result to B.
-- Identify conflicts before dispatch: overlapping files, incompatible API
-  decisions, schema or migration ordering, shared configuration, generated files,
-  and mutually exclusive design choices. Either assign ownership of the shared
-  area to one slice or serialize the conflicting work.
-- Require each subagent to stay within scope, inspect local conventions, write
-  behavioral tests for modified logic, run applicable existing tests, and report
-  changed files, verification, assumptions, and unresolved issues.
-- Do not ask subagents to perform unrelated cleanup or silently broaden the
-  specification.
-
-## Caller Integration and Reconciliation
-
-The caller is the integration owner. After each parallel group completes:
-
-1. Collect every subagent report and inspect the actual diff; do not trust a
-   summary in place of repository state.
-2. Reconcile overlapping decisions against the original acceptance criteria,
-   project conventions, and the declared ownership/dependency plan. Resolve
-   conflicts explicitly by the caller instead of blending incompatible
-   behavior.
-3. Integrate changes in dependency order. Preserve correct work, and make only
-   the smallest edits needed to resolve conflicts or fulfill the agreed contract.
-4. If a slice is incomplete or violates its contract, send focused feedback back
-   to that subagent (or reassign the slice) before declaring the group integrated.
-5. Update the shared task status and record decisions that affect later slices.
-
-## Integrated Verification
-
-Once all slices are reconciled, verify the product as a whole, not just each
-slice:
-
-- inspect the final diff and confirm scope, interfaces, migrations, and generated
-  artifacts are coherent;
-- run formatting, linting, unit tests, integration/E2E tests, and build or type
-  checks available in the repository;
-- exercise cross-slice behavior and failure paths, especially shared APIs,
-  persistence, configuration, and user-facing flows;
-- confirm acceptance criteria, security constraints, and documentation impacts;
-- report any environment-limited checks honestly and identify the remaining risk.
-
-## Final Report
-
-Report to the caller with:
-
-1. a concise summary of the integrated result;
-2. the slices delegated and their outcomes;
-3. files or major areas changed;
-4. conflicts or decisions reconciled by the caller;
-5. verification commands and results, including skipped checks and why;
-6. acceptance criteria status and any remaining risks or follow-up work.
-
-Do not claim completion until the integrated verification is finished. If a
-dependency, conflict, or failed verification blocks completion, state the blocker
-and the minimum next action instead.
+1. Read each report and inspect the actual diff.
+2. Reconcile conflicts against the agreed scope and acceptance criteria. Integrate in dependency order, making only necessary edits.
+3. Return incomplete or out-of-scope work for correction before accepting it.
+4. Verify the integrated result: inspect scope and interfaces; run applicable formatting, lint, tests, build/type checks, and cross-slice or failure-path checks; confirm documentation and security constraints.
+5. Report the result, delegated slices, changed areas, reconciled decisions, verification (including skipped checks), acceptance status, and remaining risks. Do not claim completion while required checks are blocked or failing.

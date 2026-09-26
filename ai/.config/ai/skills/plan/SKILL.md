@@ -1,78 +1,41 @@
 ---
 name: plan
 description: >-
-  Produces an analysis-only, actionable implementation plan for a small, medium,
-  or large task, including architecture, product requirements, vertical slices,
-  dependencies, risks, acceptance criteria, and verification.
+  Produce an analysis-only implementation plan grounded in the repository, with
+  requirements, ordered work slices, risks, acceptance criteria, and verification.
+  Use before implementing a nontrivial task or when the user asks for a plan.
+  Do not use to implement changes or for a simple, one-step task that needs no
+  planning.
 ---
 
 ## Contract
 
-This skill produces a plan only. Do not implement, edit, or create project files
-unless the caller separately and explicitly asks for implementation. Read the
-repository and relevant documentation as needed so the plan reflects the actual
-codebase rather than assumptions.
+Produce a plan only. Do not implement changes or create project files unless the caller separately authorizes implementation. Read enough of the repository and relevant documentation to ground the plan.
 
-Invoke it as `/plan` through OpenCode's native skill loader. This is a skill
-module, not a command file; do not create or depend on a commands symlink.
+Accept exactly one positional size: `small`, `medium`, or `large`. If it is missing or invalid, ask for one and do not produce the plan yet.
 
-## Size Argument
+- `small`: inspect immediate files and conventions; plan one bounded change, normally one to three slices.
+- `medium`: inspect the relevant subsystem, callers, tests, and dependencies; plan ordered slices and cross-cutting concerns.
+- `large`: map affected subsystems, ownership, risks, and rollout or migration phases with dependency gates.
 
-Accept one positional size argument: `small`, `medium`, or `large`.
+## Workflow
 
-- `small`: inspect the immediate files and conventions; produce a focused plan
-  for one bounded change, normally with one to three implementation slices.
-- `medium`: inspect the relevant subsystem, callers, tests, and dependencies;
-  produce a cross-cutting plan with interfaces, migration/configuration concerns,
-  and ordered vertical slices.
-- `large`: perform broad repository discovery and architecture analysis; map
-  affected subsystems, rollout or migration strategy, ownership boundaries,
-  risks, and phased vertical slices with explicit dependency gates.
-- Missing or invalid argument: do not silently choose a size. Ask the caller to
-  provide exactly one of `small`, `medium`, or `large`, and explain that no plan
-  has been produced yet. If the task itself is clearly trivial but no argument
-  was supplied, still request the argument.
+1. State the goal, user outcome, constraints, non-goals, open questions, and assumptions.
+2. Inspect relevant project instructions, documentation, source, tests, tooling, interfaces, and configuration. Stop when the plan is grounded.
+3. Define user requirements, business rules, edge/failure cases, compatibility, and measurable outcomes.
+4. Describe current and proposed behavior, component boundaries, data/control flow, public contracts, security, observability, and compatibility.
+5. Split work into testable vertical slices. For each, name areas/files, behavior, dependencies, acceptance criteria, tests, and handoff. Order dependent slices and identify safe parallel work.
+6. Inventory internal/external dependencies, schemas, migrations, feature flags, generated artifacts, and rollout prerequisites.
+7. Compare risks and alternatives, including failure modes, security/privacy, performance, operations, compatibility, rollback, and unresolved decisions. Recommend the simplest fitting approach.
+8. Define verification checks and tie each to an acceptance criterion.
 
-## Planning Workflow
+## Research
 
-1. Restate the goal, user/product outcome, constraints, non-goals, and open
-   questions. State assumptions separately.
-2. Resolve project context and inspect the relevant README, agent rules, source,
-   tests, build tooling, schemas, APIs, and deployment/configuration files. Stop
-   discovery when the plan is grounded, but do not skip files that can change
-   architecture or acceptance criteria.
-3. Define product requirements: actors, user journeys, business rules, edge and
-   failure cases, compatibility expectations, and measurable outcomes.
-4. Describe the architecture design: current behavior, proposed behavior,
-   component boundaries, data/control flow, public contracts, persistence,
-   observability, security, and backward-compatibility strategy.
-5. Break the work into independently testable vertical slices. For each slice,
-   specify context, files/areas, behavior, dependencies, acceptance criteria,
-   tests, and what must be handed to the next slice. Keep dependent slices
-   ordered; identify independent slices that can be delegated in parallel.
-6. Inventory dependencies: internal modules, external services/packages,
-   versions, schemas, feature flags, migrations, generated artifacts, and
-   environment or rollout prerequisites.
-7. Analyze risks and alternatives, including failure modes, security/privacy,
-   performance, operational impact, compatibility, rollback, and unresolved
-   decisions. Recommend the simplest option that satisfies the requirements.
-8. Define verification: unit, integration, E2E, contract, build/type, lint,
-   migration/rollback, observability, and manual acceptance checks as applicable.
-   Tie every check to an acceptance criterion.
+Use the repository as the first source of truth. When it cannot answer a concrete question about current or version-specific behavior, consult authoritative external sources. Record the source, version/date, finding, and effect on the plan. Avoid unfocused research.
 
-## Knowledge Gaps and External Research
+## Output
 
-Do not guess about uncertain concepts, current behavior, latest news, releases,
-or version-specific documentation. First use the repository as the source of
-truth; when it is insufficient, use `searxng_*` tools to search and
-`webfetch`/`searxng_web_url_read` to read authoritative sources. Prefer official
-documentation, release notes, standards, and primary sources. Record the source,
-version/date, relevant finding, and how it changes the plan. Research is for
-closing a concrete knowledge gap, not for broad unfocused browsing.
-
-## Output Format
-
-Return an actionable plan with these headings:
+Use these headings:
 
 1. **Scope and assumptions**
 2. **Product requirements and non-goals**
@@ -85,6 +48,4 @@ Return an actionable plan with these headings:
 9. **Verification strategy**
 10. **Open questions and next action**
 
-Make each step concrete enough for another agent to implement without rediscovery:
-name the relevant modules/files, interfaces, data changes, test behavior, and
-ordering. End by clearly stating that no implementation was performed.
+Make slices actionable without rediscovery. End by stating that no implementation was performed.
