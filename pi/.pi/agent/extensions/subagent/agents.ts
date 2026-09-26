@@ -57,6 +57,7 @@ function loadAgentsFromDir(dir: string, source: "user" | "project"): AgentConfig
 		}
 
 		const { frontmatter, body } = parseFrontmatter<Record<string, unknown>>(content);
+		if (frontmatter.mode !== "subagent") continue;
 
 		// Fall back to the file stem when no pi-style `name:` key is present.
 		const name = typeof frontmatter.name === "string" && frontmatter.name.trim()
