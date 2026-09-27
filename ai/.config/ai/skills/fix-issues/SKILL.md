@@ -1,14 +1,14 @@
 ---
 name: fix-issues
 description: >-
-  Resolve actionable code issues documented in ./docs/to-fix.md or equivalent
-  review feedback. Use when the user asks to implement review findings or fix
-  issues from a code review. Do not use to produce a review or to investigate
-  unrelated failures without a documented issue; use code-review to create
-  review findings.
+  Resolve actionable findings in the active coding agent's task or todo feature,
+  the repository's established issue tracker, or review feedback supplied in
+  conversation. Use when the user asks to implement review findings or fix
+  issues from a code review. Do not use to produce a review or investigate
+  unrelated failures; use code-review to record review findings.
 ---
 
-1. Read `docs/to-fix.md` and the relevant project guidance.
+1. Read the applicable task/todo items, issue tracker entries, or review feedback, along with relevant project guidance. In Pi, use the session-local `todo` tool.
 2. Fix each in-scope issue, keeping changes focused and consistent with repository conventions.
-3. Run the applicable tests and checks. Have a separate agent with no prior project context evaluate the fixes objectively; address valid feedback and repeat until it passes.
-4. Remove `docs/to-fix.md` after all findings are resolved. Keep it only while fixes remain in progress; never stage or commit it.
+3. Run applicable tests and checks. Request a separate objective review when appropriate to the scope and available workflow; address valid feedback.
+4. After verifying a finding is resolved, mark only its corresponding task complete (in Pi, check its current status and toggle it only if incomplete). Preserve unrelated tasks.

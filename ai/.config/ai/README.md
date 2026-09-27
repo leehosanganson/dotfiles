@@ -44,6 +44,7 @@ Through OpenCode's native skill mechanism, all skills are available to all prima
 | ----- | ------- |
 | `project-context` | Gather project conventions and repository context, and report branch/PR state read-only at task start or in unfamiliar codebases. |
 | `code-review` | Guide code review and quality checks before finalizing implementations. |
+| `explain` | Explain actual branch or targeted changes interactively, without modifying or reviewing them. |
 | `fix-issues` | Address test failures, lint errors, and review feedback. |
 | `delegate` | Coordinate independently scoped implementation work across agents. |
 | `plan` | Turn clarified requests into actionable plans with acceptance criteria and verification. |
