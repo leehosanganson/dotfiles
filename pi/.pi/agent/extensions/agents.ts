@@ -70,6 +70,8 @@ function writeActiveId(id: string | null): Promise<void> {
 }
 
 export default async function (pi: ExtensionAPI) {
+  if (process.env.PI_SUBAGENT_CHILD === "1") return;
+
   const agents = await loadAgents();
   const findAgent = (id?: string | null) => agents.find((a) => a.id === id);
   const completionChoices = [...agents.map((a) => a.id), "clear"];
