@@ -78,7 +78,3 @@ When something is behaving against your understanding, use an external source of
 
 Code and changes should be self-explanatory.
 Keep only neccessary comments or revise the changes themselves.
-
-## Rule 18 - Factory for Software Development
-
-Use the Factory binary as the primary tool for software development when it is available. Follow its documented CLI; do not assume Factory is a project directory or workspace. Use Pi to clarify requirements, plan, gather context, and verify the resulting changes. If the binary is unavailable, proceed with the available tools.

@@ -55,6 +55,7 @@ Through OpenCode's native skill mechanism, all skills are available to all prima
 | `gitops-ops` | Operate a Flux CD GitOps setup and reconcile cluster state from Git. |
 | `github-ops` | Perform GitHub-related infrastructure changes and operations. |
 | `research` | Coordinate research across local and external materials and synthesize verified session artifacts (loaded only when explicitly requested). |
+| `self-improvement` | On explicit request, identify and implement one worthwhile enhancement, verify it, and open a PR for human review. |
 | `write-report` | Compile research findings into a final report. |
 | `write-notes` | Capture and structure research notes during investigations. |
 | `frontend-design` | Guide UI and frontend design patterns, component structure, and style decisions. |
