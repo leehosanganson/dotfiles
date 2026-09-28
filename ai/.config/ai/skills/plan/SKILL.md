@@ -12,7 +12,7 @@ description: >-
 
 Produce a plan only. Do not implement changes or create project files unless the caller separately authorizes implementation. Read enough of the repository and relevant documentation to ground the plan.
 
-Accept exactly one positional size: `small`, `medium`, or `large`. If it is missing or invalid, ask for one and do not produce the plan yet.
+Use a supplied positional size (`small`, `medium`, or `large`) when it is valid and fits the task scope. If none is supplied, or the supplied size is invalid or mismatched to the task scope, infer the appropriate size from the task scope without asking.
 
 - `small`: inspect immediate files and conventions; plan one bounded change, normally one to three slices.
 - `medium`: inspect the relevant subsystem, callers, tests, and dependencies; plan ordered slices and cross-cutting concerns.
