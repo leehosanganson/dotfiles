@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.83.0",
+  "lastChangelogVersion": "0.87.1",
   "theme": "dark",
   "defaultProvider": "litellm",
   "defaultModel": "openrouter/gpt-6-luna",
