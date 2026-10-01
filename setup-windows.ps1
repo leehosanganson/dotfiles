@@ -6,7 +6,9 @@
 .DESCRIPTION
     - Self-elevates with admin rights if needed.
     - Installs all six apps via winget (fallback: Chocolatey), skipping any
-      already installed. Exits 1 if no installer is available or an install fails.
+      already installed (unless -Upgrade is passed, in which case already-installed
+      apps are upgraded instead). Exits 1 if no installer is available or an
+      install/upgrade fails.
     - Symlinks only GlazeWM, Zebar & bash configs (Claude apps are install-only).
         $env:USERPROFILE\.glzr\glazewm     ->  <repo>\glazewm
         $env:USERPROFILE\.glzr\zebar       ->  <repo>\zebar
@@ -17,11 +19,13 @@
 .EXAMPLE
     .\setup-windows.ps1
     .\setup-windows.ps1 -Dotfiles C:\Users\me\dotfiles
+    .\setup-windows.ps1 -Upgrade
 #>
 [CmdletBinding()]
 param(
     [string]$Dotfiles,
-    [switch]$SkipSelfElevate
+    [switch]$SkipSelfElevate,
+    [switch]$Upgrade
 )
 
 Set-StrictMode -Version Latest
@@ -47,18 +51,21 @@ if (-not $SkipSelfElevate -and -not (Test-IsElevated)) {
     Write-Host "Not elevated. Re-launching with admin rights..." -ForegroundColor Yellow
     $child = @('-SkipSelfElevate')
     if ($Dotfiles) { $child += '-Dotfiles', ('"{0}"' -f $Dotfiles) }
+    if ($Upgrade) { $child += '-Upgrade' }
     try {
         $proc = Start-Process -FilePath 'powershell.exe' -ArgumentList (
             @('-ExecutionPolicy', 'Bypass', '-NoProfile',
-              '-File', ('"{0}"' -f $PSCommandPath)) + $child
+                '-File', ('"{0}"' -f $PSCommandPath)) + $child
         ) -Verb RunAs -PassThru -Wait
         exit $(if ($null -ne $proc) { $proc.ExitCode } else { 1 })
-    } catch {
+    }
+    catch {
         Write-Host "[ERROR] Failed to self-elevate: $($_.Exception.Message)" -ForegroundColor Red
         Write-Host "        Run the script as administrator instead." -ForegroundColor Yellow
         exit 1
     }
-} elseif (-not (Test-IsElevated)) {
+}
+elseif (-not (Test-IsElevated)) {
     Write-Host "[ERROR] This script must run as administrator." -ForegroundColor Red
     exit 1
 }
@@ -68,11 +75,24 @@ Write-Host "Running with administrator privileges." -ForegroundColor Green
 function Test-Command { param([string]$Name) [bool](Get-Command $Name -ErrorAction SilentlyContinue) }
 
 # Install one app via the choco/winget commands, skipping if already installed.
+# $InstalledList is a single pre-fetched listing of all installed packages
+# (one list call for all apps, instead of one call per app) checked against $Match.
+# With -Upgrade, an already-installed app is upgraded via $UpgradeCmd instead of skipped.
 function Invoke-Install {
-    param([string]$Name, [string]$Find, [string]$Match, [string[]]$InstallCmd)
-    $hit = Invoke-Expression $Find 2>$null
-    if ($LASTEXITCODE -eq 0 -and ($hit | Select-String -Quiet $Match)) {
+    param([string]$Name, [string[]]$InstalledList, [string]$Match, [string[]]$InstallCmd, [string[]]$UpgradeCmd, [switch]$Upgrade)
+    $installed = [bool]($InstalledList | Select-String -Quiet $Match)
+    if ($installed -and -not $Upgrade) {
         Write-Host "  $Name already installed. Skipping." -ForegroundColor Green
+        return
+    }
+    if ($installed -and $Upgrade) {
+        Write-Host "  Upgrading $Name..." -ForegroundColor Yellow
+        & $UpgradeCmd[0] @($UpgradeCmd[1..($UpgradeCmd.Count - 1)])
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "[ERROR] $Name failed to upgrade (exit $LASTEXITCODE)." -ForegroundColor Red
+            exit 1
+        }
+        Write-Host "  $Name upgraded." -ForegroundColor Green
         return
     }
     Write-Host "  Installing $Name..." -ForegroundColor Yellow
@@ -88,11 +108,12 @@ function Invoke-Install {
 function New-Link {
     param([string]$Link, [string]$Target)
     if (Test-Path -LiteralPath $Link) {
-        $item   = Get-Item -LiteralPath $Link -Force
+        $item = Get-Item -LiteralPath $Link -Force
         $target = if ($item.LinkType -eq 'SymbolicLink' -and $null -ne $item.Target) {
             $raw = if ($item.Target -is [IO.FileSystemInfo]) { $item.Target.FullName } else { [string]$item.Target }
             if ([string]::IsNullOrWhiteSpace($raw)) { $null } else { [IO.Path]::GetFullPath($raw).TrimEnd('\') }
-        } else { $null }
+        }
+        else { $null }
         if ($target -and $target -ieq ([IO.Path]::GetFullPath($Target).TrimEnd('\'))) {
             Write-Host "  $Link already points at the repo config. Skipping." -ForegroundColor Green
             return
@@ -101,7 +122,8 @@ function New-Link {
     try {
         New-Item -ItemType SymbolicLink -Path $Link -Target $Target -ErrorAction Stop | Out-Null
         Write-Host "  Created symlink '$Link'." -ForegroundColor Green
-    } catch {
+    }
+    catch {
         Write-Host "[ERROR] Failed to create symlink '$Link': $($_.Exception.Message)" -ForegroundColor Red
         Write-Host "        Requires Developer Mode or an elevated shell." -ForegroundColor Yellow
         exit 1
@@ -112,33 +134,40 @@ function New-Link {
 Write-Host "`n==> Installing apps" -ForegroundColor Magenta
 
 $apps = @(
-    @{ Name = 'GlazeWM';        Winget = 'glzr-io.GlazeWM';        	Choco = 'glazewm'       },
-    @{ Name = 'Zebar';          Winget = 'glzr-io.Zebar';          	Choco = 'zebar'        	},
-    @{ Name = 'Claude Desktop'; Winget = 'Anthropic.Claude';       	Choco = 'claude' 	},
-    @{ Name = 'Claude Code';    Winget = 'Anthropic.ClaudeCode';   	Choco = 'claude-code'   },
-    @{ Name = 'Obsidian';       Winget = 'Obsidian.Obsidian';      	Choco = 'obsidian'      },
-    @{ Name = 'Neovim';         Winget = 'Neovim.Neovim';          	Choco = 'neovim'	},	
-    @{ Name = 'Fira Code'; 	Winget = 'nerdfonts.firacode';		Choco = 'firacode'	},
-    @{ Name = 'Azure CLI'; 	Winget = 'Microsoft.AzureCLI';		Choco = 'azure-cli'	},
-    @{ Name = 'jq'; 	Winget = 'jqlang.jq';		Choco = 'jq'	},
-    @{ Name = 'Lazygit'; 	Winget = 'JesseDuffield.lazygit';	Choco = 'lazygit'	},
-    @{ Name = 'fzf'; 	Winget = 'junegunn.fzf';		Choco = 'fzf'	}
+    @{ Name = 'GlazeWM'; Winget = 'glzr-io.GlazeWM'; Choco = 'glazewm' },
+    @{ Name = 'Zebar'; Winget = 'glzr-io.Zebar'; Choco = 'zebar' },
+    @{ Name = 'Claude Desktop'; Winget = 'Anthropic.Claude'; Choco = 'claude' },
+    @{ Name = 'Claude Code'; Winget = 'Anthropic.ClaudeCode'; Choco = 'claude-code' },
+    @{ Name = 'Obsidian'; Winget = 'Obsidian.Obsidian'; Choco = 'obsidian' },
+    @{ Name = 'Neovim'; Winget = 'Neovim.Neovim'; Choco = 'neovim'	},	
+    @{ Name = 'Fira Code'; Winget = 'nerdfonts.firacode'; Choco = 'firacode'	},
+    @{ Name = 'Azure CLI'; Winget = 'Microsoft.AzureCLI'; Choco = 'azure-cli'	},
+    @{ Name = 'jq'; Winget = 'jqlang.jq'; Choco = 'jq'	},
+    @{ Name = 'Lazygit'; Winget = 'JesseDuffield.lazygit';	Choco = 'lazygit'	},
+    @{ Name = 'fzf'; Winget = 'junegunn.fzf'; Choco = 'fzf'	}
 )
 
 if (Test-Command 'choco') {
     Write-Host "Using Chocolatey." -ForegroundColor Yellow
+    $installedList = choco list --local-only 2>$null
     foreach ($a in $apps) {
-        Invoke-Install -Name $a.Name -Find "choco list --local-only $($a.Choco)" `
-            -Match $a.Choco -InstallCmd @('choco', 'install', $a.Choco, '-y', '--no-progress')
+        Invoke-Install -Name $a.Name -InstalledList $installedList `
+            -Match $a.Choco -InstallCmd @('choco', 'install', $a.Choco, '-y', '--no-progress') `
+            -UpgradeCmd @('choco', 'upgrade', $a.Choco, '-y', '--no-progress') -Upgrade:$Upgrade
     }
-} elseif (Test-Command 'winget') {
+}
+elseif (Test-Command 'winget') {
     Write-Host "Using winget" -ForegroundColor Green
+    $installedList = winget list --accept-source-agreements 2>$null
     foreach ($a in $apps) {
-        Invoke-Install -Name $a.Name -Find "winget list --id $($a.Winget) --accept-source-agreements" `
+        Invoke-Install -Name $a.Name -InstalledList $installedList `
             -Match $a.Winget -InstallCmd @('winget', 'install', '--id', $a.Winget,
-            '--accept-source-agreements', '--accept-package-agreements', '--silent')
+            '--accept-source-agreements', '--accept-package-agreements', '--silent') `
+            -UpgradeCmd @('winget', 'upgrade', '--id', $a.Winget,
+            '--accept-source-agreements', '--accept-package-agreements', '--silent') -Upgrade:$Upgrade
     }
-} else {
+}
+else {
     Write-Host "[ERROR] Neither winget nor Chocolatey is available." -ForegroundColor Red
     Write-Host "        Install winget (App Installer) or Chocolatey and re-run." -ForegroundColor Yellow
     exit 1
@@ -147,9 +176,9 @@ if (Test-Command 'choco') {
 # --- 2. Symlink GlazeWM & Zebar configs -------------------------------------
 Write-Host "`n==> Symlinking configs" -ForegroundColor Magenta
 
-$glzrRoot   = Join-Path $env:USERPROFILE '.glzr'
+$glzrRoot = Join-Path $env:USERPROFILE '.glzr'
 $glazewmCfg = Join-Path $RepoRoot 'glazewm'
-$zebarCfg   = Join-Path $RepoRoot 'zebar'
+$zebarCfg = Join-Path $RepoRoot 'zebar'
 
 if (-not (Test-Path -LiteralPath $glzrRoot)) {
     Write-Host "Creating parent directory: $glzrRoot" -ForegroundColor Yellow
@@ -157,9 +186,9 @@ if (-not (Test-Path -LiteralPath $glzrRoot)) {
 }
 
 foreach ($cfg in @(
-    @{ Link = Join-Path $glzrRoot 'glazewm'; Repo = $glazewmCfg },
-    @{ Link = Join-Path $glzrRoot 'zebar';    Repo = $zebarCfg   }
-)) {
+        @{ Link = Join-Path $glzrRoot 'glazewm'; Repo = $glazewmCfg },
+        @{ Link = Join-Path $glzrRoot 'zebar'; Repo = $zebarCfg }
+    )) {
     if (-not (Test-Path -LiteralPath $cfg.Repo)) {
         Write-Host "[ERROR] Repo config dir not found: '$($cfg.Repo)'." -ForegroundColor Red
         exit 1
@@ -168,9 +197,9 @@ foreach ($cfg in @(
 }
 
 # --- 2b. Symlink bash configs ------------------------------------------------
-$bashrcCfg      = Join-Path $RepoRoot 'bash\.bashrc'
+$bashrcCfg = Join-Path $RepoRoot 'bash\.bashrc'
 $bashProfileCfg = Join-Path $RepoRoot 'bash\.bash_profile'
-$bashToolsCfg   = Join-Path $RepoRoot 'bash-tools\.config\bash-tools'
+$bashToolsCfg = Join-Path $RepoRoot 'bash-tools\.config\bash-tools'
 
 $configRoot = Join-Path $env:USERPROFILE '.config'
 if (-not (Test-Path -LiteralPath $configRoot)) {
@@ -196,9 +225,9 @@ if (Test-Path -LiteralPath $bashToolsLink) {
 New-Link -Link $bashToolsLink -Target $bashToolsCfg
 
 foreach ($cfg in @(
-    @{ Link = Join-Path $env:USERPROFILE '.bashrc';       Repo = $bashrcCfg },
-    @{ Link = Join-Path $env:USERPROFILE '.bash_profile'; Repo = $bashProfileCfg }
-)) {
+        @{ Link = Join-Path $env:USERPROFILE '.bashrc'; Repo = $bashrcCfg },
+        @{ Link = Join-Path $env:USERPROFILE '.bash_profile'; Repo = $bashProfileCfg }
+    )) {
     if (-not (Test-Path -LiteralPath $cfg.Repo)) {
         Write-Host "[ERROR] Repo config file not found: '$($cfg.Repo)'." -ForegroundColor Red
         exit 1
@@ -209,3 +238,6 @@ foreach ($cfg in @(
 # --- 3. Done ----------------------------------------------------------------
 Write-Host "`nDone! Apps installed and GlazeWM/Zebar/bash configs symlinked." -ForegroundColor Green
 Write-Host "Restart the apps (or the machine) to pick up the new config." -ForegroundColor Yellow
+
+Write-Host "`nPress any key to close . . ." -ForegroundColor Cyan
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
