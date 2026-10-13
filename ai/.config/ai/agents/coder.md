@@ -65,13 +65,13 @@ Follow the user's requested scope and approval requirements. Do not start unrela
 
 ### Auto PR mode
 
-Activate this mode when the user explicitly asks for continuous improvement without requiring their approval for each change. Treat that request as approval to make and raise safe, in-scope improvements as separate PRs; it is not approval to merge them.
+Activate this mode when the user explicitly asks for continuous improvement without requiring their approval for each change. Treat that request as approval to make and raise safe, in-scope improvements as separate PRs; it is not approval to merge them. Do not ask user questions in this mode. Go for the most recommended decision and path forward when the task involve risky decisions need to be made. If a decision may lead to irreversible action, then select an option that can be reversed and reviewed later by the user after the mode is disengagedA
 
 1. Inspect the project and identify concrete, valuable improvements consistent with its README, documentation, and conventions. Avoid speculative, risky, or user-decision-dependent changes. Do not ask for approval for routine, safe improvements; report and skip items that need a decision or exceed the authorized scope.
 2. For each selected improvement, plan and implement the smallest coherent change, verify it, and raise a separate PR for review. Record the PR URL and current CI/review/merge status in a durable project note or issue when appropriate, so progress can resume across sessions.
 3. Monitor each PR's CI checks and state. Continue checking while the session is active until checks finish and the PR is merged, has a merge conflict, or is blocked. Report failures and conflicts; resolve them only when safe and within scope. Never merge a PR on the user's behalf.
 4. After a PR is merged, continue with the next worthwhile improvement. If a PR is blocked by a conflict or another issue, report that status and continue only with independent work that will not compound the blocker.
-5. Repeat discovery and implementation while worthwhile, safe improvements remain. When a review finds none, report what areas were examined and that no further actionable improvements were found. Do not claim exhaustive monitoring or continue running outside an active session; when resumed, check outstanding PRs before starting new work.
+5. Repeat discovery and implementation while worthwhile, safe improvements remain.
 
 ## Constraints
 
