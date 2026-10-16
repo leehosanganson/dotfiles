@@ -34,6 +34,33 @@ const COOLDOWN_MS = 15_000;
 export default function (pi: ExtensionAPI) {
 	let enabled = true;
 	let lastContinueAt = 0;
+	let pendingContinuation: { reason: string; ctx: ExtensionContext } | undefined;
+	let continuationTimer: ReturnType<typeof setTimeout> | undefined;
+
+	const sendWhenIdle = () => {
+		continuationTimer = undefined;
+		const pending = pendingContinuation;
+		if (!pending) return;
+		if (!enabled) {
+			pendingContinuation = undefined;
+			return;
+		}
+
+		if (pending.ctx.hasPendingMessages()) {
+			pendingContinuation = undefined;
+			return;
+		}
+		if (!pending.ctx.isIdle()) {
+			continuationTimer = setTimeout(sendWhenIdle, 100);
+			return;
+		}
+
+		pendingContinuation = undefined;
+		if (pending.ctx.hasUI) {
+			pending.ctx.ui.notify(`Compaction finished (${pending.reason}) — auto-continuing`, "info");
+		}
+		pi.sendUserMessage(CONTINUATION_PROMPT);
+	};
 
 	const maybeContinueAfterCompact = (reason: string, willRetry: boolean, ctx: ExtensionContext) => {
 		if (!enabled) return;
@@ -42,26 +69,24 @@ export default function (pi: ExtensionAPI) {
 		if (willRetry) return;
 
 		// Avoid stacking a continuation on top of already-queued messages.
-		if (ctx.hasPendingMessages()) return;
+		if (ctx.hasPendingMessages() || pendingContinuation) return;
 
 		const now = Date.now();
 		if (now - lastContinueAt < COOLDOWN_MS) return;
 		lastContinueAt = now;
 
-		if (ctx.hasUI) {
-			ctx.ui.notify(`Compaction finished (${reason}) — auto-continuing`, "info");
-		}
-
-		if (ctx.isIdle()) {
-			pi.sendUserMessage(CONTINUATION_PROMPT);
-		} else {
-			// If the agent somehow has a turn in flight, queue it until idle.
-			pi.sendUserMessage(CONTINUATION_PROMPT, { deliverAs: "followUp" });
-		}
+		pendingContinuation = { reason, ctx };
+		continuationTimer = setTimeout(sendWhenIdle, 0);
 	};
 
 	pi.on("session_compact", (event, ctx) => {
 		maybeContinueAfterCompact(event.reason, event.willRetry, ctx);
+	});
+
+	pi.on("session_shutdown", () => {
+		if (continuationTimer) clearTimeout(continuationTimer);
+		continuationTimer = undefined;
+		pendingContinuation = undefined;
 	});
 
 	pi.registerCommand("auto-continue", {
