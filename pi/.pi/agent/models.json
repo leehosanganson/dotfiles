@@ -3,7 +3,7 @@
     "litellm": {
       "baseUrl": "https://litellm.leehosanganson.dev/v1",
       "api": "openai-completions",
-      "apiKey": "!tr -d '\\r\\n' < \"$HOME/.config/sops-nix/secrets/litellm-api-key\"",
+      "apiKey": "!tr -d '\\r\\n' < \"$HOME/.config/sops-nix/secrets/litellm-pi-api-key\"",
       "models": [
         {
           "id": "openrouter/deepseek-v4-flash",

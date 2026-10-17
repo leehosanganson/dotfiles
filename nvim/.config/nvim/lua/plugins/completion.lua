@@ -9,7 +9,7 @@ local function get_secret(path)
   return ""
 end
 
-vim.env.LITELLM_API_KEY = get_secret "~/.config/sops-nix/secrets/litellm-api-key"
+vim.env.LITELLM_API_KEY = get_secret "~/.config/sops-nix/secrets/litellm-code-completion-api-key"
 
 return {
   {
