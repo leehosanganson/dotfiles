@@ -1,0 +1,18 @@
+{
+  "mode": "model",
+  "default": {
+    "provider": "litellm",
+    "model": "openrouter/jev-1.14"
+  },
+  "providers": {
+    "litellm": {
+      "baseUrl": "https://litellm.leehosanganson.dev/v1",
+      "apiKeyFile": "~/.config/sops-nix/secrets/litellm-pi-api-key",
+      "models": [
+        {
+          "id": "openrouter/jev-1.14"
+        }
+      ]
+    }
+  }
+}

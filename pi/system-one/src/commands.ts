@@ -1,0 +1,263 @@
+import type {
+  ExtensionAPI,
+  ExtensionCommandContext,
+} from "@earendil-works/pi-coding-agent";
+import {
+  applyConfigAnswers,
+  type ConfigMode,
+  createSessionConfig,
+  describeConfig,
+  isTypeSafeEndpoint,
+  type SessionConfig,
+  TYPESAFE_BASE_URL,
+} from "./config.ts";
+import { DebugHistory, observedProvider } from "./debug.ts";
+import { DebugOverlay, debugSummary } from "./debug-ui.ts";
+import { saveStoredConfig } from "./persistence.ts";
+import { buildSystemOneTool } from "./tool.ts";
+
+export interface SessionStore {
+  session?: SessionConfig;
+}
+
+export function registerSystemOneCommands(
+  pi: ExtensionAPI,
+  store: SessionStore,
+  configPath?: string,
+) {
+  let registered = false;
+  const history = new DebugHistory();
+  pi.on("session_start", () => history.clear());
+  function applyProvider() {
+    if (registered) return;
+    registered = true;
+    pi.registerTool(
+      buildSystemOneTool({
+        resolveProvider: async (ctx) =>
+          observedProvider(
+            store.session ?? createSessionConfig(),
+            ctx,
+            history,
+          ),
+      }),
+    );
+  }
+
+  async function cmdConfig(
+    ctx: ExtensionCommandContext,
+    requestedMode?: string,
+  ): Promise<void> {
+    const current = store.session ?? createSessionConfig();
+    const modes: ConfigMode[] = [
+      current.mode,
+      ...(["model", "typesafe", "custom", "native", "auto"] as ConfigMode[]).filter(
+        (mode) => mode !== current.mode,
+      ),
+    ];
+    const descriptions: Record<ConfigMode, string> = {
+      model: "Active Pi chat model (HTTP)",
+      typesafe: "TypeSafe Jev (HTTP, full Score)",
+      custom: "Custom System One endpoint",
+      native: "Pi classifier (Choice and Noul only)",
+      auto: "Native when compatible, active Pi model HTTP otherwise",
+    };
+    const options = modes.map(
+      (mode) =>
+        `${mode} — ${descriptions[mode]}${mode === current.mode ? " (current)" : ""}`,
+    );
+    const modeRaw =
+      requestedMode ??
+      (await ctx.ui.select("System One provider mode", options));
+    if (modeRaw === undefined) {
+      ctx.ui.notify("Cancelled.", "info");
+      return;
+    }
+    const mode =
+      requestedMode === undefined
+        ? modes[options.indexOf(modeRaw)]
+        : (modeRaw.trim().toLowerCase() as ConfigMode);
+    if (!mode || !modes.includes(mode)) {
+      ctx.ui.notify("Choose model, typesafe, custom, native, or auto.", "error");
+      return;
+    }
+    const next: SessionConfig = {
+      current: { ...current.current },
+      mode,
+      modeSource: "session",
+      ignoredEnvironmentEndpoint: false,
+      keyInMemory: current.keyInMemory,
+      decisionModel: current.decisionModel,
+    };
+    if (mode === "model") {
+      next.current.baseUrl = "";
+      next.current.model = process.env.SYSTEM_ONE_BASE_URL
+        ? undefined
+        : process.env.SYSTEM_ONE_MODEL || undefined;
+      next.current.apiKey = undefined;
+      next.keyInMemory = false;
+    } else if (mode === "typesafe" || mode === "auto") {
+      next.current.baseUrl = mode === "typesafe" ? TYPESAFE_BASE_URL : "";
+      next.current.model =
+        mode === "typesafe" ? "jev-latest" : undefined;
+      // A key exported for a custom endpoint must not follow a mode switch.
+      next.current.apiKey =
+        !process.env.SYSTEM_ONE_BASE_URL ||
+        isTypeSafeEndpoint(process.env.SYSTEM_ONE_BASE_URL)
+          ? process.env.SYSTEM_ONE_API_KEY || undefined
+          : undefined;
+      next.keyInMemory = false;
+    } else if (mode === "native") {
+      next.current.baseUrl = "";
+      next.current.model = undefined;
+      next.current.apiKey = undefined;
+      next.keyInMemory = false;
+    } else {
+      const baseUrlRaw = await ctx.ui.input(
+        `SYSTEM_ONE_BASE_URL (current: ${current.mode === "custom" ? current.current.baseUrl : "unset"}):`,
+        current.mode === "custom" ? current.current.baseUrl : "",
+      );
+      if (baseUrlRaw === undefined) {
+        ctx.ui.notify("Cancelled.", "info");
+        return;
+      }
+      const baseUrl =
+        baseUrlRaw.trim() ||
+        (current.mode === "custom" ? current.current.baseUrl : "");
+      if (!baseUrl) {
+        ctx.ui.notify("Cancelled (base URL is required).", "info");
+        return;
+      }
+      const sameEndpoint =
+        current.mode === "custom" && baseUrl === current.current.baseUrl;
+      const modelRaw = await ctx.ui.input(
+        `SYSTEM_ONE_MODEL (current: ${sameEndpoint ? (current.current.model ?? "server default") : "server default"}):`,
+        sameEndpoint ? (current.current.model ?? "") : "",
+      );
+      if (modelRaw === undefined) {
+        ctx.ui.notify("Cancelled.", "info");
+        return;
+      }
+      const apiKeyRaw = await ctx.ui.input(
+        "SYSTEM_ONE_API_KEY (empty = keep, - = forget session key; never saved to JSON):",
+        "",
+      );
+      if (apiKeyRaw === undefined) {
+        ctx.ui.notify("Cancelled.", "info");
+        return;
+      }
+      next.current.baseUrl = baseUrl;
+      next.current.model =
+        modelRaw.trim() || (sameEndpoint ? current.current.model : undefined);
+      if (!sameEndpoint) {
+        // Never carry a key entered for one endpoint to another endpoint.
+        next.current.apiKey = undefined;
+        next.keyInMemory = false;
+      }
+      if (apiKeyRaw.trim() === "-") {
+        next.current.apiKey =
+          sameEndpoint && process.env.SYSTEM_ONE_BASE_URL === baseUrl
+            ? process.env.SYSTEM_ONE_API_KEY || undefined
+            : undefined;
+        next.keyInMemory = false;
+      } else if (apiKeyRaw.trim()) {
+        applyConfigAnswers(next, {
+          baseUrl: "",
+          model: "",
+          apiKey: apiKeyRaw.trim(),
+          timeoutMs: "",
+        });
+      }
+    }
+    next.ignoredEnvironmentEndpoint = Boolean(
+      process.env.SYSTEM_ONE_BASE_URL &&
+        process.env.SYSTEM_ONE_BASE_URL !== next.current.baseUrl,
+    );
+    if (configPath) {
+      try {
+        saveStoredConfig(configPath, {
+          mode,
+          ...(mode === "custom"
+            ? {
+                baseUrl: next.current.baseUrl,
+                ...(next.current.model ? { model: next.current.model } : {}),
+              }
+            : {}),
+          timeoutMs: next.current.timeoutMs,
+          ...(current.decisionModel
+            ? {
+                default: current.decisionModel.default,
+                providers: current.decisionModel.providers,
+              }
+            : {}),
+        });
+      } catch (error) {
+        ctx.ui.notify(
+          `Could not save settings: ${error instanceof Error ? error.message : String(error)}`,
+          "error",
+        );
+        return;
+      }
+    }
+    store.session = next;
+    ctx.ui.notify(
+      next.keyInMemory
+        ? "Updated. API key stays in memory only; other settings were saved."
+        : configPath
+          ? "Settings saved."
+          : "Updated for this session.",
+      "info",
+    );
+  }
+
+  async function cmdStatus(ctx: ExtensionCommandContext): Promise<void> {
+    const session = store.session ?? createSessionConfig();
+    let summary = describeConfig(session);
+    if (
+      session.mode !== "native" &&
+      session.mode !== "model" &&
+      !session.current.apiKey &&
+      isTypeSafeEndpoint(session.current.baseUrl)
+    ) {
+      const key = await ctx.modelRegistry?.getApiKeyForProvider?.("typesafe");
+      summary = summary.replace(
+        "api key: absent",
+        key
+          ? "api key: Pi TypeSafe credentials available"
+          : "api key: absent (run /login typesafe)",
+      );
+    }
+    ctx.ui.notify(summary, "info");
+  }
+
+  async function cmdDebug(ctx: ExtensionCommandContext): Promise<void> {
+    if (ctx.mode !== "tui") {
+      ctx.ui.notify(debugSummary(history.entries), "info");
+      return;
+    }
+    await ctx.ui.custom<void>(
+      (tui, theme, _keybindings, done) =>
+        new DebugOverlay([...history.entries], theme, done, () =>
+          tui.requestRender(),
+        ),
+      {
+        overlay: true,
+        overlayOptions: { anchor: "center", width: 70, maxHeight: 24 },
+      },
+    );
+  }
+
+  pi.registerCommand("so", {
+    description: "System One config (/so status for current)",
+    getArgumentCompletions: (prefix: string) =>
+      ["config", "status", "debug"]
+        .filter((c) => c.startsWith(prefix.trim().toLowerCase()))
+        .map((c) => ({ value: c, label: c })),
+    handler: async (args, ctx) => {
+      const [cmd, mode] = args.trim().toLowerCase().split(/\s+/);
+      if (cmd === "status") await cmdStatus(ctx);
+      else if (cmd === "debug") await cmdDebug(ctx);
+      else await cmdConfig(ctx, cmd === "config" ? mode : undefined);
+    },
+  });
+  return { applyProvider, store };
+}
