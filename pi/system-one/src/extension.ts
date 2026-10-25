@@ -9,6 +9,7 @@ import {
 import { registerSystemOneCommands, type SessionStore } from "./commands.ts";
 import { createSessionConfig } from "./config.ts";
 import { loadStoredConfig } from "./persistence.ts";
+import { installAutomaticDecisionAdvice } from "./auto-advisor.ts";
 
 /**
  * Directory holding the bundled `system-one` skill (use-case catalog).
@@ -50,6 +51,7 @@ export default function piSystemOneExtension(pi: ExtensionAPI) {
 
   const { applyProvider } = registerSystemOneCommands(pi, store, configPath);
   applyProvider();
+  installAutomaticDecisionAdvice(pi, () => store.session ?? createSessionConfig(process.env));
 
   // Contribute the bundled `system-one` skill (use-case catalog) and the
   // `/judge` prompt shortcut so models can pull judging recipes on demand

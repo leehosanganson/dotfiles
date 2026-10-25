@@ -46,7 +46,9 @@ omp install /path/to/pi-system-one
 omp --extension /path/to/pi-system-one
 ```
 
-The `system_one` tool registers at startup. Without a declared decision provider, HTTP requests use the active Pi chat model's base URL, model ID, and request-time credentials. A declared provider instead supplies System One's independent endpoint, model ID, and request-time key file. The configured service must implement `POST /v1/systemone` (it is a System One protocol endpoint, not just any OpenAI-compatible chat completion API).
+The `system_one` tool and automatic operation-advice hooks register at startup. Before selected higher-risk shell commands, unusual file reads, and file edits/writes, the extension sends a minimized, redacted judgment request through the configured System One provider. Results are attached to the operation result as advice only; they do not block or authorize execution. Routine shell commands and normal in-workspace reads are skipped. Evaluations are capped per turn and time-limited; provider failures produce no advice and do not change operation behavior. Subagent Pi processes load the same configured extension and therefore use the same hooks.
+
+Without a declared decision provider, HTTP requests use the active Pi chat model's base URL, model ID, and request-time credentials. A declared provider instead supplies System One's independent endpoint, model ID, and request-time key file. The configured service must implement `POST /v1/systemone` (it is a System One protocol endpoint, not just any OpenAI-compatible chat completion API).
 
 <!-- <img src="./demo.gif" alt="Description" width="640" >    -->
 
@@ -113,7 +115,9 @@ A current-session selection takes effect immediately. Saved mode and saved custo
 
 ## `/judge`
 
-The fastest way to use System One. A prompt shortcut that expands into
+The automatic operation advisor runs at tool lifecycle hooks; it does not require a manual `/judge` invocation. It checks risky shell command proposals, non-routine file reads, and proposed file mutations, then appends a short advisory to the corresponding result when concern is elevated. This is advisory, not a security boundary: Pi permissions and OS-level isolation remain authoritative. Payloads are capped and common secret patterns are redacted; avoid routing sensitive task content to an untrusted decision endpoint.
+
+The fastest way to use System One manually. A prompt shortcut that expands into
 instructions calling the `system_one` tool explicitly, so routing
 doesn't depend on inferring intent. For short, unstructured asks:
 
