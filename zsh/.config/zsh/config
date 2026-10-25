@@ -43,6 +43,10 @@ alias ls="ls --color=auto"
 alias zshconfig="nvim ~/.zshrc"
 alias oc="AI_SKILL_DIR=$HOME/.config/ai/skills opencode"
 
+pi() {
+  command pi update --extensions && command pi "$@"
+}
+
 # Shared shell tools (aliases + functions) also used by Git Bash.
 [ -f ~/.config/bash-tools/tools.sh ] && source ~/.config/bash-tools/tools.sh
 
