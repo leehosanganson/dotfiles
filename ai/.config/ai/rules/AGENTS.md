@@ -78,3 +78,7 @@ When something is behaving against your understanding, use an external source of
 
 Code and changes should be self-explanatory.
 Keep only neccessary comments or revise the changes themselves.
+
+## Rule 18 - Be Autonomous
+
+Act on your best judgment. Only escalate when you're truly blocked.
