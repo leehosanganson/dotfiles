@@ -48,6 +48,8 @@ omp --extension /path/to/pi-system-one
 
 The `system_one` tool and automatic operation-advice hooks register at startup. Before selected higher-risk shell commands, unusual file reads, and file edits/writes, the extension sends a minimized, redacted judgment request through the configured System One provider. Results are attached to the operation result as advice only; they do not block or authorize execution. Routine shell commands and normal in-workspace reads are skipped. Evaluations are capped per turn and time-limited; provider failures produce no advice and do not change operation behavior. Subagent Pi processes load the same configured extension and therefore use the same hooks.
 
+After successful `find` and `ls` calls, the extension can also append estimated relevance scores for up to 20 discovered candidate paths, sorted highest-first. It sends the task, query, and paths only—not candidate file contents. These estimates are advisory, add a bounded delay to discovery results, and are omitted on timeout or provider failure.
+
 Without a declared decision provider, HTTP requests use the active Pi chat model's base URL, model ID, and request-time credentials. A declared provider instead supplies System One's independent endpoint, model ID, and request-time key file. The configured service must implement `POST /v1/systemone` (it is a System One protocol endpoint, not just any OpenAI-compatible chat completion API).
 
 <!-- <img src="./demo.gif" alt="Description" width="640" >    -->

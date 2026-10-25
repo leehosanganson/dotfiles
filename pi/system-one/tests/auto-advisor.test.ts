@@ -6,6 +6,8 @@ import { describe, it } from "node:test";
 import type { ExtensionContext, ToolCallEvent, ToolResultEvent } from "@earendil-works/pi-coding-agent";
 import {
   adviceMessage,
+  discoveryCandidates,
+  formatCandidateRanking,
   installAutomaticDecisionAdvice,
   isWithinCwd,
   operationAdvice,
@@ -123,6 +125,60 @@ describe("automatic System One operation advice", () => {
     assert.ok(proposed.edits.length <= 8);
     assert.ok(proposed.omittedEdits > 0);
     assert.equal(proposed.truncated, true);
+  });
+
+  it("extracts bounded, non-sensitive candidate paths from find and ls output", () => {
+    const found = discoveryCandidates("find", { pattern: "**/*.ts", path: "src" }, [
+      { type: "text", text: "index.ts\nconfig.ts\n.env\n[20 results limit reached]" },
+    ], "/work/project");
+    assert.deepEqual(found?.candidates, ["/work/project/src/index.ts", "/work/project/src/config.ts"]);
+    assert.match(found?.query ?? "", /File search pattern/);
+    assert.equal(discoveryCandidates("grep", {}, [], "/work/project"), undefined);
+
+    const many = Array.from({ length: 100 }, (_, i) => `file-${i}.ts`).join("\n");
+    const bounded = discoveryCandidates("ls", { path: "." }, [{ type: "text", text: many }], "/work/project");
+    assert.ok((bounded?.candidates.length ?? 0) <= 20);
+    assert.ok(JSON.stringify(bounded?.candidates).length <= 5000);
+  });
+
+  it("formats relevance scores as ranked, explicitly advisory estimates", () => {
+    const output = formatCandidateRanking([
+      { path: "a.ts", probability: 0.2 },
+      { path: "b.ts", probability: 0.91 },
+      { path: "invalid.ts", probability: Number.NaN },
+    ]);
+    assert.match(output ?? "", /advisory only/);
+    assert.ok((output ?? "").indexOf("b.ts") < (output ?? "").indexOf("a.ts"));
+    assert.doesNotMatch(output ?? "", /invalid.ts/);
+  });
+
+  it("adds candidate rankings before the agent receives discovery results", async () => {
+    const handlers: Record<string, (event: never, ctx: never) => unknown> = {};
+    const pi = { on: (name: string, handler: (event: never, ctx: never) => unknown) => { handlers[name] = handler; } };
+    installAutomaticDecisionAdvice(pi as never, () => createSessionConfig({}), undefined, async (_task, candidates) => [
+      { path: candidates[1], probability: 0.9 },
+      { path: candidates[0], probability: 0.2 },
+    ]);
+    const output = await handlers.tool_result?.({
+      type: "tool_result", toolName: "find", toolCallId: "find-1", input: { pattern: "*.ts" },
+      content: [{ type: "text", text: "a.ts\nb.ts" }], isError: false,
+    } as never, context() as never) as { content: Array<{ text?: string }> };
+    assert.match(output.content.at(-1)?.text ?? "", /b\.ts \(90%\)/);
+    assert.match(output.content.at(-1)?.text ?? "", /a\.ts \(20%\)/);
+    assert.equal(output.content[0]?.text, "a.ts\nb.ts");
+  });
+
+  it("preserves discovery results unchanged when ranking fails", async () => {
+    const handlers: Record<string, (event: never, ctx: never) => unknown> = {};
+    const pi = { on: (name: string, handler: (event: never, ctx: never) => unknown) => { handlers[name] = handler; } };
+    installAutomaticDecisionAdvice(pi as never, () => createSessionConfig({}), undefined, async () => { throw new Error("offline"); });
+    const original = [{ type: "text" as const, text: "a.ts" }];
+    const output = await handlers.tool_result?.({
+      type: "tool_result", toolName: "find", toolCallId: "find-2", input: { pattern: "*.ts" },
+      content: original, isError: false,
+    } as never, context() as never);
+    assert.equal(output, undefined);
+    assert.deepEqual(original, [{ type: "text", text: "a.ts" }]);
   });
 
   it("surfaces high-risk or highly uncertain results as advisory text only", () => {
