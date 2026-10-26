@@ -33,6 +33,8 @@ Identify the issue or PR, prepare the comment, post it with `gh issue comment <n
 
 Check `gh pr checks <pr>`, confirm the merge strategy with the user, and merge only after confirmation. Report the merge commit and resulting state.
 
+The sole exception to this ordinary confirmation rule is the `autopilot` playbook when the user explicitly invokes it with authorization to merge. Even then, merge only after required checks and reviews pass and no unresolved conflicts or blockers remain.
+
 ## Safety
 
 - Never force-push, delete branches or tags, or close issues or PRs without explicit confirmation.

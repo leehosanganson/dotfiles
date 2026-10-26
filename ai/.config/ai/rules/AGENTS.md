@@ -31,54 +31,81 @@ Don't blend conflicting patterns.
 Before adding code, read exports, immediate callers, shared utilities.
 If unsure why existing code is structured a certain way, ask.
 
-## Rule 7 - Tests verify intent, not just behavior
-
-Tests must encode WHY behavior matters, not just WHAT it does.
-A test that can't fail when business logic changes is wrong.
-
-## Rule 8 - Match the codebase's conventions, even if you disagree
+## Rule 7 - Match the codebase's conventions, even if you disagree
 
 Conformance > taste inside the codebase.
 If you think a convention is harmful, surface it. Don't fork it silently.
 
-## Rule 9 - Temp Files
-
-Always write temporary files under `/tmp`. Never leave temp files around after use.
-
-## Rule 10 - Python Execution
-
-Prefer `uv run --with <pkg> <script>` over raw `python` for running Python scripts. Use `uv run` when available.
-
-## Rule 11 - Task Decomposition
+## Rule 8 - Task Decomposition
 
 Use clarification-first decomposition with blind-spot discovery, then break work into medium-sized, discrete, trackable task items.
 
-## Rule 12 - Context Boundaries
+## Rule 9 - Context Boundaries
 
 Use **Explore** for local repository context (SOPs, docs, conventions, relevant files).
 When local context is insufficient, **Explore** should use `searxng_*` and `webfetch` for external context gathering.
 
-## Rule 13 - Parallelism
+## Rule 10 - Parallelism
 
 Parallel execution by spawning multiple sub agents at the same time.
 
-## Rule 14 - Scoped and Limited Attempts
-
-Make at most 3 attempts for anything. If something fails for more than or equal to 3 times, hand off to an higher up and seek advice or change in direction.
-
-## Rule 15 - Makefile First
-
-When a `Makefile` exists in the repository, prefer `make <target>` over running raw bash commands. Check `make help` or the Makefile's targets first to discover available commands. If the command is not available through `make` and is expected to be used more frequently in the future, then look to improve `Makefile` by adding a new command. Only fall back to direct shell execution when it is a command only for one-time use.
-
-## Rule 16 - Truth over Confidence
+## Rule 11 - Truth over Confidence
 
 When something is behaving against your understanding, use an external source of truth to verify the correct behaviour instead of bashing through the same logic.
 
-## Rule 17 - Minimalistic Documentation
+## Rule 12 - Minimalistic Documentation
 
 Code and changes should be self-explanatory.
 Keep only neccessary comments or revise the changes themselves.
 
-## Rule 18 - Be Autonomous
+## Rule 13 - Be Autonomous
 
 Act on your best judgment. Only escalate when you're truly blocked.
+
+## Shared AI lazy references
+
+On relevant tasks, agents should read only the matching reference(s) below; do not load everything. These plain Markdown principles and playbooks are shared AI guidance, not skills or user-callable commands. Existing specialist skills remain authoritative for their procedures.
+
+Principles in `~/.config/ai/principles/`:
+- `foundational-thinking.md` — before nontrivial logic, settle data shapes, ownership, state flow, and concurrency boundaries.
+- `attack-the-premise.md` — when multiple fixes based on one assumption fail the same gate, test the assumption before another patch.
+- `type-and-boundary-discipline.md` — when handling untrusted input, internal invariants, or variant-based logic.
+- `explain-the-number.md` — before reporting or acting on performance, benchmark, latency, throughput, or evaluation numbers.
+- `test-behavior.md` — when adding or changing tests; encode why behavior matters, not just an example output.
+- `temp-files.md` — whenever creating temporary files.
+- `python-execution.md` — when executing Python scripts or choosing how to run them.
+- `scoped-attempts.md` — when repeated attempts fail or an approach is looping.
+- `makefile-first.md` — when a repository has a Makefile and you need to run project commands.
+- `safe-concurrency.md` — before parallel work that may share files, branches, or mutable state.
+- `encode-corrections.md` — when a correction recurs and could be made durable in a test or check.
+- `redesign-from-first-principles.md` — when repeated patches suggest the design does not fit the actual problem.
+- `minimize-reader-load.md` — when structuring or explaining work so intent is easy to understand and verify.
+- `outcome-oriented-execution.md` — when defining success, prioritizing work, or assessing completion.
+- `build-the-lever.md` — when recurring work may justify a reusable tool, check, or workflow.
+- `model-the-domain.md` — when choosing domain concepts, names, data shapes, or invariant boundaries.
+- `migrate-callers-then-delete-legacy-apis.md` — when replacing an API or removing a legacy interface.
+- `make-operations-idempotent.md` — when designing operations that may be retried or run repeatedly.
+- `prove-it-works.md` — when verifying behavior; create/update a project-local verification skill only if no repeatable check exists and ongoing verification is valuable.
+- `sequence-verifiable-units.md` — when decomposing work with dependencies or multiple verification steps.
+
+Playbooks in `~/.config/ai/playbooks/`:
+- `prototype.md` — when uncertainty can be answered by a small observation-driven experiment.
+- `pause-safely.md` — when pausing, compacting context, or going offline during substantive work.
+- `session-pickup.md` — when resuming substantive in-flight work.
+- `feature-work.md` — for implementing a scoped feature.
+- `bug-fix.md` — for reproducing and fixing a coding defect.
+- `refactoring.md` — for behavior-preserving structural changes.
+- `performance.md` — for investigating or improving measured performance.
+- `visual-parity.md` — when matching an implementation to an authoritative visual reference.
+- `research.md` — when a question needs multi-source investigation or evidence-backed synthesis.
+- `project-context.md` — before substantive work when repository conventions or state are unfamiliar or relevant.
+- `diagnose-issues.md` — when an unclear symptom spans homelab or connected infrastructure.
+- `create-skill.md` — when authoring, revising, or evaluating an agent skill.
+- `plan.md` — when a plan is requested or nontrivial work needs analysis before implementation.
+- `delegate.md` — when authorized implementation has independently scoped slices suited to subagents.
+- `raise-pr.md` — when the user explicitly asks to create a pull request.
+- `babysit.md` — when monitoring or shepherding an existing PR/stack toward merge readiness.
+- `autopilot.md` — when explicitly authorized to run sustained autonomous engineering work.
+- `worktree-cleanup.md` — when asked to reclaim space by cleaning up Git worktrees or stale development artifacts.
+
+In Pi sessions, these references are also available through `~/.pi/agent/principles/` and `~/.pi/agent/playbooks/` via directory symlinks; read only the matching file when triggered.
