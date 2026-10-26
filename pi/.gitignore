@@ -1,4 +1,5 @@
 .pi/agent/auth.json
 .pi/agent/sessions/
 .pi/agent/cache/
+.pi/agent/pi-web-access/
 .pi/agent/*.log
