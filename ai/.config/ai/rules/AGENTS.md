@@ -64,9 +64,9 @@ Act on your best judgment. Only escalate when you're truly blocked.
 
 ## Shared AI lazy references
 
-On relevant tasks, agents should read only the matching reference(s) below; do not load everything. These plain Markdown principles and playbooks are shared AI guidance, not skills or user-callable commands. Existing specialist skills remain authoritative for their procedures.
+On relevant tasks, agents should read only the matching reference(s) below; do not load everything. These plain Markdown guidance files and playbooks are not skills or user-callable commands. Existing specialist skills remain authoritative for their procedures.
 
-Principles in `~/.config/ai/principles/`:
+Guidance in `~/.config/ai/rules/`:
 - `foundational-thinking.md` — before nontrivial logic, settle data shapes, ownership, state flow, and concurrency boundaries.
 - `attack-the-premise.md` — when multiple fixes based on one assumption fail the same gate, test the assumption before another patch.
 - `type-and-boundary-discipline.md` — when handling untrusted input, internal invariants, or variant-based logic.
@@ -108,4 +108,4 @@ Playbooks in `~/.config/ai/playbooks/`:
 - `autopilot.md` — when explicitly authorized to run sustained autonomous engineering work.
 - `worktree-cleanup.md` — when asked to reclaim space by cleaning up Git worktrees or stale development artifacts.
 
-In Pi sessions, these references are also available through `~/.pi/agent/principles/` and `~/.pi/agent/playbooks/` via directory symlinks; read only the matching file when triggered.
+In Pi sessions, these references are available through `~/.pi/agent/rules/` and `~/.pi/agent/playbooks/` via directory symlinks; read only the matching file when triggered.

@@ -1,6 +1,6 @@
 # AI Configuration for OpenCode
 
-This directory holds shared agents, skills, and rules for the OpenCode agentic setup. All files live in `~/.dotfiles/ai/.config/ai/` and are symlinked into `~/.config/opencode/` so OpenCode can load them.
+This directory holds shared agents, skills, rules, and playbooks for the OpenCode agentic setup. All files live in `~/.dotfiles/ai/.config/ai/` and are symlinked into `~/.config/opencode/` so OpenCode can load them.
 
 ## Primary Agents
 
@@ -33,6 +33,14 @@ OpenCode provides built-in subagents that follow OpenCode's model inheritance an
 - **explore** — Used for local repository context gathering (docs, conventions, relevant files).
 - **general** — Used for general tasks that do not need a domain-specific primary agent.
 - **scout** — Used for scouting and lightweight exploration.
+
+## Rules and principles
+
+Shared working rules and engineering principles are kept together as focused Markdown files in `rules/`. OpenCode loads the listed rule files from `opencode.json`; consult the relevant additional file when its topic applies.
+
+## Playbooks
+
+Task-specific workflows are stored separately in `playbooks/` and consulted when relevant.
 
 ## Skills
 
@@ -86,8 +94,8 @@ ln -s ~/.dotfiles/ai/.config/ai/skills ~/.config/opencode/skills
 ln -s ~/.dotfiles/ai/.config/ai/rules ~/.config/opencode/rules
 ```
 
-Only `agents`, `skills`, and `rules` are symlinked; there is no `commands` symlink.
+Only `agents`, `skills`, and `rules` are symlinked; playbooks remain guidance files, not OpenCode commands.
 
 ## Rules
 
-Global agent rules live in `rules/` and are referenced from `opencode.json`.
+Shared rules and principles live together in `rules/` and are referenced from `opencode.json`.

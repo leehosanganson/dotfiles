@@ -3,9 +3,8 @@
 This is the canonical entry point for harnesses that load a single `AGENTS.md`.
 The shared instruction material is maintained in `rules/`:
 
-- `rules/AGENTS.md` — general working rules
-- `rules/bash-tool-usage.md` — shell and file-operation rules
-- `rules/web-search.md` — current-information lookup rules
+- `rules/AGENTS.md` — general working rules and guidance index
+- Other `rules/*.md` files — focused working guidance, including shell/file operations, web search, and engineering principles
 
 OpenCode loads all three files through `opencode.json`'s `instructions` list.
 Pi loads this entry point through `~/.pi/agent/AGENTS.md`, but Pi 0.83.0 does
