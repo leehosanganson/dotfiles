@@ -10,11 +10,11 @@ description: >-
 
 ## Dispatch
 
-Use the harness's native sub-agent tool to delegate each slice. Do not implement a slice in the caller and claim it was delegated.
+Use the harness's native subagent/task mechanism to delegate each slice. Do not implement a slice in the caller and claim it was delegated. Follow this skill's role and handoff contract, not another harness's tool names or syntax.
 
 - Use parallel dispatch only for independent slices; use sequential dispatch when a slice depends on an earlier result.
-- In this repository, `worker` implements focused tasks and `evaluator` reviews them. Use `coder`, `homelab`, or `content` only when a slice itself requires domain planning or delegation.
-- If no sub-agent tool is available, state that delegation is unavailable. Proceed inline only when appropriate and report the limitation.
+- Assign implementation and independent review roles using the subagents and names actually available in the current harness. In this dotfiles setup, `worker` and `evaluator` are available where configured; do not assume those names or definitions exist in every harness. Use a domain coordinator only when a slice itself needs that expertise.
+- If no subagent tool is available, state that delegation is unavailable. Proceed inline only when appropriate and report the limitation.
 
 ## Before dispatch
 

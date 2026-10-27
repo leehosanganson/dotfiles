@@ -1,101 +1,22 @@
-# AI Configuration for OpenCode
+# AI Workflow Configuration
 
-This directory holds shared agents, skills, rules, and playbooks for the OpenCode agentic setup. All files live in `~/.dotfiles/ai/.config/ai/` and are symlinked into `~/.config/opencode/` so OpenCode can load them.
+This package shares one task workflow between Pi and Claude Code. **The portable `skills/autopilot/` directory is the sole source of truth for working principles and playbooks.** Do not maintain sibling copies under `rules/` or `playbooks/`.
 
-## Primary Agents
+## Autopilot skill
 
-Three human-facing primary agents handle distinct domains. Switch between them with the OpenCode TUI using the `Tab` key.
+The skill routes substantive work to one or more matching workflows in `skills/autopilot/references/playbooks/`, applies relevant principles from `skills/autopilot/references/principles/`, and coordinates planning, task tracking, delegation when useful, execution, and verification. It keeps simple questions and one-step tasks lightweight.
 
-| Agent | Domain | Model configuration | Purpose |
-| ----- | ------ | ----- | ------- |
-| **coder** | Software engineering / coding | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | Clarifies coding goals, gathers context, and delegates implementation work. |
-| **homelab** | Homelab / infrastructure / Kubernetes / GitOps | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | Clarifies ops goals, gathers context, and delegates implementation work. |
-| **content** | LinkedIn / Medium content creation | Global `opencode.json` model: `openrouter/gpt-5.6-luna` | Clarifies topics and angles, gathers context, and delegates implementation work. |
+Download or install `skills/autopilot/` by itself to get the complete router, playbooks, and principles. No sibling directories, generator, or sync step are required. To change workflow policy, edit the references inside that skill directory directly.
 
-## Subagents
+Invoking the router authorizes only the requested task. Sustained autonomous runs, publishing, merging, and other gated actions need explicit authorization under the applicable workflow.
 
-### Custom subagents
+## Harness integration
 
-Custom subagents support focused repository exploration, implementation, and evaluation:
+- **Claude Code:** Install the directory as `.claude/skills/autopilot/` in a project or `~/.claude/skills/autopilot/` for personal use. Claude Code exposes it as `/autopilot`.
+- **Pi:** Install the same skill directory in Pi's skills location. Invoke it as `/skill:autopilot`. This dotfiles package also includes the optional `pi/.pi/agent/extensions/autopilot.ts` command, which adds `/autopilot` and expands the skill.
 
-- **explorer** — Read-only, narrowly explores repository files and documents based on the caller's interest, returning concise findings and open questions.
-- **worker** — Executes one implementation pass for a single task item, producing code or file changes.
-- **evaluator** — Reviews the Worker's output against the task's acceptance criteria.
+The shared entry point in `AGENTS.md` tells agents to use the skill for substantive work. Harness-specific commands and subagent tools belong in their adapters; the playbooks avoid assuming one runtime's tool names are available in another.
 
-The custom explorer is a focused, caller-directed repository reader. OpenCode's built-in **explore** and **scout** remain available for their general-purpose local context gathering and lightweight scouting behavior; use the custom explorer when a constrained, read-only investigation with a concise findings report is preferred.
+## Other capability skills
 
-The canonical retry loop is **Worker → Evaluator**. If the evaluator finds issues, delegate the feedback back to the Worker for another attempt, up to a maximum of 3 attempts. The loop stops early as soon as a pass succeeds.
-
-### Built-in subagents
-
-OpenCode provides built-in subagents that follow OpenCode's model inheritance and default behavior unless a model is explicitly configured for a subagent. The `small_model` setting may be configured for lightweight tasks, but it should not be treated as controlling any particular built-in subagent:
-
-- **explore** — Used for local repository context gathering (docs, conventions, relevant files).
-- **general** — Used for general tasks that do not need a domain-specific primary agent.
-- **scout** — Used for scouting and lightweight exploration.
-
-## Rules and principles
-
-Shared working rules and engineering principles are kept together as focused Markdown files in `rules/`. OpenCode loads the listed rule files from `opencode.json`; consult the relevant additional file when its topic applies.
-
-## Playbooks
-
-Task-specific workflows are stored separately in `playbooks/` and consulted when relevant.
-
-## Skills
-
-Skills are on-demand capability modules stored in `skills/`.
-
-Through OpenCode's native skill mechanism, all skills are available to all primary agents and subagents by default. No `permission.skill` allowlists are required; load the skill that matches the current task rather than treating the lists below as agent-specific restrictions.
-
-| Skill | Purpose |
-| ----- | ------- |
-| `project-context` | Gather project conventions and repository context, and report branch/PR state read-only at task start or in unfamiliar codebases. |
-| `code-review` | Guide code review and quality checks before finalizing implementations. |
-| `explain` | Explain actual branch or targeted changes interactively, without modifying or reviewing them. |
-| `fix-issues` | Address test failures, lint errors, and review feedback. |
-| `delegate` | Coordinate independently scoped implementation work across agents. |
-| `plan` | Turn clarified requests into actionable plans with acceptance criteria and verification. |
-| `diagnose-issues` | Investigate and diagnose issues before implementation or remediation. |
-| `content-writer` | Draft and publish LinkedIn / Medium content. |
-| `kubernetes-ops` | Run Kubernetes operational tasks with kubectl and Kustomize. |
-| `nixos-ops` | Operate NixOS hosts with nixos-rebuild, nix, and nixos-anywhere. |
-| `gitops-ops` | Operate a Flux CD GitOps setup and reconcile cluster state from Git. |
-| `github-ops` | Perform GitHub-related infrastructure changes and operations. |
-| `research` | Coordinate research across local and external materials and synthesize verified session artifacts (loaded only when explicitly requested). |
-| `self-improvement` | On explicit request, identify and implement one worthwhile enhancement, verify it, and open a PR for human review. |
-| `write-report` | Compile research findings into a final report. |
-| `write-notes` | Capture and structure research notes during investigations. |
-| `frontend-design` | Guide UI and frontend design patterns, component structure, and style decisions. |
-| `raise-pr` | Create pull requests following the repository workflow. |
-| `create-skill` | Create or revise agent skills and evaluate their behavior when requested. |
-
-## Delegate workflow
-
-Use `/plan` to clarify the request, identify constraints and acceptance criteria, and turn the work into concrete task items. Use `/delegate` to hand those task items to the appropriate implementation and evaluation agents. The delegate may ask for clarification when the scope or success criteria are ambiguous.
-
-For implementation work, the normal flow is:
-
-```
-/plan → context → skill → /delegate → Worker → Evaluator
-```
-
-The Worker makes the scoped changes, and the Evaluator independently checks them against the acceptance criteria. Iterate through the delegate workflow when evaluation finds issues; stop when the work is verified or clearly blocked.
-
-## Usage
-
-Switch primary agents from the OpenCode TUI using the `Tab` key.
-
-Symlink this configuration into `~/.config/opencode/`:
-
-```bash
-ln -s ~/.dotfiles/ai/.config/ai/agents ~/.config/opencode/agents
-ln -s ~/.dotfiles/ai/.config/ai/skills ~/.config/opencode/skills
-ln -s ~/.dotfiles/ai/.config/ai/rules ~/.config/opencode/rules
-```
-
-Only `agents`, `skills`, and `rules` are symlinked; playbooks remain guidance files, not OpenCode commands.
-
-## Rules
-
-Shared rules and principles live together in `rules/` and are referenced from `opencode.json`.
+Other directories under `skills/` provide optional, focused capabilities such as planning, code review, delegation, operations, research, and content workflows. They may point to the corresponding canonical playbook inside `skills/autopilot/references/playbooks/`, but do not maintain a second copy of workflow policy.

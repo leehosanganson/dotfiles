@@ -10,28 +10,13 @@ description: >-
 
 ## Contract
 
-Produce a plan only. Do not implement changes or create project files unless the caller separately authorizes implementation. Read enough of the repository and relevant documentation to ground the plan.
+Read and follow [`../autopilot/references/playbooks/plan.md`](../autopilot/references/playbooks/plan.md) for the planning workflow. This skill adds a native entry point, optional sizing, and a consistent output structure; it is analysis-only and must not implement changes or create project files unless separately authorized.
 
-Use a supplied positional size (`small`, `medium`, or `large`) when it is valid and fits the task scope. If none is supplied, or the supplied size is invalid or mismatched to the task scope, infer the appropriate size from the task scope without asking.
+Use a supplied positional size (`small`, `medium`, or `large`) when valid and appropriate; otherwise infer from scope without asking.
 
-- `small`: inspect immediate files and conventions; plan one bounded change, normally one to three slices.
-- `medium`: inspect the relevant subsystem, callers, tests, and dependencies; plan ordered slices and cross-cutting concerns.
-- `large`: map affected subsystems, ownership, risks, and rollout or migration phases with dependency gates.
-
-## Workflow
-
-1. State the goal, user outcome, constraints, non-goals, open questions, and assumptions.
-2. Inspect relevant project instructions, documentation, source, tests, tooling, interfaces, and configuration. Stop when the plan is grounded.
-3. Define user requirements, business rules, edge/failure cases, compatibility, and measurable outcomes.
-4. Describe current and proposed behavior, component boundaries, data/control flow, public contracts, security, observability, and compatibility.
-5. Split work into testable vertical slices. For each, name areas/files, behavior, dependencies, acceptance criteria, tests, and handoff. Order dependent slices and identify safe parallel work.
-6. Inventory internal/external dependencies, schemas, migrations, feature flags, generated artifacts, and rollout prerequisites.
-7. Compare risks and alternatives, including failure modes, security/privacy, performance, operations, compatibility, rollback, and unresolved decisions. Recommend the simplest fitting approach.
-8. Define verification checks and tie each to an acceptance criterion.
-
-## Research
-
-Use the repository as the first source of truth. When it cannot answer a concrete question about current or version-specific behavior, consult authoritative external sources. Record the source, version/date, finding, and effect on the plan. Avoid unfocused research.
+- `small`: one bounded change, normally one to three slices.
+- `medium`: relevant subsystem, callers, tests, dependencies, and ordered slices.
+- `large`: affected subsystems, ownership, risks, and rollout or migration gates.
 
 ## Output
 

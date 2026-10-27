@@ -16,18 +16,18 @@ subagents return evidence and must not create competing session files.
 
 1. Break the question into focused sub-questions and decide which need local
    exploration or external research.
-2. Use `/delegate` for bounded research tasks when useful. Ask local researchers
-   for repository paths and external researchers for source URLs; neither should
-   produce the final artifacts.
+2. Use the `delegate` workflow and harness-native subagents for bounded research
+   tasks when useful. Ask local researchers for repository paths and external
+   researchers for source URLs; neither should produce the final artifacts.
 3. Verify source relevance and support material claims with citations. Prefer
    primary sources, official documentation, and reputable publications. Cross-
    check important claims against two independent sources when practical, and
    separate evidence from interpretation.
 4. Reconcile findings and conflicts. Link every material claim to a source or
    repository path; report gaps rather than inventing or padding conclusions.
-5. Write the final `notes.md` and `sources.md`. Use `/write-notes` for the
-   synthesized notes and `/write-report` for `report.html`, passing each an
-   explicit path in the session directory. The orchestrator owns and verifies
+5. Write the final `notes.md` and `sources.md`. Use the `write-notes` and
+   `write-report` skills for the synthesized notes and `report.html`, passing
+   each an explicit path in the session directory. The orchestrator owns and verifies
    all final files.
 
 `notes.md` should state the research question, cited findings, synthesis,

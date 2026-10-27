@@ -1,1 +1,1 @@
-/home/ansonlee/dotfiles/ai/.config/ai/rules/AGENTS.md
+/home/ansonlee/dotfiles/ai/.config/ai/AGENTS.md

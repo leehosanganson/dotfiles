@@ -8,4 +8,4 @@
 4. Keep a concise status trail: PR, current head, checks/reviews, unresolved blockers, next safe action, and handoff needs.
 5. Stop at merge-ready handoff. Obtain explicit authorization before any merge or other irreversible external action.
 
-**Boundary:** Do not create a new PR (use `/raise-pr`), silently broaden requested changes, or merge on the user's behalf. Follow the task's requested monitoring cadence; do not poll indefinitely without a meaningful update.
+**Boundary:** Do not create a new PR (follow `raise-pr.md`), silently broaden requested changes, or merge on the user's behalf. Follow the task's requested monitoring cadence; do not poll indefinitely without a meaningful update.

@@ -8,4 +8,4 @@
 4. Make the smallest fix that addresses the root cause without broadening scope.
 5. Run the regression test or alternative check and relevant suite, then inspect the diff for unintended changes.
 
-**Boundary:** For homelab symptoms use `/diagnose-issues`; for known tracked findings use `/fix-issues`. This playbook is for coding defects, not infrastructure diagnosis or general cleanup.
+**Boundary:** For homelab symptoms, use an installed infrastructure-diagnosis capability; for known tracked findings, use the repository's issue-fixing workflow. This playbook is for coding defects, not infrastructure diagnosis or general cleanup.

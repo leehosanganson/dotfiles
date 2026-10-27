@@ -13,6 +13,8 @@ Use this skill only for the final PR-creation step after implementation is compl
 
 ## Workflow
 
+Read and follow [`../autopilot/references/playbooks/raise-pr.md`](../autopilot/references/playbooks/raise-pr.md) before publishing. This skill supplies the harness-specific PR creation steps.
+
 1. Inspect the current branch, working tree, remotes, and relevant commits. Identify the exact changes intended for the PR; do not include unrelated or pre-existing changes.
 2. If changes are uncommitted, confirm the intended files and commit message with the user before staging or committing. Never stage everything indiscriminately, stash, discard, or amend commits without explicit approval.
 3. Check the project's contribution guidance and tests. If the work is not complete, checks fail, or the target/base branch is unclear, report the blocker and ask how to proceed rather than opening the PR.

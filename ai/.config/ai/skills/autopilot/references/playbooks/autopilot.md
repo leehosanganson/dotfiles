@@ -1,6 +1,6 @@
 # Autopilot
 
-**Trigger:** The user explicitly authorizes a sustained autonomous engineering run or multi-PR improvement cycle with a goal and completion criteria.
+**Trigger:** The user explicitly authorizes a sustained autonomous engineering run or multi-PR improvement cycle with a goal and completion criteria. The `autopilot` skill is the ordinary task router; do not apply this sustained-run procedure unless that authorization is explicit.
 
 1. Clarify the target outcome, scope, verification, permitted repositories/branches, and stopping conditions. Keep durable progress visible with discrete, verifiable tasks.
 2. Choose the smallest fitting workflow: one task for a bounded long run; independently owned PRs only for an explicitly approved multi-PR run. Gather context and plan nontrivial work before implementation.

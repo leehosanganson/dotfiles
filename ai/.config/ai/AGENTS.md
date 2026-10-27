@@ -1,16 +1,5 @@
-# Shared AI instructions
+# Pi workflow entry point
 
-This is the canonical entry point for harnesses that load a single `AGENTS.md`.
-The shared instruction material is maintained in `rules/`:
+For substantive tasks, use the `autopilot` skill as the workflow entry point. It owns the canonical working principles and playbooks in its `references/` directory; do not depend on sibling rule or playbook directories.
 
-- `rules/AGENTS.md` — general working rules and guidance index
-- Other `rules/*.md` files — focused working guidance, including shell/file operations, web search, and engineering principles
-
-OpenCode loads all three files through `opencode.json`'s `instructions` list.
-Pi loads this entry point through `~/.pi/agent/AGENTS.md`, but Pi 0.83.0 does
-not automatically expand a directory of rule files or support OpenCode's
-instruction-list configuration. Keep the rules canonical in `rules/` rather
-than copying them into Pi; Pi users should consult the listed files when a
-rule applies.
-
-See `README.md` for the shared resource layout.
+Invoke `/skill:autopilot` directly or use the optional `/autopilot` extension command. Follow the matching playbook and relevant principles. Keep simple questions and one-step tasks lightweight. Routing does not authorize sustained autonomy or gated actions.

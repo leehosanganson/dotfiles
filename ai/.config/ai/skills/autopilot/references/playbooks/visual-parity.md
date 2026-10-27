@@ -8,4 +8,4 @@
 4. Adjust the implementation, then capture and compare again until acceptance criteria are met.
 5. Preserve accessibility, responsive behavior, and project conventions while matching the reference.
 
-**Boundary:** This is for parity work only; use `/frontend-design` for a new visual direction. Do not claim pixel parity without direct visual comparison.
+**Boundary:** This is for parity work only; use an installed frontend-design capability for a new visual direction. Do not claim pixel parity without direct visual comparison.

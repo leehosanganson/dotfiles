@@ -4,29 +4,20 @@ description: >-
   Gather repository conventions and concise project context before substantive
   implementation or planning, especially in unfamiliar repositories, and report
   branch and PR state read-only. Use when project context has not yet been
-  gathered or branch/PR context matters. Do not use for isolated questions or
-  one-step tasks where repository context is irrelevant. Never sync or switch
-  branches as part of context gathering.
+  gathered or branch/PR context matters. Do not use for isolated or one-step
+  tasks where repository context is irrelevant. Never sync or switch branches
+  as part of context gathering.
 ---
 
-## Workflow
+## Contract
 
-For substantive coding tasks, unfamiliar repositories, or relevant branch/PR context:
+Read and follow [`../autopilot/references/playbooks/project-context.md`](../autopilot/references/playbooks/project-context.md) for the shared context-gathering workflow. This skill adds a native entry point and a read-only script for a concise report of repository and PR state. Use it before substantive implementation or planning when context is unfamiliar or relevant; skip it for isolated or one-step tasks.
 
-1. Get the absolute directory containing this `SKILL.md` and assign it to `skill_dir` (for example, `skill_dir=/absolute/path/to/project-context`). With the target repository as the current working directory, run `bash "$skill_dir/scripts/project-context.sh"`. Do not resolve the script path relative to the target repository or change directories to the skill directory.
-2. Read the most relevant project documentation and conventions. Stop once you have enough context to plan safely; filenames and script output are pointers, not substitutes for reading relevant guidance.
-3. Report a concise project note with confirmed facts and unknowns, covering project type, relevant language/framework, test/build commands, conventions, branch/upstream/working-tree status, relevant PR state, and decisions needed.
+## Helper script
 
-Skip this workflow for simple isolated questions or one-step tasks where repository context is irrelevant.
+1. Get the absolute directory containing this `SKILL.md` and assign it to `skill_dir` (for example, `skill_dir=/absolute/path/to/project-context`).
+2. With the target repository as the current working directory, run `bash "$skill_dir/scripts/project-context.sh"`. Do not resolve the script path relative to the target repository or change directories to the skill directory.
+3. Read the most relevant project documentation and conventions; script output and filenames are pointers, not substitutes for source documents.
+4. Report confirmed facts and unknowns, including project type, relevant stack, test/build commands, conventions, branch/upstream/working-tree state, relevant PR state, and decisions needed.
 
-## Safe inspection
-
-The script reads local Git metadata and may query open PRs with `gh pr list`. It does not change repository or GitHub state. Report missing tools and failed inspections instead of assuming results.
-
-- Include branch, working-tree state, latest commit, and ahead/behind status when an upstream is configured; note that tracking data may be stale.
-- If `gh` is available, report open/draft PRs or the query failure. Do not infer that an unrelated PR should be continued.
-- Never fetch, pull, checkout, switch, reset, rebase, or otherwise change Git state. Ask the user first if context suggests such an operation is needed.
-
-## Discovery
-
-Read only files relevant to the task. Consider README, agent instructions, manifests, build/test tooling, design docs, CI guidance, tests, deployment/configuration, and lint/format settings. Do not dump broad file contents or expose secrets while gathering context.
+The script reads local Git metadata and may query open/draft PRs with `gh pr list`; it does not change Git or GitHub state. Report missing tools and failed inspections rather than assuming results. Never fetch, pull, checkout, switch, reset, rebase, or otherwise change Git state during context gathering. Read only relevant files and avoid exposing secrets.

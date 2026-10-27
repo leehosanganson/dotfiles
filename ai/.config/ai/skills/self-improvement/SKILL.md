@@ -1,11 +1,10 @@
 ---
 name: self-improvement
 description: >-
-  When the user explicitly asks for a project self-improvement cycle, identify,
-  document, implement, verify, and raise separate PRs for worthwhile, safe
-  enhancements or roadmap items. Monitor PR status and continue the cycle while
-  the session is active. Do not trigger for code review, fixing a specific
-  request, or general discussion about self-improvement.
+  Run the explicitly authorized sustained self-improvement cycle routed through
+  `autopilot`, including roadmap discovery, separate PRs, verification, and
+  monitoring while the session is active. Do not trigger for a bounded task,
+  code review, or general discussion about self-improvement.
 ---
 
 # Project Self-Improvement
