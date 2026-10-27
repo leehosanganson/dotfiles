@@ -45,7 +45,7 @@ Verify behavior against observable outcomes and report checks actually run. When
 
 ## Workflow router
 
-The `autopilot` skill is the entry point for substantive work. It selects workflows from the bundled [`../playbooks/INDEX.md`](../playbooks/INDEX.md), loads only relevant principles from this directory, and uses specialist capabilities when helpful. Keep simple questions and one-step tasks lightweight. Follow the selected workflow and report verification and blockers.
+The `autopilot` skill is the entry point for substantive work. It selects workflows from the playbooks listed in [`../../SKILL.md`](../../SKILL.md), loads only relevant principles from this directory, and uses specialist capabilities when helpful. Keep simple questions and one-step tasks lightweight. Follow the selected workflow and report verification and blockers.
 
 Use the current harness's task tracking and delegation mechanisms. The bundled `delegate` playbook and any installed delegate skill describe when and how to delegate; do so only when independently scoped work benefits from it. Never assume tool names or behavior transfer between harnesses.
 

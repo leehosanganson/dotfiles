@@ -1,6 +1,6 @@
 # Pause safely
 
-For an explicit pause, context compaction, or going offline during substantive in-flight work:
+**Trigger:** The user asks to pause, context is about to be compacted, or the session is going offline during substantive in-flight work.
 
 1. Stop starting new work. Record the current state, branches and files, what is complete and incomplete, verification, blockers, and the exact next safe step.
 2. Identify irreversible-action gates and ensure no risky background process is left unmanaged.
