@@ -88,6 +88,11 @@ function Invoke-Install {
     if ($installed -and $Upgrade) {
         Write-Host "  Upgrading $Name..." -ForegroundColor Yellow
         & $UpgradeCmd[0] @($UpgradeCmd[1..($UpgradeCmd.Count - 1)])
+        # winget exits -1978335189 (0x8A15002B) when no newer version applies.
+        if ($LASTEXITCODE -eq -1978335189) {
+            Write-Host "  $Name already up to date." -ForegroundColor Green
+            return
+        }
         if ($LASTEXITCODE -ne 0) {
             Write-Host "[ERROR] $Name failed to upgrade (exit $LASTEXITCODE)." -ForegroundColor Red
             exit 1
@@ -144,13 +149,24 @@ $apps = @(
     @{ Name = 'Azure CLI'; Winget = 'Microsoft.AzureCLI'; Choco = 'azure-cli'	},
     @{ Name = 'jq'; Winget = 'jqlang.jq'; Choco = 'jq'	},
     @{ Name = 'Lazygit'; Winget = 'JesseDuffield.lazygit';	Choco = 'lazygit'	},
-    @{ Name = 'fzf'; Winget = 'junegunn.fzf'; Choco = 'fzf'	}
+    @{ Name = 'fzf'; Winget = 'junegunn.fzf'; Choco = 'fzf'	},
+    @{ Name = 'zoxide'; Winget = 'ajeetdsouza.zoxide'; Choco = 'zoxide'	}
 )
 
 if (Test-Command 'choco') {
     Write-Host "Using Chocolatey." -ForegroundColor Yellow
-    $installedList = choco list --local-only 2>$null
+    $installedList = choco list 2>$null
+    # Apps installed earlier via winget are invisible to choco; upgrade them with winget.
+    $wingetList = if (Test-Command 'winget') { winget list --accept-source-agreements 2>$null }
     foreach ($a in $apps) {
+        if (-not ($installedList | Select-String -Quiet $a.Choco) -and
+            ($wingetList | Select-String -Quiet -SimpleMatch $a.Winget)) {
+            Invoke-Install -Name $a.Name -InstalledList $wingetList `
+                -Match $a.Winget -InstallCmd @() `
+                -UpgradeCmd @('winget', 'upgrade', '--id', $a.Winget,
+                '--accept-source-agreements', '--accept-package-agreements', '--silent') -Upgrade:$Upgrade
+            continue
+        }
         Invoke-Install -Name $a.Name -InstalledList $installedList `
             -Match $a.Choco -InstallCmd @('choco', 'install', $a.Choco, '-y', '--no-progress') `
             -UpgradeCmd @('choco', 'upgrade', $a.Choco, '-y', '--no-progress') -Upgrade:$Upgrade

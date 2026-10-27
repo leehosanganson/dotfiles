@@ -17,6 +17,9 @@ export VISUAL="$EDITOR"
 
 export DOCKER_SQL_MOUNT_PATH='/d/DockerMount/SQL'
 
+# Zoxide (defines `z` and `zi`)
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash)"
+
 # Autocomplete
 if ! [ -f ~/.git-completion.bash ]; then
   curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash
