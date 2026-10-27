@@ -7,7 +7,7 @@ Canonical workflow playbooks for the autopilot skill. Use this index to choose a
 - [`bug-fix`](bug-fix.md) — A coding defect has a concrete, observable failure.
 - [`create-skill`](create-skill.md) — The user requests authoring, revising, or evaluating an agent skill.
 - [`delegate`](delegate.md) — The user has authorized implementation and the work has independently scoped slices that benefit from subagents.
-- [`diagnose-issues`](diagnose-issues.md) — An unclear symptom spans homelab or connected infrastructure and the affected subsystem is not yet known.
+- [`diagnose-issues`](diagnose-issues.md) — Triage an unclear homelab or connected-infrastructure symptom before the owning subsystem is known; hand off to its specialist skill once identified.
 - [`feature-work`](feature-work.md) — Implementing a scoped feature or user-facing behavior.
 - [`pause-safely`](pause-safely.md) — Pause safely
 - [`performance`](performance.md) — Investigating or changing performance, latency, throughput, or resource use.

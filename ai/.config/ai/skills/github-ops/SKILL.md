@@ -33,11 +33,11 @@ Identify the issue or PR, prepare the comment, post it with `gh issue comment <n
 
 Check `gh pr checks <pr>`, confirm the merge strategy with the user, and merge only after confirmation. Report the merge commit and resulting state.
 
-The sole exception to this ordinary confirmation rule is the `autopilot` playbook when the user explicitly invokes it with authorization to merge. Even then, merge only after required checks and reviews pass and no unresolved conflicts or blockers remain.
+The only exception to the general no-merge default is a sustained run where the user explicitly invokes the `autopilot` playbook and authorizes merging. That exception does not apply to the `self-improvement` workflow, which never merges. In all cases, merge only after required checks and reviews pass and no unresolved conflicts or blockers remain.
 
 ## Safety
 
 - Never force-push, delete branches or tags, or close issues or PRs without explicit confirmation.
-- Never merge without passing checks unless the user explicitly overrides this requirement.
+- Never merge without passing checks. User authorization may permit a merge action, but does not bypass required checks or reviews.
 - Draft edits and show them to the user before applying.
 - Keep `gh` commands single-purpose; do not chain unrelated operations.

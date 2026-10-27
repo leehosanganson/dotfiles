@@ -27,11 +27,11 @@ directly without routing them through a workflow.
    `plan.md` before nontrivial changes. Load an installed specialist skill when
    it adds needed domain or harness capability, and check for repository-
    specific workflow guidance. Do not read unrelated playbooks.
-3. **Track execution.** Use the harness's native task/todo mechanism when
-   available. Copy the selected playbook's steps into the task checklist when
-   supported; mark an inapplicable step skipped with a brief reason instead of
-   silently dropping it. Otherwise keep progress visible in the response or
-   handoff.
+3. **Track execution proportionately.** Use the harness's native task/todo
+   mechanism for multi-step work when available. Keep simple or one-step work
+   lightweight; do not mechanically copy playbook steps or create skipped-step
+   entries when they add no tracking value. Otherwise keep progress visible in
+   the response or handoff.
 4. **Plan and delegate proportionately.** Keep one-step tasks lightweight. For
    nontrivial work, plan before implementation. Follow the `delegate` playbook
    and use native subagents when independently scoped work benefits from it.

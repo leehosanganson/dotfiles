@@ -11,8 +11,9 @@ description: >-
 
 Run only on explicit request. During the active session, keep finding and
 shipping safe, bounded improvements; do not treat opening a PR or giving a
-status report as the end of the cycle. Never merge PRs or continue work outside
-the active session.
+status report as the end of the cycle. This workflow never merges PRs, even if
+the user authorizes merging under the broader autopilot playbook. Never continue
+work outside the active session.
 
 ## Cycle
 
