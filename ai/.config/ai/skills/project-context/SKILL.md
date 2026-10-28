@@ -15,9 +15,8 @@ Read and follow [`../autopilot/references/playbooks/project-context.md`](../auto
 
 ## Helper script
 
-1. Get the absolute directory containing this `SKILL.md` and assign it to `skill_dir` (for example, `skill_dir=/absolute/path/to/project-context`).
-2. With the target repository as the current working directory, run `bash "$skill_dir/scripts/project-context.sh"`. Do not resolve the script path relative to the target repository or change directories to the skill directory.
-3. Read the most relevant project documentation and conventions; script output and filenames are pointers, not substitutes for source documents.
-4. Report confirmed facts and unknowns, including project type, relevant stack, test/build commands, conventions, branch/upstream/working-tree state, relevant PR state, and decisions needed.
+1. Resolve this skill's directory and run its `scripts/project-context.sh` with the target repository as the current working directory.
+2. Read the most relevant project documentation and conventions; script output and filenames are pointers, not substitutes for source documents.
+3. Report confirmed facts and unknowns, including project type, relevant stack, test/build commands, conventions, branch/upstream/working-tree state, available pull-request state, and decisions needed.
 
-The script reads local Git metadata and may query open/draft PRs with `gh pr list`; it does not change Git or GitHub state. Report missing tools and failed inspections rather than assuming results. Never fetch, pull, checkout, switch, reset, rebase, or otherwise change Git state during context gathering. Read only relevant files and avoid exposing secrets.
+The helper reads local Git metadata and does not change Git state. It may query pull-request state only when an optional provider integration is configured. Report missing capabilities and failed inspections rather than assuming results. Never fetch, pull, checkout, switch, reset, rebase, or otherwise change Git state during context gathering. Read only relevant files and avoid exposing secrets.

@@ -74,7 +74,7 @@ fi
 
 printf 'Project files (up to 12, within 3 levels):\n'
 project_files=$(find . -maxdepth 3 -type f \
-  \( -name 'README*' -o -name 'AGENTS.md' -o -name '.cursorrules' -o \
+  \( -name 'README*' -o -name 'AGENTS.md' -o \
      -name 'Makefile' -o -name 'justfile' -o -name 'Taskfile.yml' -o \
      -name 'package.json' -o -name 'pyproject.toml' -o -name 'Cargo.toml' -o \
      -name 'go.mod' -o -name 'pom.xml' -o -name 'flake.nix' -o \
@@ -82,13 +82,4 @@ project_files=$(find . -maxdepth 3 -type f \
   -not -path './.git/*' -print 2>/dev/null | sort | awk 'NR <= 12 { print "  " $0 } END { if (NR == 0) print "  none found"; else if (NR > 12) print "  …more files omitted" }')
 printf '%s\n' "$project_files"
 
-if command -v gh >/dev/null 2>&1; then
-  if prs=$(gh pr list --state open --limit 20 --json number,title,state,isDraft,url \
-    --template '{{range .}}  #{{.number}} [{{if .isDraft}}draft{{else}}{{.state}}{{end}}] {{.title}} — {{.url}}{{"\n"}}{{else}}  none{{"\n"}}{{end}}' 2>&1); then
-    printf 'Open/draft PRs (up to 20; additional PRs may be omitted):\n%s' "$prs"
-  else
-    printf 'Open/draft PRs: unavailable (gh query failed: %.240s)\n' "${prs//$'\n'/; }"
-  fi
-else
-  printf 'Open/draft PRs: unavailable (gh is not installed)\n'
-fi
+printf 'Pull-request state: inspect through the repository provider interface when available.\n'

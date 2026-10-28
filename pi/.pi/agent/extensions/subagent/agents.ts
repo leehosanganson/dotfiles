@@ -11,7 +11,15 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 import { CONFIG_DIR_NAME, getAgentDir, parseFrontmatter } from "@earendil-works/pi-coding-agent";
+import { mergeAgentMetadata, readAgentConfigSync, resolveAgentConfigDir } from "../../lib/agent-config.ts";
+
+const expandHome = (value: string) => value.startsWith("~/")
+	? path.join(process.env.HOME ?? "", value.slice(2))
+	: value;
+const CONFIG_DIR = resolveAgentConfigDir(fileURLToPath(import.meta.url),
+	process.env.PI_AGENT_CONFIG_DIR ? expandHome(process.env.PI_AGENT_CONFIG_DIR) : undefined);
 
 export type AgentScope = "user" | "project" | "both";
 
@@ -57,25 +65,29 @@ function loadAgentsFromDir(dir: string, source: "user" | "project"): AgentConfig
 		}
 
 		const { frontmatter, body } = parseFrontmatter<Record<string, unknown>>(content);
-		if (frontmatter.mode !== "subagent") continue;
+		const config = source === "user" ? readAgentConfigSync(CONFIG_DIR, entry.name) : {};
+		const metadata = mergeAgentMetadata(frontmatter, config);
+		if (metadata.mode !== "subagent") continue;
 
 		// Fall back to the file stem when no pi-style `name:` key is present.
-		const name = typeof frontmatter.name === "string" && frontmatter.name.trim()
-			? frontmatter.name.trim()
+		const name = typeof metadata.name === "string" && metadata.name.trim()
+			? metadata.name.trim()
 			: entry.name.replace(/\.md$/, "");
-		const description = typeof frontmatter.description === "string"
-			? frontmatter.description.trim()
+		const description = typeof metadata.description === "string"
+			? metadata.description.trim()
 			: "";
 
 		if (!description) {
 			continue;
 		}
 
-		const tools = typeof frontmatter.tools === "string"
-			? frontmatter.tools.split(",").map((t: string) => t.trim()).filter(Boolean)
-			: undefined;
-		const model = typeof frontmatter.model === "string" && frontmatter.model.trim()
-			? frontmatter.model.trim()
+		const tools = typeof metadata.tools === "string"
+			? metadata.tools.split(",").map((t: string) => t.trim()).filter(Boolean)
+			: Array.isArray(metadata.tools) && metadata.tools.every((tool) => typeof tool === "string")
+				? metadata.tools
+				: undefined;
+		const model = typeof metadata.model === "string" && metadata.model.trim()
+			? metadata.model.trim()
 			: undefined;
 
 		agents.push({

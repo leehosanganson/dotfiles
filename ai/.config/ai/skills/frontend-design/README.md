@@ -1,4 +1,4 @@
-# Frontend Design Plugin
+# Frontend Design
 
 Generates distinctive, production-grade frontend interfaces that avoid generic AI aesthetics.
 
@@ -26,9 +26,4 @@ The skill will choose a clear aesthetic direction and implement production code 
 
 ## Learn More
 
-See the [Frontend Aesthetics Cookbook](https://github.com/anthropics/claude-cookbooks/blob/main/coding/prompting_for_frontend_aesthetics.ipynb) for detailed guidance on prompting for high-quality frontend design.
-
-## Authors
-
-Prithvi Rajasekaran (prithvi@anthropic.com)
-Alexander Bricken (alexander@anthropic.com)
+Use current, project-relevant design references when needed; this skill does not depend on a specific provider, model, or agent runtime.

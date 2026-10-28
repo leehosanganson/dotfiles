@@ -75,6 +75,6 @@ These references are part of this standalone skill. Read only the matching files
 - `type-and-boundary-discipline.md` — validate untrusted inputs and preserve internal invariants.
 - `web-search.md` — use external search when an answer depends on current facts.
 
-## Harness-specific guidance
+## Runtime integration
 
-Tool operation details belong in runtime adapters. Do not assume one runtime's tools or commands exist in another.
+Keep shared instructions and principles independent of any agent runtime. Consult the active runtime's own configuration for concrete tool operations, commands, and metadata; do not assume an interface exists elsewhere.

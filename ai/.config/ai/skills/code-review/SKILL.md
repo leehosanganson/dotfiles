@@ -8,7 +8,7 @@ description: >-
   use fix-issues to resolve recorded findings.
 ---
 
-Review every changed file in scope and record actionable findings in the active coding agent's task or todo feature when available. In Pi, use the session-local `todo` tool.
+Review every changed file in scope and record actionable findings in the active task-tracking feature when available.
 
 - Summarize the change and its behavioral impact.
 - Check correctness, necessity, readability, scope, and repository conventions. Read the relevant README, contribution guidance, and other project documentation.

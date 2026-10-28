@@ -77,12 +77,9 @@ the user under the applicable playbook.
 - [`visual-parity`](references/playbooks/visual-parity.md) — Matching an implementation to an authoritative screenshot or visual reference.
 - [`worktree-cleanup`](references/playbooks/worktree-cleanup.md) — The user asks to reclaim disk or remove Git worktrees and related stale development artifacts.
 
-## Runtime adapter
+## Runtime integration
 
-Use the current harness's native skill invocation, task tracker, subagent
-mechanism, and file/tool names. Pi can invoke `/skill:autopilot`; its optional
-dotfiles extension adds `/autopilot`. Claude Code exposes the skill as
-`/autopilot`. Never assume a tool name or behavior transfers between runtimes.
-If `references/adapters/<runtime>.md` exists for the current harness (e.g.
-`claude-code.md`), read it first; it maps this skill's generic guidance to that
-harness's tools.
+Use the current runtime's native mechanisms for skill invocation, task tracking,
+subagents, and tools. Runtime-specific commands, schemas, and mappings do not
+belong in this shared skill; consult the runtime's own configuration when needed.
+Do not assume a tool or command name transfers between environments.

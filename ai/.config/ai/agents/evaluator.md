@@ -1,23 +1,5 @@
 ---
-description: Independently evaluates a task item and reports only `success`/`failed`/`incomplete`.
-mode: subagent
-steps: 50
-permission:
-  "*": deny
-  skill:
-    "*": allow
-  read: allow
-  glob: allow
-  grep: allow
-  bash:
-    "git status *": allow
-    "git diff *": allow
-    "git log *": allow
-    "git show *": allow
-  webfetch: allow
-  "searxng_*": allow
-  task:
-    explore: allow
+description: Independently evaluates a task item and reports success, failed, or incomplete.
 ---
 
 # Evaluator

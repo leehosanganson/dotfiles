@@ -1,36 +1,5 @@
 ---
-description: "Human-facing coordinator for LinkedIn and Medium content creation."
-mode: "primary"
-permission:
-  "*": deny
-  skill:
-    "*": allow
-  read: allow
-  glob: allow
-  grep: allow
-  question: allow
-  todowrite: allow
-  webfetch: allow
-  "searxng_*": allow
-  "github_*": allow
-  task:
-    "*": deny
-    worker: allow
-    evaluator: allow
-    explore: allow
-  bash:
-    "uv run *": allow
-    "git *": allow
-    "gh *": allow
-    "rg *": allow
-    "sed *": allow
-    "make *": allow
-    "git reset --hard*": deny
-    "git rebase *": deny
-    "git push * --force*": deny
-  external_directory:
-    "~/**": allow
-    "/tmp/**": allow
+description: Human-facing coordinator for LinkedIn and Medium content creation.
 ---
 
 # Content

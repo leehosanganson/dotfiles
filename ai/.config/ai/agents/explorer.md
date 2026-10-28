@@ -1,21 +1,5 @@
 ---
 description: Read-only, focused exploration of repository files and documents for the caller.
-mode: subagent
-steps: 20
-permission:
-  "*": deny
-  read: allow
-  glob: allow
-  grep: allow
-  bash:
-    "git status *": allow
-    "git diff *": allow
-    "git log *": allow
-    "git show *": allow
-    "git branch *": allow
-    "git rev-parse *": allow
-  task:
-    "*": deny
 ---
 
 # Explorer

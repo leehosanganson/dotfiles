@@ -1,18 +1,22 @@
-// Registers the primary agents (coder, content, homelab) defined as markdown
-// files in ~/.pi/agent/agents/ and keeps the active one persistent for the
-// session via system-prompt injection (survives compaction) and across sessions
-// via a state file. Subagent definitions (mode !== "primary") are ignored, and
-// opencode's nested `permission` frontmatter block is intentionally dropped.
+// Registers primary agents whose vendor-neutral prompt bodies live in
+// ~/.pi/agent/agents/*.md; Pi-only metadata is read from the adjacent
+// agent-config/*.json directory. Active agent state persists across sessions.
+// Subagent definitions are ignored by this selector.
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { readAgentConfig, resolveAgentConfigDir } from "../lib/agent-config.ts";
 
 const expandHome = (p: string) => (p.startsWith("~/") ? join(homedir(), p.slice(2)) : p);
 const AGENTS_DIR = process.env.PI_AGENTS_DIR
   ? resolve(expandHome(process.env.PI_AGENTS_DIR))
   : resolve(homedir(), ".pi/agent/agents");
 const STATE_FILE = join(homedir(), ".pi/agent/agents-active.json");
+const CONFIG_DIR = resolveAgentConfigDir(fileURLToPath(import.meta.url),
+  process.env.PI_AGENT_CONFIG_DIR ? expandHome(process.env.PI_AGENT_CONFIG_DIR) : undefined);
+
 const STATUS_KEY = "agent-selector";
 
 interface Agent {
@@ -28,7 +32,7 @@ interface ParsedMarkdown {
 }
 
 // Read only flat frontmatter keys needed by pi; the `permission` block is ignored.
-function parseMarkdown(raw: string): ParsedMarkdown {
+function parseMarkdown(raw: string, config: Record<string, unknown> = {}): ParsedMarkdown {
   const fence = /^---\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/.exec(raw);
   const frontmatter = fence ? fence[1] : "";
   const body = fence ? raw.slice(fence[0].length).trim() : raw.trim();
@@ -39,7 +43,9 @@ function parseMarkdown(raw: string): ParsedMarkdown {
     return hit ? hit[1].trim() : "";
   };
 
-  return { description: line("description"), isPrimary: line("mode") === "primary", body };
+  const description = typeof config.description === "string" ? config.description : line("description");
+  const mode = typeof config.mode === "string" ? config.mode : line("mode");
+  return { description, isPrimary: mode === "primary", body };
 }
 
 async function loadAgents(): Promise<Agent[]> {
@@ -47,7 +53,8 @@ async function loadAgents(): Promise<Agent[]> {
     const files = (await readdir(AGENTS_DIR)).filter((f) => f.endsWith(".md"));
     const agents: Agent[] = [];
     for (const file of files) {
-      const { description, isPrimary, body } = parseMarkdown(await readFile(join(AGENTS_DIR, file), "utf8"));
+      const config = await readAgentConfig(CONFIG_DIR, file);
+      const { description, isPrimary, body } = parseMarkdown(await readFile(join(AGENTS_DIR, file), "utf8"), config);
       if (isPrimary) agents.push({ id: file.replace(/\.md$/, ""), description, instruction: body });
     }
     return agents.sort((a, b) => a.id.localeCompare(b.id));

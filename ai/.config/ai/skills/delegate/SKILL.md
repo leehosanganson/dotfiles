@@ -10,17 +10,17 @@ description: >-
 
 ## Dispatch
 
-Use the harness's native subagent/task mechanism to delegate each slice. Do not implement a slice in the caller and claim it was delegated. Follow this skill's role and handoff contract, not another harness's tool names or syntax.
+Use the current runtime's native agent or task mechanism to delegate each slice. Do not implement a slice in the caller and claim it was delegated. Follow the autopilot delegate playbook for whether and how to divide work. This skill supplies dispatch and handoff, not a separate routing policy.
 
 - Use parallel dispatch only for independent slices; use sequential dispatch when a slice depends on an earlier result.
-- Assign implementation and independent review roles using the subagents and names actually available in the current harness. In this dotfiles setup, `worker` and `evaluator` are available where configured; do not assume those names or definitions exist in every harness. Use a domain coordinator only when a slice itself needs that expertise.
+- Assign implementation and independent review roles using the capabilities and agents available in the current runtime. Use a domain coordinator only when a slice itself needs that expertise.
 - If no subagent tool is available, state that delegation is unavailable. Proceed inline only when appropriate and report the limitation.
 
 ## Before dispatch
 
 1. Read project instructions, relevant documentation, architecture, and conventions.
 2. Clarify ambiguities; state assumptions and measurable success criteria.
-3. Split the approved scope into independently testable vertical slices. Include interface, implementation, and tests in each slice where applicable.
+3. Split the approved scope into independently testable vertical slices. Include interfaces, implementation, and tests in each slice where applicable. Keep the delegate playbook's deterministic safety boundaries regardless of any bounded-judge recommendation.
 4. Give each sub-agent a brief with the goal, context, exact scope and exclusions, dependencies, acceptance criteria, verification, permitted files, assumptions, and risks.
 5. Identify overlapping files and shared decisions. Assign one owner or serialize conflicting work.
 
