@@ -61,7 +61,6 @@ the user under the applicable playbook.
 - [`autopilot`](references/playbooks/autopilot.md) — The user explicitly authorizes a sustained autonomous engineering run or multi-PR improvement cycle with a goal and completion criteria. The `autopilot` skill is the ordinary task router; do not apply this sustained-run procedure unless that authorization is explicit.
 - [`babysit`](references/playbooks/babysit.md) — The user asks to monitor or shepherd an existing PR/stack toward a reviewable, merge-ready state.
 - [`bug-fix`](references/playbooks/bug-fix.md) — A coding defect has a concrete, observable failure.
-- [`create-skill`](references/playbooks/create-skill.md) — The user requests authoring, revising, or evaluating an agent skill.
 - [`delegate`](references/playbooks/delegate.md) — The user has authorized implementation and the work has independently scoped slices that benefit from subagents.
 - [`diagnose-issues`](references/playbooks/diagnose-issues.md) — Triage an unclear homelab or connected-infrastructure symptom before the owning subsystem is known; hand off to its specialist skill once identified.
 - [`feature-work`](references/playbooks/feature-work.md) — Implementing a scoped feature or user-facing behavior.
