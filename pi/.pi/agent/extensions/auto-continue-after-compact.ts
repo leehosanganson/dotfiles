@@ -21,10 +21,11 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 
 const CONTINUATION_PROMPT =
-  "The conversation context was compacted to reclaim space. Continue the in-progress work " +
-  "seamlessly: resume the next uncompleted step of the current task. Do not apologize, do not " +
-  "restate the whole plan, and do not summarize what already happened — just proceed with the " +
-  "next action as if nothing interrupted you.";
+  "The conversation context was compacted to reclaim space. Before continuing, re-read any " +
+  "skills the user explicitly invoked or asked you to use that remain relevant to the current task. " +
+  "Then continue the in-progress work seamlessly: resume the next uncompleted step of the current " +
+  "task. Do not apologize, do not restate the whole plan, and do not summarize what already " +
+  "happened — just proceed with the next action as if nothing interrupted you.";
 
 // Cooldown so a compaction followed almost immediately by another compaction
 // (e.g. the just-produced continuation itself pushes over the threshold) does
