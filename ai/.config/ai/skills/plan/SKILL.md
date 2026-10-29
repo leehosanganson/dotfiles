@@ -10,7 +10,7 @@ description: >-
 
 ## Contract
 
-Read and follow [`../autopilot/references/playbooks/plan.md`](../autopilot/references/playbooks/plan.md) for the planning workflow. This skill adds a native entry point, optional sizing, and a consistent output structure; it is analysis-only and must not implement changes or create project files unless separately authorized.
+Read and follow [`../autopilot/references/playbooks/plan.md`](../autopilot/references/playbooks/plan.md) for the task-specific Plan workflow and [`../autopilot/references/stages/plan.md`](../autopilot/references/stages/plan.md) for its lifecycle handoff. This skill adds a native entry point, optional sizing, and a consistent output structure; it is analysis-only and must not implement changes or create project files unless separately authorized.
 
 Use a supplied positional size (`small`, `medium`, or `large`) when valid and appropriate; otherwise infer from scope without asking.
 
