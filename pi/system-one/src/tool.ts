@@ -1119,6 +1119,7 @@ export function buildSystemOneTool(deps: {
       "Judge bounded decisions over explicitly supplied state with a dedicated judge model - calibrated probabilities conditional on that state (confidence for choice/score only; noul has no confidence field, its probability is the uncertainty measure). " +
       "Call system_one instead of making a bounded judgment directly when the decision is a pick from named options, a yes/no likelihood, or a rubric score over state already in context. This applies both to final answers and intermediate agent decisions such as classification, routing, or choosing among plausible tools, skills, strategies, implementations, models, or providers. " +
       "The judge only weighs the state you supply: it cannot recall facts or browse, so retrieve evidence first and never ask it to recall facts. " +
+      "When choosing which optional context to load, use System One on a shortlist of already-discovered skills, tools, or files before reading their full contents; it cannot discover resources. " +
       "Do not use it for open-ended generation itself or factual lookup. A generative task may still contain bounded intermediate judgments where system_one is useful. " +
       "Questions that share the same state can be evaluated together in one call. " +
       'Each question is {"type": "choice" | "noul" | "score", "instructions": "...", "criteria": ...}: ' +
@@ -1130,12 +1131,16 @@ export function buildSystemOneTool(deps: {
     outputSchema: systemOneOutput,
 
     promptSnippet:
-      "Use system_one for bounded judgments over supplied evidence, including classification, routing, and selecting among plausible tools, skills, strategies, implementations, models, or providers",
+      "Use system_one for bounded judgments over supplied evidence, including classification, routing, and selecting among plausible optional tools, skills, files, strategies, implementations, models, or providers before loading their full context",
 
     promptGuidelines: [
       "Whenever you encounter a bounded judgment over supplied or retrieved evidence, including as an intermediate step in a larger task, call system_one instead of making the judgment yourself. A bounded judgment is choosing among explicit alternatives, making a yes/no judgment, or rating something on an ordered scale.",
 
       "Common bounded-choice patterns include classification into known labels, selecting among plausible candidate tools or skills, routing among models/providers, and choosing among plausible strategies or implementations. These are examples, not an exhaustive list; recognize other bounded decisions from their structure.",
+
+      "Before reading full optional skills, tools, or files for a substantive task, when several candidates could help, shortlist them from the request, workflow indexes, descriptions, repository structure, and focused search results; then call system_one to estimate the probability each candidate is worth loading. Use one choice with a described none option when exactly one candidate should be selected; use one batched noul per candidate when several may independently apply. Load the likely useful optional resources and continue; do not wait for certainty or let low probabilities overrule workflow rules.",
+
+      "System One must not decide whether to load mandatory workflow or safety guidance, explicitly requested resources, required checks, or approval requirements; load and follow those directly. Optional-context selection is advisory and never authorizes an action.",
 
       "Pick the system_one question type mechanically: unordered alternatives (frontend, backend, platform) -> choice; yes/no -> noul; ordered scale, rating, severity, risk, or grade -> score. Never use choice for an ordered scale merely because its levels have names: very low / low / moderate / high / very high is score, not choice.",
 

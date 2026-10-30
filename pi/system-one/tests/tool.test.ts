@@ -1368,6 +1368,9 @@ describe("system_one tool", () => {
       assert.match(guidelines, /never use choice for an ordered scale/i);
       assert.match(guidelines, /batch.*one call/i);
       assert.match(guidelines, /retrieve.*first/i);
+      assert.match(guidelines, /before reading full optional skills, tools, or files/i);
+      assert.match(guidelines, /probability each candidate is worth loading/i);
+      assert.match(guidelines, /must not decide whether to load mandatory workflow/i);
       // The snippet advertises the capability; it must not duplicate the
       // full decision algorithm.
       assert.ok(
