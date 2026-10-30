@@ -125,7 +125,8 @@ the user under the applicable playbook.
 - [`bug-fix`](references/playbooks/bug-fix.md) — A coding defect has a concrete, observable failure.
 - [`delegate`](../delegate/SKILL.md) (skill) — Multi-step work that can be split into independently scoped slices.
 - [`diagnose-issues`](../diagnose-issues/SKILL.md) (skill) — Triage an unclear homelab or connected-infrastructure symptom before the owning subsystem is known; hand off to its specialist skill once identified.
-- [`feature-work`](references/playbooks/feature-work.md) — Implementing a scoped feature or user-facing behavior.
+- [`feature-work`](references/playbooks/feature-work.md) — Implementing a scoped feature or user-facing behavior; new feature work normally starts in an isolated worktree via [`feature-worktree`](../feature-worktree/SKILL.md).
+- [`feature-worktree`](../feature-worktree/SKILL.md) (skill) — Start feature work in a dedicated worktree/local branch and route it through authorized PR creation, follow-up, and separately authorized cleanup.
 - [`pause-safely`](references/playbooks/pause-safely.md) — The user asks to pause, context is about to be compacted, or the session is going offline during substantive in-flight work.
 - [`performance`](references/playbooks/performance.md) — Investigating or changing performance, latency, throughput, or resource use.
 - [`plan`](../plan/SKILL.md) (skill) — The user asks for a plan, or a nontrivial implementation needs an analysis phase before work begins.

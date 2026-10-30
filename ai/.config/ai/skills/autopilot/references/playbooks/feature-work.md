@@ -2,7 +2,7 @@
 
 **Trigger:** Implementing a scoped feature or user-facing behavior.
 
-1. Invoke `project-context` unless repository conventions, branch, and PR state were already gathered in this session. Clarify expected behavior, constraints, and approval boundaries.
+1. Invoke `feature-worktree` at the start of new feature work unless the user explicitly requests the current checkout, the task is already in its intended isolated worktree, or worktrees are unsuitable. Keep branch creation local; pushing is deferred to an authorized PR workflow. Invoke `project-context` unless repository conventions, branch, and PR state were already gathered in this session. Clarify expected behavior, constraints, and approval boundaries.
 2. Invoke `plan` when the feature spans several files or has an open decision. Skip it only for a one-file change with one obvious implementation.
 3. Invoke `architect` and `principle-foundational-thinking` when the feature changes a data shape, interface, or state ownership. Skip both when the change stays inside existing interfaces.
 4. Split into slices only when they share no files and can be verified separately. Invoke `delegate` for each slice, passing its playbook, skill names, and relevant `principle-*` skills. Otherwise implement in this thread. Never delegate dependent work.
@@ -11,4 +11,4 @@
 7. Invoke `code-review` on the changed files. Skip it only when the change has no logic, such as copy or configuration.
 8. Run the relevant checks and compare the final diff against the acceptance criteria. Invoke `principle-prove-it-works` for this check.
 
-**Boundary:** Preserve explicit user approval constraints. Do not turn a small feature into an adjacent refactor or delegate dependent work.
+**Boundary:** Preserve explicit user approval constraints. Do not turn a small feature into an adjacent refactor or delegate dependent work. Feature work normally stays in its dedicated worktree; PR creation and remote publication remain gated by `raise-pr`, PR follow-up by `babysit`, and worktree removal by `worktree-cleanup`.
