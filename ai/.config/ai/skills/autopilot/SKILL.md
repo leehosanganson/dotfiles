@@ -20,13 +20,22 @@ user requests, not a sustained autonomous campaign or any action beyond scope.
 1. **Classify the request.** Identify the desired outcome, scope, constraints,
    approval boundaries, and observable success criteria. Answer simple questions
    directly without routing them through a workflow.
-2. **Select guidance.** Pick the matching entry from the Playbooks section
-   below. For a playbook, read its complete file and follow its steps; for a
-   skill, invoke it. Pick the current stage from the Development lifecycle
-   table and invoke its skills. Check repository-specific workflow guidance.
-   Do not read unrelated playbooks or skills.
-3. **Track execution.** Use the harness's native task/todo mechanism for
-   multi-step work. Skip tracking for one-step work.
+2. **Select and load guidance.** Pick the matching entry from the Playbooks
+   section below. Read the selected playbook or workflow skill in full before
+   acting on it. Identify the active lifecycle stage and read its stage guide in
+   full. Check repository-specific workflow guidance. Do not read unrelated
+   playbooks, stage guides, or skills.
+3. **Make guidance use observable.** Before substantive execution, put the
+   selected playbook's numbered steps into the harness's native task/todo
+   mechanism verbatim and in order. Add checklist items for the selected
+   playbook, active stage guide, and each applicable skill or principle they
+   reference. Mark a reference loaded only after invoking its skill through the
+   runtime's native mechanism or reading its full guidance. Keep conditional
+   items visible; mark a skipped item with a brief reason. If no task tracker is
+   available, use an equivalent checklist in working notes or the response.
+   Do not begin execution until the required guidance is loaded and the
+   checklist is recorded. For simple questions and one-step tasks, skip this
+   checklist when no workflow is selected.
 4. **Plan and delegate.** For multi-step work, invoke `plan` before
    implementation, then invoke `delegate`. Skip both for one-step work or work
    too tightly coupled to split. Do not parallelize dependent or overlapping
@@ -40,7 +49,7 @@ user requests, not a sustained autonomous campaign or any action beyond scope.
 
 ## Development lifecycle
 
-Identify the current stage from the user's goal and repository evidence. State the active stage, evidence, and any stage skipped or already complete. Run stages in order; start partway through when earlier exit evidence already exists. A stage is complete when its exit evidence is present. Read a stage guide when the stage needs more detail.
+Identify the current stage from the user's goal and repository evidence. State the active stage, evidence, and any stage skipped or already complete. Run stages in order; start partway through when earlier exit evidence already exists. A stage is complete when its exit evidence is present. Read the full guide for each active stage; do not rely on the summary table alone. Record inactive or already-complete stages with a brief reason when they would otherwise be expected for the selected route.
 
 | Stage | Guide | Invoke | Principles | Exit evidence |
 |---|---|---|---|---|
@@ -60,7 +69,7 @@ Default routes:
 - Plan-only, design-only, and verify-only requests stop at their requested stage.
 - One-step tasks skip the lifecycle; say so.
 
-In each active stage, invoke every listed skill whose trigger matches the task, through the runtime's skill mechanism. Do not paraphrase a skill from memory. Never claim a skill ran when it did not. When delegating, name the stage and its skills in the handoff so subagents invoke them for their own scope.
+In each active stage, invoke every listed skill whose trigger matches the task, through the runtime's skill mechanism. Follow the selected playbook's references as well: invoke each applicable capability skill and read each applicable principle skill in full. If a reference does not apply, record why rather than silently omitting it. Do not paraphrase a skill from memory. Never claim a skill ran when it did not. When delegating, name the stage and its skills in the handoff so subagents invoke them for their own scope.
 
 Maintain is deferred. Lifecycle routing does not authorize publishing, deployment, merging, or destructive actions. Shared skills and stage guidance must remain runtime-agnostic; report when an important capability is unavailable and choose a safe available alternative.
 
