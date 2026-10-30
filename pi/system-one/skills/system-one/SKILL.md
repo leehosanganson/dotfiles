@@ -34,6 +34,36 @@ reasoning.
 One user message can hold several such judgments; batch them over the
 same state in a single call.
 
+## Selecting context before loading
+
+When System One is available and a task has several plausible optional
+skills, tools, or source files, use it to choose among a small candidate
+set before loading their full content. This is an optional aid to context
+selection, not a replacement for the task's workflow, project instructions,
+or mandatory and explicitly requested guidance.
+
+1. Build candidates from facts already available: the request, relevant
+   workflow indexes, skill/tool descriptions, repository structure, and
+   focused search results. Do not ask System One to discover resources,
+   invent candidate names or paths, or inspect file contents.
+2. Supply concise candidate descriptions and the evidence needed for the
+   decision as state. For multiple items that may independently apply, ask
+   one `noul` per candidate and batch the questions over shared state. For
+   an exactly-one choice, include a described `none` option if no candidate
+   may fit. Skip the call when the selection is obvious, immaterial, or
+   entirely determined by mandatory workflow rules.
+3. Read or invoke only the selected optional resources, using the runtime's
+   available batch-read mechanism for independent files when useful. Keep
+   later-stage guidance with its owner instead of loading it in advance.
+4. If System One is unavailable, errors, or returns unusable results, use
+   the candidate evidence and normal workflow triggers to proceed safely;
+   never block the task or discard required guidance because of the judge.
+
+Do not use this procedure to gate safety tools, mandatory workflow
+instructions, required checks, explicitly requested skills/resources, or
+approval requirements. A selection is not authorization to perform an
+operation.
+
 ## Atomic questions
 
 Ask the most explicit, narrow, specific, atomic questions you can. This is
