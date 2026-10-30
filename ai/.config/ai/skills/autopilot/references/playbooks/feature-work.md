@@ -2,11 +2,13 @@
 
 **Trigger:** Implementing a scoped feature or user-facing behavior.
 
-1. Clarify expected behavior, constraints, and approval boundaries; follow the `project-context` and `plan` playbooks when repository context or task complexity warrants them.
-2. Define the relevant data shape, ownership, state flow, and success criteria before changing code. Apply `principle-foundational-thinking` when those decisions are nontrivial.
-3. Split into independent slices only when useful; follow the `delegate` playbook and use the harness's native subagent mechanism only for genuinely independent work. Give each subagent its assigned playbook/capability skills and the specific `principle-*` skills relevant to its slice; it should load and apply them independently.
-4. Read immediate callers and conventions, then implement the smallest scoped diff.
-5. Add or update tests for intended behavior; use integration coverage for user-facing changes when feasible. Apply `principle-test-behavior` when shaping tests.
-6. Run relevant checks and inspect the final diff against the acceptance criteria, applying `principle-prove-it-works`.
+1. Invoke `project-context` unless repository conventions, branch, and PR state were already gathered in this session. Clarify expected behavior, constraints, and approval boundaries.
+2. Invoke `plan` when the feature spans several files or has an open decision. Skip it only for a one-file change with one obvious implementation.
+3. Invoke `architect` and `principle-foundational-thinking` when the feature changes a data shape, interface, or state ownership. Skip both when the change stays inside existing interfaces.
+4. Split into slices only when they share no files and can be verified separately. Invoke `delegate` for each slice, passing its playbook, skill names, and relevant `principle-*` skills. Otherwise implement in this thread. Never delegate dependent work.
+5. Invoke `principle-read-before-writing` on the immediate callers and conventions. Invoke `tdd` to write failing tests for the intended behavior, and `principle-test-behavior` to test the contract. For user-facing changes, add integration coverage, or state the gap if the repository has no integration harness.
+6. Implement the smallest scoped diff. Invoke `principle-simplicity-first` and `principle-surgical-changes` to keep scope bounded.
+7. Invoke `code-review` on the changed files. Skip it only when the change has no logic, such as copy or configuration.
+8. Run the relevant checks and compare the final diff against the acceptance criteria. Invoke `principle-prove-it-works` for this check.
 
 **Boundary:** Preserve explicit user approval constraints. Do not turn a small feature into an adjacent refactor or delegate dependent work.

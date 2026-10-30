@@ -3,7 +3,7 @@ name: autopilot
 description: >-
   Route nontrivial engineering work (bug fix, feature, refactor, performance,
   plan, research, PR, worktree cleanup, session pickup) to the matching
-  playbook and principles, then coordinate execution and verification. Use
+  playbook and skills, then coordinate execution and verification. Use
   when the user asks for multi-step engineering work or invokes autopilot.
   Not for simple questions, single-line edits, or non-engineering tasks
   covered by other skills.
@@ -11,34 +11,26 @@ description: >-
 
 # Autopilot
 
-Autopilot is the task router for substantive work. The complete skill directory
-is self-contained and portable: `references/playbooks/` and
-`references/stages/` hold task workflows and lifecycle guidance. The
-`principle-*` skills are the canonical working principles; Autopilot references
-contain only an index and router policy. Do not expect sibling `rules/` or
-`playbooks/` directories. Installing this skill authorizes only the task the
-user requests—not a sustained autonomous campaign or any action beyond scope.
+Autopilot is the task router for substantive work. `references/playbooks/` holds
+task workflows and `references/stages/` holds lifecycle detail. Task-specific
+skills and the `principle-*` skills hold the canonical procedures; invoke them
+rather than restating them. Installing this skill authorizes only the task the
+user requests, not a sustained autonomous campaign or any action beyond scope.
 
 1. **Classify the request.** Identify the desired outcome, scope, constraints,
    approval boundaries, and observable success criteria. Answer simple questions
-directly without routing them through a workflow.
-2. **Select guidance.** Pick the matching task workflow from the Playbooks
-   section below and read its complete file. Read the lifecycle stage guide
-   when routing substantive work. Load only the relevant `principle-*` skills
-   and capability skills named by the workflow. Gather project context when
-   unfamiliar or relevant. Check repository-specific workflow guidance. Do not
-   read unrelated playbooks or skills.
-3. **Track execution proportionately.** Use the harness's native task/todo
-   mechanism for multi-step work when available. Keep simple or one-step work
-   lightweight; do not mechanically copy playbook steps or create skipped-step
-   entries when they add no tracking value. Otherwise keep progress visible in
-   the response or handoff.
-4. **Plan and delegate proportionately.** Keep one-step tasks lightweight. For
-   nontrivial work, plan before implementation. Follow the `delegate` playbook
-   and use native subagents when independently scoped work benefits from it.
-   Give each worker the applicable instructions, scope, exclusions, and checks.
-   Do not parallelize dependent or overlapping changes. Integrate and
-   independently verify delegated results.
+   directly without routing them through a workflow.
+2. **Select guidance.** Pick the matching entry from the Playbooks section
+   below. For a playbook, read its complete file and follow its steps; for a
+   skill, invoke it. Pick the current stage from the Development lifecycle
+   table and invoke its skills. Check repository-specific workflow guidance.
+   Do not read unrelated playbooks or skills.
+3. **Track execution.** Use the harness's native task/todo mechanism for
+   multi-step work. Skip tracking for one-step work.
+4. **Plan and delegate.** For multi-step work, invoke `plan` before
+   implementation, then invoke `delegate`. Skip both for one-step work or work
+   too tightly coupled to split. Do not parallelize dependent or overlapping
+   changes. Integrate and independently verify delegated results.
 5. **Execute and verify.** Follow the selected guidance, preserve the user's
    scope and approval gates, and verify the stated success criteria. Report
    checks run or skipped; do not claim unverified success.
@@ -48,9 +40,29 @@ directly without routing them through a workflow.
 
 ## Development lifecycle
 
-For substantive engineering work, route by task type through the existing task-specific playbooks and use the ordered lifecycle stages in [`references/stages/README.md`](references/stages/README.md). Identify the current stage from the user's goal and repository evidence. State the active stage, evidence, and any stage skipped or already complete. Do not force irrelevant steps or repeat completed work. Stage guidance selects capabilities only when they add value; subagent use remains subject to the delegate playbook. The lifecycle is not a universal command checklist and does not replace task playbooks.
+Identify the current stage from the user's goal and repository evidence. State the active stage, evidence, and any stage skipped or already complete. Run stages in order; start partway through when earlier exit evidence already exists. A stage is complete when its exit evidence is present. Read a stage guide when the stage needs more detail.
 
-Maintain is deferred. Lifecycle routing does not authorize publishing, deployment, merging, or destructive actions. Shared skills and stage guidance must remain runtime-agnostic; report when an important capability is unavailable and choose a safe available alternative. When delegating, follow the selected playbook's handoff instructions so subagents can load the same relevant capability and principle skills for their own scope.
+| Stage | Guide | Invoke | Principles | Exit evidence |
+|---|---|---|---|---|
+| Plan | [plan.md](references/stages/plan.md) | `project-context`, `how`, `why`, `teach`, `plan`, `research`, `figure-it-out`, `show-me-your-work` | `principle-read-before-writing`, `principle-context-boundaries`, `principle-outcome-oriented-execution` | Clear goal, relevant code understanding, constraints, and an actionable plan when needed. |
+| Design | [design.md](references/stages/design.md) | `architect`, `arena`, `interrogate` | `principle-foundational-thinking`, `principle-model-the-domain`, `principle-simplicity-first` | Chosen approach, data shape, and boundaries. |
+| Build | [build.md](references/stages/build.md) | `tdd`, `language-best-practices`, `deslop`, `no-comments` | `principle-simplicity-first`, `principle-surgical-changes`, `principle-sequence-verifiable-units` | Scoped change with tests and a reviewable diff. |
+| Test | [test.md](references/stages/test.md) | `code-review`, `blast-radius`, `interrogate`, `benchmark-checklist`, `create-verification-skill`, `swarm` | `principle-test-behavior`, `principle-prove-it-works`, `principle-explain-the-number` | Evidence the intended behavior works on the best available surface, plus limitations. |
+| Deploy | [deploy.md](references/stages/deploy.md) | `make-pr-easy-to-review`, `raise-pr`, `babysit`, `get-pr-comments`, `fix-ci`, `fix-merge-conflicts` | `principle-make-operations-idempotent`, `principle-prove-it-works` | Requested delivery prepared within publishing and merge gates. |
+
+Default routes:
+
+- Read-only how/why questions: Plan, then stop without editing.
+- Bug fixes and features: Plan, Design if data shape or interfaces change, Build, Test. Deploy only when requested.
+- Refactors: Plan, Build, behavior-preserving Test. Add Design if structure choices are material.
+- Performance: set target and baseline in Plan, then Build and comparable Test measurements.
+- Existing PR, CI, comment, or conflict requests: start in Deploy. Do Build and Test first if code changes are needed.
+- Plan-only, design-only, and verify-only requests stop at their requested stage.
+- One-step tasks skip the lifecycle; say so.
+
+In each active stage, invoke every listed skill whose trigger matches the task, through the runtime's skill mechanism. Do not paraphrase a skill from memory. Never claim a skill ran when it did not. When delegating, name the stage and its skills in the handoff so subagents invoke them for their own scope.
+
+Maintain is deferred. Lifecycle routing does not authorize publishing, deployment, merging, or destructive actions. Shared skills and stage guidance must remain runtime-agnostic; report when an important capability is unavailable and choose a safe available alternative.
 
 ## Explicit sustained-autonomy mode
 
@@ -64,19 +76,19 @@ the user under the applicable playbook.
 ## Playbooks
 
 - [`autopilot`](references/playbooks/autopilot.md) — The user explicitly authorizes a sustained autonomous engineering run or multi-PR improvement cycle with a goal and completion criteria. The `autopilot` skill is the ordinary task router; do not apply this sustained-run procedure unless that authorization is explicit.
-- [`babysit`](../babysit/SKILL.md) — The user asks to monitor or shepherd an existing PR/stack toward a reviewable, merge-ready state.
+- [`babysit`](../babysit/SKILL.md) (skill) — The user asks to monitor or shepherd an existing PR/stack toward a reviewable, merge-ready state.
 - [`bug-fix`](references/playbooks/bug-fix.md) — A coding defect has a concrete, observable failure.
-- [`delegate`](references/playbooks/delegate.md) — The user has authorized implementation and the work has independently scoped slices that benefit from subagents.
-- [`diagnose-issues`](references/playbooks/diagnose-issues.md) — Triage an unclear homelab or connected-infrastructure symptom before the owning subsystem is known; hand off to its specialist skill once identified.
+- [`delegate`](../delegate/SKILL.md) (skill) — Multi-step work that can be split into independently scoped slices.
+- [`diagnose-issues`](../diagnose-issues/SKILL.md) (skill) — Triage an unclear homelab or connected-infrastructure symptom before the owning subsystem is known; hand off to its specialist skill once identified.
 - [`feature-work`](references/playbooks/feature-work.md) — Implementing a scoped feature or user-facing behavior.
 - [`pause-safely`](references/playbooks/pause-safely.md) — The user asks to pause, context is about to be compacted, or the session is going offline during substantive in-flight work.
 - [`performance`](references/playbooks/performance.md) — Investigating or changing performance, latency, throughput, or resource use.
-- [`plan`](references/playbooks/plan.md) — The user asks for a plan, or a nontrivial implementation needs an analysis phase before work begins. Shared stage guidance: [`stages/plan.md`](references/stages/plan.md).
-- [`project-context`](references/playbooks/project-context.md) — Before substantive implementation or planning when repository conventions, architecture, branch/PR state, or verification commands are unfamiliar or relevant.
+- [`plan`](../plan/SKILL.md) (skill) — The user asks for a plan, or a nontrivial implementation needs an analysis phase before work begins.
+- [`project-context`](../project-context/SKILL.md) (skill) — Before substantive implementation or planning when repository conventions, architecture, branch/PR state, or verification commands are unfamiliar.
 - [`prototype`](references/playbooks/prototype.md) — An uncertainty can be settled faster by observation (behavior, layout, performance, output, or a design fork) than by analysis or source reading.
-- [`raise-pr`](../raise-pr/SKILL.md) — The user explicitly asks to create a PR or requests PR creation as the final delivery step after implementation.
+- [`raise-pr`](../raise-pr/SKILL.md) (skill) — The user explicitly asks to create a PR or requests PR creation as the final delivery step after implementation.
 - [`refactoring`](references/playbooks/refactoring.md) — Changing code structure while intending to preserve externally observable behavior.
-- [`research`](references/playbooks/research.md) — A question needs investigation across multiple local or external sources, comparison, or evidence-backed synthesis.
+- [`research`](../research/SKILL.md) (skill) — A question needs investigation across multiple local or external sources, comparison, or evidence-backed synthesis.
 - [`session-pickup`](references/playbooks/session-pickup.md) — Resuming substantive in-flight work from an earlier session, handoff, or compaction.
 - [`visual-parity`](references/playbooks/visual-parity.md) — Matching an implementation to an authoritative screenshot or visual reference.
 - [`worktree-cleanup`](references/playbooks/worktree-cleanup.md) — The user asks to reclaim disk or remove Git worktrees and related stale development artifacts.

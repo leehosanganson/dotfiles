@@ -10,13 +10,21 @@ description: >-
 
 ## Contract
 
-Read and follow [`../autopilot/references/playbooks/plan.md`](../autopilot/references/playbooks/plan.md) for the task-specific Plan workflow and [`../autopilot/references/stages/plan.md`](../autopilot/references/stages/plan.md) for its lifecycle handoff. This skill adds a native entry point, optional sizing, and a consistent output structure; it is analysis-only and must not implement changes or create project files unless separately authorized.
+This skill is analysis-only. It must not implement changes or create project files unless separately authorized. Keep one-step tasks lightweight. For how Plan fits the lifecycle, see the [Plan stage guide](../autopilot/references/stages/plan.md).
 
 Use a supplied positional size (`small`, `medium`, or `large`) when valid and appropriate; otherwise infer from scope without asking.
 
 - `small`: one bounded change, normally one to three slices.
 - `medium`: relevant subsystem, callers, tests, dependencies, and ordered slices.
 - `large`: affected subsystems, ownership, risks, and rollout or migration gates.
+
+## Workflow
+
+1. Clarify the goal, outcome, constraints, non-goals, success criteria, and unresolved decisions. Use settled conversation context; ask only when a missing decision blocks safe planning. Apply `principle-outcome-oriented-execution`.
+2. Inspect enough relevant instructions, documentation, code, interfaces, tests, and tooling to ground the plan. Use authoritative external sources only to resolve a concrete factual uncertainty. Apply `principle-read-before-writing` and `principle-context-boundaries`.
+3. Describe the current context and proposed behavior/design, including boundaries, data/control flow, compatibility, edge cases, dependencies, and risks as relevant.
+4. Break the work into ordered, testable vertical slices with owners, dependencies, acceptance criteria, verification, and safe parallelism. Identify migration, rollout, and rollback gates where needed. Apply `principle-sequence-verifiable-units` and `principle-safe-concurrency`.
+5. Recommend the simplest fitting approach and map each acceptance criterion to a verification check.
 
 ## Output
 

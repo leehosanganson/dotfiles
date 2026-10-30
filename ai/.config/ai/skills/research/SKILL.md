@@ -15,16 +15,22 @@ Create exactly one session directory for the query at
 subagents return evidence and must not create competing session files.
 
 1. Break the question into focused sub-questions and decide which need local
-   exploration or external research.
-2. Use the `delegate` workflow and harness-native subagents for bounded research
-   tasks when useful. Ask local researchers for repository paths and external
-   researchers for source URLs; neither should produce the final artifacts.
+   exploration or external research. Check local materials first for
+   repository-specific questions. For repository context gathering, invoke the
+   `project-context` skill; for simple lookups, do a direct lookup instead. Apply
+   `principle-context-boundaries` and `principle-web-search` as appropriate.
+2. Invoke the `delegate` skill for bounded research subtasks that are independent
+   of each other; keep simple lookups with the orchestrator. Ask local researchers
+   for repository paths and external researchers for source URLs; neither should
+   produce the final artifacts.
 3. Verify source relevance and support material claims with citations. Prefer
    primary sources, official documentation, and reputable publications. Cross-
    check important claims against two independent sources when practical, and
-   separate evidence from interpretation.
+   separate evidence from interpretation. Apply `principle-prove-it-works` to
+   verification claims.
 4. Reconcile findings and conflicts. Link every material claim to a source or
-   repository path; report gaps rather than inventing or padding conclusions.
+   repository path; surface conflicts, unknowns, and research blockers rather than
+   inventing or padding conclusions.
 5. Write the final `notes.md` and `sources.md`. Use the `write-notes` and
    `write-report` skills for the synthesized notes and `report.html`, passing
    each an explicit path in the session directory. The orchestrator owns and verifies
@@ -37,4 +43,4 @@ for external sources, supported claims, and a brief reliability note.
 
 Report contradictory, paywalled, missing, or unverifiable sources and research
 blockers to the user with a clear account of what is known and what remains
-unknown.
+unknown. Do not implement findings unless separately requested.

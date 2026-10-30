@@ -13,15 +13,13 @@ Use this skill only for the final PR-creation step after implementation is compl
 
 ## Workflow
 
-Read and follow [`../autopilot/references/playbooks/raise-pr.md`](../autopilot/references/playbooks/raise-pr.md) before publishing. This skill supplies the harness-specific PR creation steps.
-
-1. Inspect the current branch, working tree, remotes, and relevant commits. Identify the exact changes intended for the PR; do not include unrelated or pre-existing changes.
+1. Inspect the current branch, working tree, remotes, commits, and repository contribution guidance. Identify exactly which changes are intended for publication; do not include unrelated or pre-existing changes. Apply `principle-surgical-changes` and `principle-prove-it-works`.
 2. If changes are uncommitted, confirm the intended files and commit message with the user before staging or committing. Never stage everything indiscriminately, stash, discard, or amend commits without explicit approval.
-3. Check the project's contribution guidance and tests. If the work is not complete, checks fail, or the target/base branch is unclear, report the blocker and ask how to proceed rather than opening the PR.
-4. Use the existing feature branch when appropriate. Do not switch branches or create a branch without the user's direction. Push only the intended branch to its configured remote; ask before adding/changing remotes or resolving a rejected push.
-5. Confirm `gh` is available and use the repository's default base unless its guidance or the user specifies otherwise. Create the PR with a concise, accurate title and a body summarizing the change and checks. Do not claim checks passed unless they were run.
-6. Verify the created PR and return its URL. If `gh` is unavailable, provide concise manual steps and a proposed title/body instead of claiming the PR was created.
+3. Check the applicable checks and tests. If the work is not complete, checks fail, the target/base branch is unclear, or unrelated changes would be included, report the blocker and ask how to proceed rather than opening the PR.
+4. Use the existing feature branch when appropriate. Do not switch branches, alter Git state, or create a branch without the user's direction; work on a non-current branch in a worktree per the installed worktree policy. Confirm the intended push target and base. Push only the intended branch to its configured remote; ask before adding/changing remotes or resolving a rejected push.
+5. Confirm `gh` (or the repository's git provider tooling) is available and use the repository's default base unless its guidance or the user specifies otherwise. Create the PR with a concise, accurate title and a body summarizing the change and the checks actually run. Do not claim checks passed unless they were run.
+6. Verify the created PR and return its URL. If the provider tooling is unavailable, provide concise manual steps and a proposed title/body instead of claiming the PR was created.
 
 ## Safety
 
-Creating a PR publishes branch contents. Before pushing or opening it, verify that the branch contains only changes intended for this PR. Stop and ask if repository state or authorization is ambiguous.
+Creating a PR publishes branch contents. Before pushing or opening it, verify that the branch contains only changes intended for this PR. Stop and ask if repository state or authorization is ambiguous. Do not merge.

@@ -11,10 +11,10 @@ description: >-
 
 Use this skill to identify the affected subsystem and establish evidence, not as a replacement for domain runbooks.
 
-1. Inspect relevant live state and configuration read-only. Start with the reported symptom; avoid broad command sweeps or commands from unrelated platforms.
+1. Inspect only relevant live state and configuration, read-only. Start with the reported symptom; avoid broad command sweeps or commands from unrelated platforms.
 2. Define a repeatable check and record its pre-change result. Save it only when it will be reused.
-3. If the issue maps to a specialist skill, hand off with the evidence, checks, and unresolved questions. Follow that skill for further diagnosis or changes.
-4. If no specialist applies, use local evidence and version-relevant documentation to narrow the cause. Make only the smallest authorized fix, validate it, and repeat the check.
-5. Report evidence, likely cause, checks and results, changes, and remaining uncertainty or risks.
+3. If the issue maps to a specialist skill (e.g. `gitops-ops` for Flux/GitOps, `kubernetes-ops` for Kubernetes), hand off with the evidence, checks, and unresolved questions. Follow that skill for further diagnosis or changes.
+4. If no specialist applies, use local evidence and version-specific authoritative documentation to narrow the cause before changing anything. Make only the smallest authorized fix, use a dry run where possible, validate it, and repeat the check.
+5. Report evidence, likely cause, checks and results, blast radius, changes, remaining uncertainty or risks, and rollback or follow-up needs.
 
 Prefer read-only inspection. Describe blast radius and obtain confirmation for destructive or otherwise approval-gated operations. Do not propose a fix before the current state supports it.

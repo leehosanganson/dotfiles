@@ -6,15 +6,15 @@ Establish evidence that the intended behavior works and that material regression
 
 ## Steps
 
-1. Start with the task's acceptance criteria and reproduce or exercise the behavior on the most representative available surface, ideally the real application or system.
-2. Run focused tests first, followed by relevant project checks and integration coverage. Add a reusable verification skill or script only when repeatable behavior is difficult to validate and the tool is worth maintaining.
-3. Assess blast radius and compatibility for changes with downstream callers or external contracts. Use benchmarks only for performance-relevant work, with comparable baselines and metrics.
-4. Use parallel verification workers only for independent checks and only when dispatch is available. Use adversarial review for meaningful risk. Avoid repeating the same review prompt without a distinct question.
+1. Start from the task's acceptance criteria. Invoke `principle-prove-it-works` to exercise the behavior on the real application or system. Use a lower-fidelity surface only when the real one is unavailable, and say so in the report.
+2. Run focused tests first, then relevant project checks and integration coverage. Invoke `principle-test-behavior` so tests cover contracts. Invoke `create-verification-skill` when a behavior needs repeated real-surface checks that cannot practically be run once by hand; skip it for one-time checks.
+3. Invoke `blast-radius` when the change has downstream callers or external contracts; skip it for internal changes with no callers. Invoke `benchmark-checklist` for every performance-relevant change before reporting a measurement; skip it for other changes.
+4. Invoke `code-review` on every non-trivial change. Also invoke `interrogate` for high-risk changes touching authentication, data, concurrency, or external contracts. Skip `code-review` only for documentation-only or configuration-only changes. Invoke `swarm` for two or more independent checks when workers are available. Do not repeat a review prompt without a distinct question.
 5. Report actual commands, outcomes, and unavailable or inconclusive checks. Return to Build for actionable failures; proceed to Deploy only when acceptance evidence is adequate.
 
 ## Capability routing
 
-Use `create-verification-skill` only when reusable verification is worthwhile, `swarm` for genuinely independent parallel checks when workers are available, `blast-radius` for consequential compatibility risk, and `benchmark-checklist` for relevant performance measurement. Use `interrogate` or the existing `code-review` skill for an independent review proportional to change risk; do not duplicate a review merely because it appears twice in a conceptual list.
+Invoke `create-verification-skill` for repeated real-surface checks, `swarm` for independent parallel checks when workers are available, `blast-radius` for downstream or contract risk, and `benchmark-checklist` for performance measurement. Invoke `code-review` for each non-trivial review and `interrogate` for high-risk changes. Run each review once, even though both appear in this list.
 
 ## Exit evidence
 

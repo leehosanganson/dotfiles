@@ -7,18 +7,18 @@ Settle the implementation approach before building when the task has meaningful 
 ## Steps
 
 1. Start from Plan's evidence and acceptance criteria. Name the relevant data shape, ownership, state flow, and invariants before introducing logic.
-2. Keep straightforward fixes lightweight. For a significant design choice, sketch the interfaces and affected callers. Use an architecture/design capability when available and useful.
-3. Compare competing designs only when uncertainty is real and the comparison could change the choice. Use a code/design bakeoff for materially different implementations, not ceremony.
-4. Use adversarial subagent review for contested or high-risk proposals when independent dispatch is available and worthwhile. Resolve substantive objections before implementation.
-5. Record the chosen approach, rejected alternatives and reasons when meaningful, and any unresolved risks. Hand off the smallest implementable scope to Build.
+2. Invoke `architect` when the change alters a data shape, interface, module boundary, or state ownership. Sketch the interfaces and affected callers. Skip `architect` for a change that stays inside existing interfaces, and say so.
+3. Invoke `arena` when two or more materially different designs remain after step 2 and the choice would change the outcome. Skip it when one design is clearly better, and state why.
+4. Invoke `interrogate` on any proposal that changes authentication, data persistence, concurrency, or an external contract. Resolve substantive objections before implementation. Skip it for low-risk local changes.
+5. Record the chosen approach, each rejected alternative with its reason, and any unresolved risks. Hand off the smallest implementable scope to Build.
 
 ## Capability routing
 
-Use `architect` for meaningful boundary and data-shape design. Use `arena` for material alternatives that benefit from a bakeoff and `interrogate` for contested or high-risk proposals. These capabilities do not require spawning subagents; dispatch only when the active runtime supports it and the benefit justifies the cost.
+Invoke `architect` for data-shape, boundary, and state design; `arena` for materially different alternatives; and `interrogate` for contested or high-risk proposals. These run inline. Dispatch subagents for them only when the runtime supports it and the proposal is high-risk.
 
 ## Exit evidence
 
-A design decision is made when needed, with boundaries and acceptance criteria clear enough to implement. For simple tasks, a brief rationale that no separate design step is warranted is sufficient.
+A design decision is recorded with boundaries and acceptance criteria clear enough to implement. For a one-file change with one obvious approach, a one-line rationale that design was skipped is sufficient.
 
 ## Boundaries
 

@@ -24,9 +24,9 @@ Use `principle-foundational-thinking` for nontrivial state/data shape decisions,
 
 ## Workflow router
 
-The `autopilot` skill is the entry point for substantive work. It selects workflows from the playbooks listed in [`../../SKILL.md`](../../SKILL.md), loads only relevant `principle-*` skills, and uses specialist capability skills when helpful. Keep simple questions and one-step tasks lightweight. Follow the selected workflow and report verification and blockers.
+The `autopilot` skill is the entry point for substantive work. It selects workflows from the playbooks listed in [`../../SKILL.md`](../../SKILL.md) and invokes the skills and `principle-*` skills named by the active stage and playbook. Keep simple questions and one-step tasks lightweight. Follow the selected workflow and report verification and blockers.
 
-Use the current harness's task tracking and delegation mechanisms. The bundled `delegate` playbook and any installed delegate skill describe when and how to delegate; do so only when independently scoped work benefits from it. Give subagents the applicable playbook and skill names, and direct them to load relevant principle skills for their assigned scope. Shared guidance names capabilities, not runtime-specific invocation syntax.
+Use the current harness's task tracking and delegation mechanisms. For multi-step work, invoke the `delegate` skill; skip it for one-step work or work too tightly coupled to split. Give subagents the applicable playbook and skill names, and direct them to load relevant principle skills for their assigned scope. Shared guidance names capabilities, not runtime-specific invocation syntax.
 
 ## Principle skill index
 
