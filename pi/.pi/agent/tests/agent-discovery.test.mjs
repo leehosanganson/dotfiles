@@ -3,6 +3,7 @@ import { readFile, readdir, realpath } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import { discoverAgents } from "../extensions/subagent/agents.ts";
 import registerAgentSelector from "../extensions/agents.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -51,6 +52,15 @@ test("primary-agent extension discovers only configured primary prompts", async 
   assert.deepEqual(command.config.getArgumentCompletions("").map(({ value }) => value).sort(), [
     "clear", "coder", "content", "homelab",
   ]);
+});
+
+test("subagent discovery loads configured user subagents from the nested extension", async () => {
+  const { agents } = discoverAgents(process.cwd(), "user");
+
+  assert.deepEqual(agents.map(({ name }) => name).sort(), ["evaluator", "explorer", "worker"]);
+  for (const name of ["worker", "explorer"]) {
+    assert.equal(agents.find((agent) => agent.name === name)?.model, "litellm/openrouter/gpt-6-luna");
+  }
 });
 
 test("Pi metadata selects primary and subagents and preserves Luna worker/explorer models", async () => {

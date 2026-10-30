@@ -4,8 +4,12 @@ import { dirname, join, resolve } from "node:path";
 
 export type AgentMetadata = Record<string, unknown>;
 
-export function resolveAgentConfigDir(extensionPath: string, override?: string): string {
-  return override ? resolve(override) : resolve(dirname(extensionPath), "../agent-config");
+export function resolveAgentConfigDir(
+  extensionPath: string,
+  override?: string,
+  relativeConfigDir = "../agent-config",
+): string {
+  return override ? resolve(override) : resolve(dirname(extensionPath), relativeConfigDir);
 }
 
 export function mergeAgentMetadata(frontmatter: AgentMetadata, config: AgentMetadata): AgentMetadata {

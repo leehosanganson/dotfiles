@@ -18,8 +18,11 @@ import { mergeAgentMetadata, readAgentConfigSync, resolveAgentConfigDir } from "
 const expandHome = (value: string) => value.startsWith("~/")
 	? path.join(process.env.HOME ?? "", value.slice(2))
 	: value;
-const CONFIG_DIR = resolveAgentConfigDir(fileURLToPath(import.meta.url),
-	process.env.PI_AGENT_CONFIG_DIR ? expandHome(process.env.PI_AGENT_CONFIG_DIR) : undefined);
+const CONFIG_DIR = resolveAgentConfigDir(
+	fileURLToPath(import.meta.url),
+	process.env.PI_AGENT_CONFIG_DIR ? expandHome(process.env.PI_AGENT_CONFIG_DIR) : undefined,
+	"../../agent-config",
+);
 
 export type AgentScope = "user" | "project" | "both";
 

@@ -12,6 +12,14 @@ test("config directory honors deployment overrides and defaults beside the Pi co
   assert.equal(resolveAgentConfigDir(extension), "/install/.pi/agent/agent-config");
 });
 
+test("nested extensions can resolve the shared config directory from their own location", () => {
+  const subagentExtension = "/install/.pi/agent/extensions/subagent/agents.ts";
+  assert.equal(
+    resolveAgentConfigDir(subagentExtension, undefined, "../../agent-config"),
+    "/install/.pi/agent/agent-config",
+  );
+});
+
 test("metadata sidecars override frontmatter but retain unspecified fallback fields", () => {
   assert.deepEqual(
     mergeAgentMetadata({ mode: "primary", description: "frontmatter", name: "agent" }, { description: "Pi", model: "model-x" }),
