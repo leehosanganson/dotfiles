@@ -18,6 +18,7 @@ const TodoParams = Type.Object({
   action: StringEnum(["list", "add", "toggle", "clear"] as const),
   text: Type.Optional(Type.String({ description: "Todo text (for add)" })),
   id: Type.Optional(Type.Number({ description: "Todo ID (for toggle)" })),
+  ids: Type.Optional(Type.Array(Type.Number(), { description: "Todo IDs (for toggling multiple todos)" })),
 });
 
 export default function (pi: ExtensionAPI) {
@@ -61,7 +62,7 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "todo",
     label: "Todo",
-    description: "Manage this session's todo list: list, add (text), toggle (id), or clear",
+    description: "Manage this session's todo list: list, add (text), toggle (id or ids), or clear",
     parameters: TodoParams,
     async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
       let message: string;
@@ -85,19 +86,23 @@ export default function (pi: ExtensionAPI) {
           break;
         }
         case "toggle": {
-          if (params.id === undefined) {
-            message = "Error: id required for toggle";
+          const ids = params.ids ?? (params.id === undefined ? [] : [params.id]);
+          if (ids.length === 0) {
+            message = "Error: id or ids required for toggle";
             successful = false;
             break;
           }
-          const todo = todos.find((item) => item.id === params.id);
-          if (!todo) {
-            message = `Todo #${params.id} not found`;
+          const missingId = ids.find((id) => !todos.some((todo) => todo.id === id));
+          if (missingId !== undefined) {
+            message = `Todo #${missingId} not found`;
             successful = false;
             break;
           }
-          todo.done = !todo.done;
-          message = `Todo #${todo.id} ${todo.done ? "completed" : "uncompleted"}`;
+          const selected = [...new Set(ids)].map((id) => todos.find((todo) => todo.id === id)!);
+          for (const todo of selected) todo.done = !todo.done;
+          message = selected
+            .map((todo) => `Todo #${todo.id} ${todo.done ? "completed" : "uncompleted"}`)
+            .join("\n");
           break;
         }
         case "clear": {
