@@ -10,7 +10,7 @@ description: >-
 
 ## Contract
 
-This skill is analysis-only. It must not implement changes or create project files unless separately authorized. Keep one-step tasks lightweight. For how Plan fits the lifecycle, see the [Plan stage guide](../autopilot/references/stages/plan.md).
+This skill is analysis-only. It must not implement changes or create project files unless separately authorized. Keep one-step tasks lightweight. For the lifecycle-owned Plan procedure, see [`stage-plan`](../stage-plan/SKILL.md).
 
 Use a supplied positional size (`small`, `medium`, or `large`) when valid and appropriate; otherwise infer from scope without asking.
 

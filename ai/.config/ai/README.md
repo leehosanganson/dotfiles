@@ -56,7 +56,7 @@ rely on external systems to trigger tasks to follow through 1-5
 
 The `skills/autopilot/` directory is the router and home for creating and storing playbooks, lifecycle stage guidance, and working principles. Autopilot identifies the task and current lifecycle stage, selects the relevant task playbook, and invokes capability skills as needed. Keep main session with user at high level with simple directive questions and tasks management.
 
-The lifecycle stage guides are Plan, Design, Build, Test, and Deploy. Stage guidance complements task playbooks; it does not replace them or require every task to pass through every stage. See [`skills/autopilot/references/stages/README.md`](skills/autopilot/references/stages/README.md) for stage routing and [`skills/autopilot/SKILL.md`](skills/autopilot/SKILL.md) for the router.
+The lifecycle stage skills are `stage-plan`, `stage-design`, `stage-build`, `stage-test`, and `stage-deploy`. Stage guidance complements task playbooks; it does not replace them or require every task to pass through every stage. See [`skills/autopilot/SKILL.md`](skills/autopilot/SKILL.md) for stage routing.
 
 Use the Harness native skill to activate Autopilot. Follow its matching playbook and relevant principles. Routing authorizes only the requested task; sustained autonomy and gated actions require explicit authorization under the applicable workflow.
 
@@ -66,7 +66,7 @@ The inventory below lists shared invokable skills by capability area, then the A
 
 ### Skills
 
-- **Workflow and understanding:** `autopilot`, `plan`, `project-context`, `how`, `why`, `teach`, `figure-it-out`, `show-me-your-work`, `delegate`, `self-improvement`.
+- **Workflow and understanding:** `autopilot`, `plan`, `stage-plan`, `stage-design`, `stage-build`, `stage-test`, `stage-deploy`, `project-context`, `how`, `why`, `teach`, `figure-it-out`, `show-me-your-work`, `delegate`, `self-improvement`.
 - **Design, build, and verification:** `architect`, `arena`, `interrogate`, `tdd`, `language-best-practices`, `deslop`, `no-comments`, `create-verification-skill`, `swarm`, `blast-radius`, `benchmark-checklist`.
 - **Review and delivery:** `code-review`, `code-review-harsh`, `fix-issues`, `make-pr-easy-to-review`, `raise-pr`, `babysit`, `get-pr-comments`, `fix-merge-conflicts`, `fix-ci`, `github-ops`.
 - **Domain and content:** `frontend-design`, `content-writer`, `write-notes`, `write-report`, `research`, `diagnose-issues`, `gitops-ops`, `kubernetes-ops`, `nixos-ops`, `explain`.
@@ -77,9 +77,9 @@ The inventory below lists shared invokable skills by capability area, then the A
 
 `autopilot`, `babysit`, `bug-fix`, `delegate`, `diagnose-issues`, `feature-work`, `pause-safely`, `performance`, `plan`, `project-context`, `prototype`, `raise-pr`, `refactoring`, `research`, `session-pickup`, `visual-parity`, `worktree-cleanup`.
 
-### Autopilot lifecycle stage guides
+### Autopilot lifecycle stage skills
 
-`Plan`, `Design`, `Build`, `Test`, and `Deploy` each have a guide under `skills/autopilot/references/stages/`. `Maintain` is intentionally deferred.
+`Plan`, `Design`, `Build`, `Test`, and `Deploy` each have a discoverable skill: `stage-plan`, `stage-design`, `stage-build`, `stage-test`, and `stage-deploy`. `Maintain` is intentionally deferred.
 
 ### Principle skills
 

@@ -11,4 +11,4 @@
 7. Invoke `code-review` on the changed files. Skip it only when the change has no logic, such as copy or configuration.
 8. Run the relevant checks and compare the final diff against the acceptance criteria. Invoke `principle-prove-it-works` for this check.
 
-**Boundary:** Preserve explicit user approval constraints. Do not turn a small feature into an adjacent refactor or delegate dependent work. Feature work normally stays in its dedicated worktree; PR creation and remote publication remain gated by `raise-pr`, PR follow-up by `babysit`, and worktree removal by `worktree-cleanup`.
+**Boundary:** Preserve explicit user approval constraints. Do not turn a small feature into an adjacent refactor or delegate dependent work. Feature work normally stays in its dedicated worktree. When autopilot was explicitly invoked for the implementation, its agreed outcome is a reviewable PR: route scoped commits, branch push, and PR creation through `raise-pr` without requesting redundant authorization. PR follow-up uses `babysit`; merging and deployment remain separately gated; worktree removal uses `worktree-cleanup`.
