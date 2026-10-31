@@ -25,9 +25,7 @@ async function readOutputStyle(filename: unknown): Promise<string> {
   }
 
   const agentDir = await realpath(getAgentDir());
-  const expectedStylesDir = join(agentDir, OUTPUT_STYLES_DIR);
-  const stylesDir = await realpath(expectedStylesDir);
-  if (stylesDir !== expectedStylesDir) throw new Error("invalid styles directory");
+  const stylesDir = await realpath(join(agentDir, OUTPUT_STYLES_DIR));
 
   const stylePath = await realpath(join(stylesDir, filename));
   if (!isWithinDirectory(stylesDir, stylePath)) throw new Error("style outside styles directory");

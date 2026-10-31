@@ -22,6 +22,7 @@
     "../../dotfiles/pi/system-one"
   ],
   "defaultThinkingLevel": "medium",
+  "outputStyle": "eli5.md",
   "defaultTools": [
     "+codemode",
     "+system_one"

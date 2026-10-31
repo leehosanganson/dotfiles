@@ -83,6 +83,27 @@ test("invalid or unavailable styles fail nonfatally and diagnostics are throttle
   });
 });
 
+test("a symlinked styles directory loads contained styles but rejects escaping file symlinks", async () => {
+  await withAgentDir(async (agentDir) => {
+    const stylesTarget = join(agentDir, "shared-styles");
+    const outside = join(agentDir, "secret.md");
+    await rm(join(agentDir, "output-styles"), { recursive: true });
+    await mkdir(stylesTarget);
+    await writeFile(join(stylesTarget, "eli5.md"), "Explain it simply.");
+    await writeFile(outside, "Must not be loaded.");
+    await symlink(stylesTarget, join(agentDir, "output-styles"));
+    await symlink(outside, join(stylesTarget, "escape.md"));
+
+    const validExtension = startExtension({ outputStyle: "eli5.md" });
+    assert.equal((await validExtension.start()).sections["output-style"], "Explain it simply.");
+    assert.deepEqual(validExtension.notifications, []);
+
+    const escapingExtension = startExtension({ outputStyle: "escape.md" });
+    assert.deepEqual((await escapingExtension.start()).sections, { base: "Keep the base prompt." });
+    assert.equal(escapingExtension.notifications.length, 1);
+  });
+});
+
 test("a symlink cannot load a style from outside the canonical directory", async () => {
   await withAgentDir(async (agentDir) => {
     const outside = join(agentDir, "secret.md");
