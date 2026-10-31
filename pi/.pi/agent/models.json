@@ -16,7 +16,16 @@
         {
           "id": "openrouter/gpt-6-luna",
           "name": "openrouter/gpt-6-luna",
-          "reasoning": false,
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "off": null,
+            "minimal": null,
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": null,
+            "max": null
+          },
           "input": ["text"],
           "contextWindow": 256000,
           "maxTokens": 16384
