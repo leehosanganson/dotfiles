@@ -28,7 +28,7 @@ classifies the request, identifies the active lifecycle stage and matching
 playbook, selects only the stage skill and capabilities that stage needs, and delegates execution to a
 subagent. The subagent owns the stage: it loads and applies the assigned playbook,
 assigned `stage-*` skill and selected skills, and returns concise exit evidence
-plus any handoff. For each dependent stage, dispatch a new owner after checking that the
+plus any handoff. The coordinator alone dispatches top-level lifecycle stage owners. A stage owner must never spawn or delegate to child agents; the owner performs applicable capability work inline or sequentially, or reports the limitation. For each dependent stage, dispatch a new owner after checking that the
 prior stage's exit evidence is present. Do not do stage work inline merely to
 avoid dispatch or because instructions say a capability is normally invoked
 "inline"; that refers to how the stage owner applies it.

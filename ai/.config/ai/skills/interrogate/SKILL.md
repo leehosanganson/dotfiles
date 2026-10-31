@@ -12,7 +12,7 @@ Review evidence and actual changes, not imagined requirements. Distinguish defec
 ## Steps
 1. Read task contract, design, diff, and relevant callers/tests.
 2. Attack assumptions, boundaries, error paths, compatibility, concurrency, and security relevant to scope.
-3. Give dispatched reviewers distinct questions and reconcile findings independently.
+3. Give dispatched reviewers distinct questions and reconcile findings independently. The coordinator alone dispatches top-level stage owners; when invoked by a delegated stage owner, review inline or sequentially and report any limitation.
 4. Return actionable findings with evidence and severity; recheck fixes.
 
 ## Asks You?

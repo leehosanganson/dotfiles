@@ -12,7 +12,7 @@ Do not create variants for routine work. Keep comparison criteria consistent and
 ## Steps
 1. Define decision, constraints, and acceptance criteria.
 2. Choose two or three genuinely distinct candidates.
-3. Assign isolated experiments or scopes; use workers only when supported and safe.
+3. Assign isolated experiments or scopes. The coordinator alone dispatches top-level stage owners; if invoked by a delegated stage owner, do the comparison inline or sequentially and report any limitation.
 4. Compare behavior, complexity, maintainability, and relevant performance evidence.
 5. Select a candidate and verify any integrated changes.
 

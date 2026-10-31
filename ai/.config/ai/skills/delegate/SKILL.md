@@ -9,23 +9,23 @@ description: >-
 
 ## Dispatch
 
-Use the current runtime's native agent or task mechanism to delegate each slice. Do not implement a slice in the caller and claim it was delegated. Decide whether and how to divide the work using Before dispatch below.
+The coordinator uses the current runtime's native agent or task mechanism to delegate each top-level lifecycle stage. A delegated stage owner must never spawn child agents. Do not implement a slice in the caller and claim it was delegated. Decide whether and how to divide the work using Before dispatch below.
 
 - Use parallel dispatch only for independent slices; use sequential dispatch when a slice depends on an earlier result.
 - Assign implementation and independent review roles using the capabilities and agents available in the current runtime. Use a domain coordinator only when a slice itself needs that expertise.
-- If no subagent tool is available, state that delegation is unavailable. Proceed inline only when appropriate and report the limitation.
+- If no subagent tool is available to the coordinator, state the limitation and report it. A delegated stage owner performs applicable capability work inline or sequentially, or reports the limitation.
 
 ## Before dispatch
 
 1. Read project instructions, relevant documentation, architecture, and conventions.
 2. Clarify ambiguities; state assumptions and measurable success criteria.
-3. Draft plausible slices and identify dependencies, shared files/state, context-transfer cost, and task risk before judging delegation. Choose a proportionate strategy: lead-only, one bounded agent, parallel agents, or serial agents. Parallelize only when slices are independently useful and likely to save meaningful time. Delegate serial work only when it removes enough lead effort or improves the time/cost tradeoff. Keep the work with the lead when the estimate is equivocal, the slices are weakly bounded, or coordination cost outweighs the benefit.
+3. Coordinator only: Draft plausible slices and identify dependencies, shared files/state, context-transfer cost, and task risk before judging delegation. Choose a proportionate strategy: lead-only, one bounded agent, parallel agents, or serial agents. Parallelize only when slices are independently useful and likely to save meaningful time. Delegate serial work only when it removes enough lead effort or improves the time/cost tradeoff. Keep the work with the lead when the estimate is equivocal, the slices are weakly bounded, or coordination cost outweighs the benefit.
 4. When the speed/cost tradeoff is genuinely uncertain and a bounded decision capability is available, consult it once with the evidence, batching: which strategy fits best; whether delegation is likely to reduce elapsed time versus lead-only; and whether it is likely to reduce total model cost versus lead-only. Include candidate slices, model assignments, and coordination overhead. Treat the answer as advice, not authorization. Skip it for obvious or mechanically determined choices.
 5. Split the scope into independently testable vertical slices with explicit interfaces, permitted files, exclusions, dependencies, risks, and verification steps. Include interfaces, implementation, and tests in each slice where applicable. Assign one owner per mutable file or state and serialize conflicting work.
-6. Give each sub-agent a brief with the goal, context, exact scope and exclusions, dependencies, acceptance criteria, verification, permitted files, assumptions, and risks. Have each brief name the skill(s) for its assignment and any relevant `principle-*` skills, and direct the sub-agent to read and apply them itself rather than relying on copied summaries. Assign separate implementation and independent-review roles when appropriate. Select models using runtime configuration; keep stronger reasoning for ambiguous or high-risk work and final review.
+6. Coordinator only: Give each sub-agent a brief with the goal, context, exact scope and exclusions, dependencies, acceptance criteria, verification, permitted files, assumptions, and risks. Have each brief name the skill(s) for its assignment and any relevant `principle-*` skills, and direct the sub-agent to read and apply them itself rather than relying on copied summaries. Assign separate implementation and independent-review roles when appropriate. Select models using runtime configuration; keep stronger reasoning for ambiguous or high-risk work and final review.
 7. Hard boundaries stay deterministic regardless of any advisory output: no conflicting writes, no unapproved external or irreversible actions, and no worker outside its assigned scope.
 
-Do not delegate planning-only work or slices with unresolved dependencies. If delegation is unavailable, say so and proceed inline only when appropriate.
+Do not delegate planning-only work or slices with unresolved dependencies. If top-level delegation is unavailable, say so; delegated stage owners perform applicable capability work inline or sequentially, or report the limitation.
 
 ## Integrate and verify
 

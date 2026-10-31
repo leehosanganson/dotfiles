@@ -21,7 +21,7 @@ You are the assigned stage owner, not the main coordinator. Load this full guide
 6. Record the chosen approach, boundaries, acceptance criteria, each rejected alternative with its reason, and unresolved risks. Hand off this decision and the smallest implementable scope to Build.
 
 ### Capability routing
-Invoke `architect` for data-shape, boundary, and state design; `arena` for materially different alternatives; and `interrogate` for contested or high-risk proposals. These run inline for the stage owner. Dispatch subagents for them only when the runtime supports it and the proposal is high-risk.
+Invoke `architect` for data-shape, boundary, and state design; `arena` for materially different alternatives; and `interrogate` for contested or high-risk proposals. These run inline for the stage owner. Do not dispatch subagents; handle the work within this stage inline or sequentially, or report the limitation.
 
 ### Exit evidence
 A design decision is recorded with boundaries and acceptance criteria clear enough to implement, along with the selected guidance applied and any relevant conditional capability skipped with a reason. For a one-file change with one obvious approach, a one-line rationale that design was skipped is sufficient. The Build handoff carries the chosen approach, smallest implementable scope, acceptance criteria, and unresolved risks; if Plan evidence is missing, this is not a successful Design exit.
