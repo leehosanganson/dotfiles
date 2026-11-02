@@ -18,8 +18,14 @@ rather than restating them. Invoking autopilot for a bounded engineering task
 means the user wants that task carried through its applicable stages to a
 reviewable PR-ready result. It authorizes scoped local commits and, when PR
 creation is the requested or agreed delivery, pushing the task branch and
-creating that PR without asking again. It does not authorize merging, deployment,
-unrelated changes, or destructive actions.
+creating that PR without asking again. After PR creation, inspect its required
+checks and monitor them until all pass or a concrete blocker exists. For safe,
+in-scope CI failures, invoke `fix-ci`, push authorized task-scoped fixes, and
+recheck the updated PR without asking for separate `fix-ci`, `babysit`, or
+`raise-pr` commands or redundant approval. If check status is unavailable or
+monitoring makes no meaningful progress, report the current status and stop;
+do not poll indefinitely. This does not authorize merging, deployment,
+unrelated changes, weakening or bypassing checks, or destructive actions.
 
 ## Ownership model
 
@@ -113,7 +119,7 @@ otherwise be expected for the selected route.
 Default routes:
 
 - Read-only how/why questions: Plan, then stop without editing.
-- Bug fixes and features: Plan, Design if data shape or interfaces change, Build, Test. For explicit autopilot implementation requests, continue through Deploy to a reviewable PR: prepare and commit only the scoped change, then push and create its PR without asking again for authorization. Stop before merge or deployment.
+- Bug fixes and features: Plan, Design if data shape or interfaces change, Build, Test. For explicit autopilot implementation requests, continue through Deploy to a reviewable PR: prepare and commit only the scoped change, then push and create its PR without asking again for authorization. Inspect and monitor required PR checks after creation; invoke `fix-ci` for safe, in-scope failures, push authorized task-scoped fixes, and recheck. Do not ask for separate delivery/CI commands or redundant approval. Finish when all required checks pass or a concrete blocker exists; report unavailable status or no meaningful progress and stop rather than polling indefinitely. Never weaken or bypass checks. Stop before merge or deployment.
 - Refactors: Plan, Build, behavior-preserving Test. Add Design if structure choices are material. For explicit autopilot implementation requests, continue through Deploy and create a PR for the verified scoped refactor.
 - Performance: set target and baseline in Plan, then Build and comparable Test measurements. For explicit autopilot implementation requests, continue through Deploy and create a PR for the verified scoped change.
 - Existing PR, CI, comment, or conflict requests: start in Deploy. Do Build and Test first if code changes are needed.
