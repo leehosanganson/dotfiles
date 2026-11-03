@@ -5,7 +5,7 @@ description: >-
   the repository's established issue tracker, or review feedback supplied in
   conversation. Use when the user asks to implement review findings or fix
   issues from a code review. Do not use to produce a review or investigate
-  unrelated failures; use code-review to record review findings.
+  unrelated failures; use /code-review to record review findings.
 ---
 
 1. Read the applicable task items, issue tracker entries, or review feedback, along with relevant project guidance.

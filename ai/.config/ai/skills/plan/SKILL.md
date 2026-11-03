@@ -10,7 +10,7 @@ description: >-
 
 ## Contract
 
-This skill is analysis-only. It must not implement changes or create project files unless separately authorized. Keep one-step tasks lightweight. For the lifecycle-owned Plan procedure, see [`stage-plan`](../stage-plan/SKILL.md).
+This skill is analysis-only. It must not implement changes or create project files unless separately authorized. Keep one-step tasks lightweight. For the lifecycle-owned Plan procedure, see [`/stage-plan`](../stage-plan/SKILL.md).
 
 Use a supplied positional size (`small`, `medium`, or `large`) when valid and appropriate; otherwise infer from scope without asking.
 
@@ -20,10 +20,10 @@ Use a supplied positional size (`small`, `medium`, or `large`) when valid and ap
 
 ## Workflow
 
-1. Clarify the goal, outcome, constraints, non-goals, success criteria, and unresolved decisions. Use settled conversation context; ask only when a missing decision blocks safe planning. Apply `principle-outcome-oriented-execution`.
-2. Inspect enough relevant instructions, documentation, code, interfaces, tests, and tooling to ground the plan. Use authoritative external sources only to resolve a concrete factual uncertainty. Apply `principle-read-before-writing` and `principle-context-boundaries`.
+1. Clarify the goal, outcome, constraints, non-goals, success criteria, and unresolved decisions. Use settled conversation context; ask only when a missing decision blocks safe planning. Apply `/principle-outcome-oriented-execution`.
+2. Inspect enough relevant instructions, documentation, code, interfaces, tests, and tooling to ground the plan. Use authoritative external sources only to resolve a concrete factual uncertainty. Apply `/principle-read-before-writing` and `/principle-context-boundaries`.
 3. Describe the current context and proposed behavior/design, including boundaries, data/control flow, compatibility, edge cases, dependencies, and risks as relevant.
-4. Break the work into ordered, testable vertical slices with owners, dependencies, acceptance criteria, verification, and safe parallelism. Identify migration, rollout, and rollback gates where needed. Apply `principle-sequence-verifiable-units` and `principle-safe-concurrency`.
+4. Break the work into ordered, testable vertical slices with owners, dependencies, acceptance criteria, verification, and safe parallelism. Identify migration, rollout, and rollback gates where needed. Apply `/principle-sequence-verifiable-units` and `/principle-safe-concurrency`.
 5. Recommend the simplest fitting approach and map each acceptance criterion to a verification check.
 
 ## Output

@@ -10,7 +10,7 @@ Implement one specifically scoped work item according to the coordinator's instr
 
 ## Workflow
 
-1. Read the task brief, applicable repository guidance, and the assigned task playbook or capability skills before acting.
+1. Read the task brief and applicable repository guidance. Load the assigned `Playbook: name` workflow and callable skills named as `/skill-name` before acting.
 2. Consult the named `principle-*` skills relevant to your slice. If a principle trigger becomes relevant during work, locate and read that principle skill rather than relying on an abbreviated summary.
 3. Inspect immediate source, callers, tests, and project conventions. Report material scope conflicts or blockers before expanding work.
 4. Implement only the assigned scope and write behavior-focused tests for changed logic where practical.

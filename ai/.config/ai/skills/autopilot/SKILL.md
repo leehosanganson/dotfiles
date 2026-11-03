@@ -20,9 +20,9 @@ reviewable PR-ready result. It authorizes scoped local commits and, when PR
 creation is the requested or agreed delivery, pushing the task branch and
 creating that PR without asking again. After PR creation, inspect its required
 checks and monitor them until all pass or a concrete blocker exists. For safe,
-in-scope CI failures, invoke `fix-ci`, push authorized task-scoped fixes, and
-recheck the updated PR without asking for separate `fix-ci`, `babysit`, or
-`raise-pr` commands or redundant approval. If check status is unavailable or
+in-scope CI failures, invoke `/fix-ci`, push authorized task-scoped fixes, and
+recheck the updated PR without asking for separate `/fix-ci`, `/babysit`, or
+`/raise-pr` commands or redundant approval. If check status is unavailable or
 monitoring makes no meaningful progress, report the current status and stop;
 do not poll indefinitely. This does not authorize merging, deployment,
 unrelated changes, weakening or bypassing checks, or destructive actions.
@@ -110,16 +110,16 @@ otherwise be expected for the selected route.
 
 | Stage | Stage skill | Invoke | Principles | Exit evidence |
 |---|---|---|---|---|
-| Plan | [`stage-plan`](../stage-plan/SKILL.md) | `project-context`, `how`, `why`, `teach`, `plan`, `research`, `figure-it-out`, `show-me-your-work` | `principle-read-before-writing`, `principle-context-boundaries`, `principle-outcome-oriented-execution` | Clear goal, relevant code understanding, constraints, and an actionable plan when needed. |
-| Design | [`stage-design`](../stage-design/SKILL.md) | `architect`, `arena`, `interrogate` | `principle-foundational-thinking`, `principle-model-the-domain`, `principle-simplicity-first` | Chosen approach, data shape, and boundaries. |
-| Build | [`stage-build`](../stage-build/SKILL.md) | `tdd`, `language-best-practices`, `deslop`, `no-comments` | `principle-simplicity-first`, `principle-surgical-changes`, `principle-sequence-verifiable-units` | Scoped change with tests and a reviewable diff. |
-| Test | [`stage-test`](../stage-test/SKILL.md) | `code-review`, `blast-radius`, `interrogate`, `benchmark-checklist`, `create-verification-skill`, `swarm` | `principle-test-behavior`, `principle-prove-it-works`, `principle-explain-the-number` | Evidence the intended behavior works on the best available surface, plus limitations. |
-| Deploy | [`stage-deploy`](../stage-deploy/SKILL.md) | `make-pr-easy-to-review`, `raise-pr`, `babysit`, `get-pr-comments`, `fix-ci`, `fix-merge-conflicts` | `principle-make-operations-idempotent`, `principle-prove-it-works` | Requested delivery prepared within publishing and merge gates. |
+| Plan | [`/stage-plan`](../stage-plan/SKILL.md) | `/project-context`, `/how`, `/why`, `/teach`, `/plan`, `/research`, `/figure-it-out`, `/show-me-your-work` | `/principle-read-before-writing`, `/principle-context-boundaries`, `/principle-outcome-oriented-execution` | Clear goal, relevant code understanding, constraints, and an actionable plan when needed. |
+| Design | [`/stage-design`](../stage-design/SKILL.md) | `/architect`, `/arena`, `/interrogate` | `/principle-foundational-thinking`, `/principle-model-the-domain`, `/principle-simplicity-first` | Chosen approach, data shape, and boundaries. |
+| Build | [`/stage-build`](../stage-build/SKILL.md) | `/tdd`, `/language-best-practices`, `/deslop`, `/no-comments` | `/principle-simplicity-first`, `/principle-surgical-changes`, `/principle-sequence-verifiable-units` | Scoped change with tests and a reviewable diff. |
+| Test | [`/stage-test`](../stage-test/SKILL.md) | `/code-review`, `/blast-radius`, `/interrogate`, `/benchmark-checklist`, `/create-verification-skill`, `/swarm` | `/principle-test-behavior`, `/principle-prove-it-works`, `/principle-explain-the-number` | Evidence the intended behavior works on the best available surface, plus limitations. |
+| Deploy | [`/stage-deploy`](../stage-deploy/SKILL.md) | `/make-pr-easy-to-review`, `/raise-pr`, `/babysit`, `/get-pr-comments`, `/fix-ci`, `/fix-merge-conflicts` | `/principle-make-operations-idempotent`, `/principle-prove-it-works` | Requested delivery prepared within publishing and merge gates. |
 
 Default routes:
 
 - Read-only how/why questions: Plan, then stop without editing.
-- Bug fixes and features: Plan, Design if data shape or interfaces change, Build, Test. For explicit autopilot implementation requests, continue through Deploy to a reviewable PR: prepare and commit only the scoped change, then push and create its PR without asking again for authorization. Inspect and monitor required PR checks after creation; invoke `fix-ci` for safe, in-scope failures, push authorized task-scoped fixes, and recheck. Do not ask for separate delivery/CI commands or redundant approval. Finish when all required checks pass or a concrete blocker exists; report unavailable status or no meaningful progress and stop rather than polling indefinitely. Never weaken or bypass checks. Stop before merge or deployment.
+- Bug fixes and features: Plan, Design if data shape or interfaces change, Build, Test. For explicit autopilot implementation requests, continue through Deploy to a reviewable PR: prepare and commit only the scoped change, then push and create its PR without asking again for authorization. Inspect and monitor required PR checks after creation; invoke `/fix-ci` for safe, in-scope failures, push authorized task-scoped fixes, and recheck. Do not ask for separate delivery/CI commands or redundant approval. Finish when all required checks pass or a concrete blocker exists; report unavailable status or no meaningful progress and stop rather than polling indefinitely. Never weaken or bypass checks. Stop before merge or deployment.
 - Refactors: Plan, Build, behavior-preserving Test. Add Design if structure choices are material. For explicit autopilot implementation requests, continue through Deploy and create a PR for the verified scoped refactor.
 - Performance: set target and baseline in Plan, then Build and comparable Test measurements. For explicit autopilot implementation requests, continue through Deploy and create a PR for the verified scoped change.
 - Existing PR, CI, comment, or conflict requests: start in Deploy. Do Build and Test first if code changes are needed.
@@ -157,24 +157,24 @@ authorized by the user under the applicable playbook.
 
 ## Playbooks
 
-- [`autopilot`](references/playbooks/autopilot.md) — The user explicitly authorizes a sustained autonomous engineering run or multi-PR improvement cycle with a goal and completion criteria. The `autopilot` skill is the ordinary task router; an explicit invocation for implementation authorizes scoped commits and PR creation, but not sustained work or merging.
-- [`babysit`](../babysit/SKILL.md) (skill) — The user asks to monitor or shepherd an existing PR/stack toward a reviewable, merge-ready state.
-- [`bug-fix`](references/playbooks/bug-fix.md) — A coding defect has a concrete, observable failure.
-- [`delegate`](../delegate/SKILL.md) (skill) — Multi-step work that can be split into independently scoped slices.
-- [`diagnose-issues`](../diagnose-issues/SKILL.md) (skill) — Triage an unclear homelab or connected-infrastructure symptom before the owning subsystem is known; hand off to its specialist skill once identified.
-- [`feature-work`](references/playbooks/feature-work.md) — Implementing a scoped feature or user-facing behavior; new feature work normally starts in an isolated worktree via [`feature-worktree`](../feature-worktree/SKILL.md).
-- [`feature-worktree`](../feature-worktree/SKILL.md) (skill) — Start feature work in a dedicated worktree/local branch and route it through scoped PR creation authorized by autopilot or the user's explicit request, follow-up, and separately gated merging.
-- [`pause-safely`](references/playbooks/pause-safely.md) — The user asks to pause, context is about to be compacted, or the session is going offline during substantive in-flight work.
-- [`performance`](references/playbooks/performance.md) — Investigating or changing performance, latency, throughput, or resource use.
-- [`plan`](../plan/SKILL.md) (skill) — The user asks for a plan, or a nontrivial implementation needs an analysis phase before work begins.
-- [`project-context`](../project-context/SKILL.md) (skill) — Before substantive implementation or planning when repository conventions, architecture, branch/PR state, or verification commands are unfamiliar.
-- [`prototype`](references/playbooks/prototype.md) — An uncertainty can be settled faster by observation (behavior, layout, performance, output, or a design fork) than by analysis or source reading.
-- [`raise-pr`](../raise-pr/SKILL.md) (skill) — Create the reviewable PR for autopilot implementation tasks after verification; do not ask again for commit/push/PR authorization when autopilot was explicitly invoked for that task.
-- [`refactoring`](references/playbooks/refactoring.md) — Changing code structure while intending to preserve externally observable behavior.
-- [`research`](../research/SKILL.md) (skill) — A question needs investigation across multiple local or external sources, comparison, or evidence-backed synthesis.
-- [`session-pickup`](references/playbooks/session-pickup.md) — Resuming substantive in-flight work from an earlier session, handoff, or compaction.
-- [`visual-parity`](references/playbooks/visual-parity.md) — Matching an implementation to an authoritative screenshot or visual reference.
-- [`worktree-cleanup`](references/playbooks/worktree-cleanup.md) — The user asks to reclaim disk or remove Git worktrees and related stale development artifacts.
+- Playbook: [`/autopilot`](references/playbooks/autopilot.md) — The user explicitly authorizes a sustained autonomous engineering run or multi-PR improvement cycle with a goal and completion criteria. The `/autopilot` skill is the ordinary task router; an explicit invocation for implementation authorizes scoped commits and PR creation, but not sustained work or merging.
+- `/babysit` ([skill](../babysit/SKILL.md)) — The user asks to monitor or shepherd an existing PR/stack toward a reviewable, merge-ready state.
+- Playbook: [`bug-fix`](references/playbooks/bug-fix.md) — A coding defect has a concrete, observable failure.
+- `/delegate` ([skill](../delegate/SKILL.md)) — Multi-step work that can be split into independently scoped slices.
+- `/diagnose-issues` ([skill](../diagnose-issues/SKILL.md)) — Triage an unclear homelab or connected-infrastructure symptom before the owning subsystem is known; hand off to its specialist skill once identified.
+- Playbook: [`feature-work`](references/playbooks/feature-work.md) — Implementing a scoped feature or user-facing behavior; new feature work normally starts in an isolated worktree via `/feature-worktree` ([skill](../feature-worktree/SKILL.md)).
+- `/feature-worktree` ([skill](../feature-worktree/SKILL.md)) — Start feature work in a dedicated worktree/local branch and route it through scoped PR creation authorized by autopilot or the user's explicit request, follow-up, and separately gated merging.
+- Playbook: [`pause-safely`](references/playbooks/pause-safely.md) — The user asks to pause, context is about to be compacted, or the session is going offline during substantive in-flight work.
+- Playbook: [`performance`](references/playbooks/performance.md) — Investigating or changing performance, latency, throughput, or resource use.
+- `/plan` ([skill](../plan/SKILL.md)) — The user asks for a plan, or a nontrivial implementation needs an analysis phase before work begins.
+- `/project-context` ([skill](../project-context/SKILL.md)) — Before substantive implementation or planning when repository conventions, architecture, branch/PR state, or verification commands are unfamiliar.
+- Playbook: [`prototype`](references/playbooks/prototype.md) — An uncertainty can be settled faster by observation (behavior, layout, performance, output, or a design fork) than by analysis or source reading.
+- `/raise-pr` ([skill](../raise-pr/SKILL.md)) — Create the reviewable PR for autopilot implementation tasks after verification; do not ask again for commit/push/PR authorization when autopilot was explicitly invoked for that task.
+- Playbook: [`refactoring`](references/playbooks/refactoring.md) — Changing code structure while intending to preserve externally observable behavior.
+- `/research` ([skill](../research/SKILL.md)) — A question needs investigation across multiple local or external sources, comparison, or evidence-backed synthesis.
+- Playbook: [`session-pickup`](references/playbooks/session-pickup.md) — Resuming substantive in-flight work from an earlier session, handoff, or compaction.
+- Playbook: [`visual-parity`](references/playbooks/visual-parity.md) — Matching an implementation to an authoritative screenshot or visual reference.
+- Playbook: [`worktree-cleanup`](references/playbooks/worktree-cleanup.md) — The user asks to reclaim disk or remove Git worktrees and related stale development artifacts.
 
 ## Runtime integration
 

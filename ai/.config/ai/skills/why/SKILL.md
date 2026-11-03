@@ -22,7 +22,7 @@ Ask only when the target decision cannot be identified from context.
 A concise account of confirmed motivation and clearly labeled inference or unknowns.
 
 ## Best Size
-One decision or focused subsystem. Use research for broad multi-source investigations.
+One decision or focused subsystem. Use /research for broad multi-source investigations.
 
 ## Speed
 Check direct evidence first and stop when the answer is supported.

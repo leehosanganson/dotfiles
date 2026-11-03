@@ -22,7 +22,7 @@ Ask only when the requested external action or source access requires authorizat
 A sourced answer that resolves the uncertainty and clearly states remaining unknowns.
 
 ## Best Size
-Focused factual research. Use the research workflow for broad multi-source investigations.
+Focused factual research. Use `Playbook: research` for broad multi-source investigations.
 
 ## Speed
 Prefer a small number of authoritative searches over broad unfocused browsing.

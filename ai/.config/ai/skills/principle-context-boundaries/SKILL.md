@@ -28,4 +28,4 @@ Repository, runtime, or multi-source investigations.
 Keep inspection relevant and minimize context transfer.
 
 ## Edge
-Use `principle-web-search` for current public facts; external browsing is not a substitute for reading local source.
+Use `/principle-web-search` for current public facts; external browsing is not a substitute for reading local source.

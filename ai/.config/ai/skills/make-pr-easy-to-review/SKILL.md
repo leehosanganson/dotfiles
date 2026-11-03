@@ -14,7 +14,7 @@ Do not publish, stage, commit, rewrite history, or push unless separately author
 2. Keep unrelated edits untouched and outside the proposed scope.
 3. Check that the diff tells a coherent story and commits are focused where present.
 4. Draft a concise title and description with why, what, risks, and actual checks.
-5. Use existing raise-pr workflow for publication only when requested.
+5. Use the `/raise-pr` skill for publication only when requested.
 
 ## Asks You?
 Ask before staging, committing, pushing, or when intended PR scope is ambiguous.

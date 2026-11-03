@@ -4,7 +4,7 @@ description: Explain a technical concept, code path, or completed change in simp
 ---
 
 ## When
-Use to explain code or work simply. Use how for source-grounded architecture and explain for interactive walkthroughs of a current diff.
+Use to explain code or work simply. Use /how for source-grounded architecture and /explain for interactive walkthroughs of a current diff.
 
 ## Strict
 Be accurate before simplifying. Do not hide caveats or present assumptions as facts. Do not modify code.

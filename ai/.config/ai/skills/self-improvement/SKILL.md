@@ -2,7 +2,7 @@
 name: self-improvement
 description: >-
   Run the explicitly authorized sustained self-improvement cycle routed through
-  `autopilot`, including roadmap discovery, separate PRs, verification, and
+  `/autopilot`, including roadmap discovery, separate PRs, verification, and
   monitoring while the session is active. Do not trigger for a bounded task,
   code review, or general discussion about self-improvement.
 ---
@@ -33,7 +33,7 @@ work outside the active session.
    diff. If a decision, safety concern, or failed check blocks the work, pause
    that item and report the blocker; do not claim success or open an unverified
    PR.
-4. **Open a PR.** Follow the `raise-pr` skill. Make each independent item a
+4. **Open a PR.** Follow the `/raise-pr` skill. Make each independent item a
    separate PR, confirm only intended changes are included, and never merge.
    Ask before staging/committing uncommitted changes or publishing when safety
    or authorization is unclear.

@@ -3,7 +3,7 @@ name: kubernetes-ops
 description: >-
   Inspect, troubleshoot, or perform day-to-day operations on Kubernetes workloads,
   namespaces, and manifests with kubectl and Kustomize. Do not use for Flux-managed
-  GitOps operations (use gitops-ops) or NixOS host operations. Out of scope: cluster
+  GitOps operations (use /gitops-ops) or NixOS host operations. Out of scope: cluster
   bootstrap and disaster recovery.
 ---
 

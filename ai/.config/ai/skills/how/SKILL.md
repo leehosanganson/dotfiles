@@ -4,7 +4,7 @@ description: Explain how a codebase, subsystem, or behavior works from source ev
 ---
 
 ## When
-Use to understand architecture, control/data flow, ownership, or runtime behavior. Use why for historical rationale and explain for an interactive walkthrough of a specific diff.
+Use to understand architecture, control/data flow, ownership, or runtime behavior. Use /why for historical rationale and /explain for an interactive walkthrough of a specific diff.
 
 ## Strict
 Ground claims in inspected source, tests, docs, or observed behavior. Mark inference as inference. Stay read-only unless the user separately asks for changes.
@@ -22,7 +22,7 @@ Ask only if the target subsystem or behavior is unclear and cannot be inferred s
 A concise, evidence-backed explanation of what happens and where.
 
 ## Best Size
-One subsystem or user-visible behavior. Route broad investigations through research or a custom playbook.
+One subsystem or user-visible behavior. Route broad investigations through /research or a custom playbook.
 
 ## Speed
 Read the shortest evidence path that answers the question.

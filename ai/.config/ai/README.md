@@ -21,6 +21,8 @@ Do not collapse these roles into one undifferentiated catalog. Keep one source o
 
 ## Development Workflow Concept
 
+When naming a callable skill, use `/skill-name`. Identify a task workflow with the label `Playbook: name` so it is not mistaken for a skill. The slash marks a skill reference in shared prose; it does not promise a runtime command syntax.
+
 1. Plan
 2. Design
 3. Build
@@ -30,23 +32,23 @@ Do not collapse these roles into one undifferentiated catalog. Keep one source o
 
 ### 1. Plan
 
-learning the code first. with /how (explain how code works), /why (find why code was built) and /teach (explain your work simply). if it's a big job or unattnded job, /figure-it-out (design custom playbook for job) then /show-me-your-work (log every decision made)
+Learn the code first with `/how` (explain how code works), `/why` (find why code was built), and `/teach` (explain work simply). For a large or unattended job, use `/figure-it-out` to design a custom playbook, then `/show-me-your-work` to log decisions.
 
 ### 2. Design
 
-/architect (sketch types, then write code), /arena (build rival versions, pick best), /interrogate (have subagents to attack the diff)
+Use `/architect` to sketch types and boundaries, `/arena` to compare alternatives, and `/interrogate` to examine the proposed change for gaps.
 
 ### 3. Build
 
-/tdd (write failing test, fix bug) then /{language}-best-practices (enforce language specific rules). then clean up the diff with /deslop (strip AI junk from diff) and /no-comments (delete needless code comments, prio code)
+Use `/tdd` to write a failing test and fix the defect, then `/language-best-practices` for language-specific checks. Clean up the diff with `/deslop` and `/no-comments` where needed.
 
 ### 4. Test
 
-to prove it on a real app, /create-verification-skill (build /verify-{behaviour} or scripts to run app), /swarm (to run many workers at the same time). Vet the change and benchmark, use /blast-radius (find breaking changes) into /benchmark-checklist (sanity check speed and metrics), then use /interrogate again to attack the diff, follow with /code-review-harsh (harshly review code structure)
+Use `/create-verification-skill` when repeatable real-application checks are needed, and `/swarm` for independent parallel work when appropriate. Assess downstream impact with `/blast-radius`; use `/benchmark-checklist` for performance measurements. Use `/interrogate` to look for gaps and `/code-review-harsh` for a critical review of the change.
 
 ### 5. Deploy
 
-/make-pr-eas-to-review (tidy PR for reviewers, title, description, commit messages), /babysit (watch PR until it merges), /fix-merge-conflicts (resolve conflicts, recheck build), /get-pr-comments (list review comments as actions), /fix-ci (fix failing CI checks)
+Use `/make-pr-easy-to-review` to prepare a reviewer-friendly PR, `/babysit` to track an existing PR, `/fix-merge-conflicts` to resolve conflicts, `/get-pr-comments` to gather review feedback, and `/fix-ci` to resolve safe, in-scope CI failures.
 
 ### 6. Maintain
 
@@ -54,40 +56,41 @@ rely on external systems to trigger tasks to follow through 1-5
 
 ## Autopilot
 
-The `skills/autopilot/` directory is the router and home for creating and storing playbooks, lifecycle stage guidance, and working principles. Autopilot identifies the task and current lifecycle stage, selects the relevant task playbook, and invokes capability skills as needed. Keep main session with user at high level with simple directive questions and tasks management.
+The `skills/autopilot/` directory contains the router, task playbooks, lifecycle-stage skills, and working-principle index. Autopilot identifies the task and current lifecycle stage, selects the relevant task playbook, and invokes capability skills as needed. Keep the main session focused on user decisions, task tracking, and coordination.
 
-The lifecycle stage skills are `stage-plan`, `stage-design`, `stage-build`, `stage-test`, and `stage-deploy`. Stage guidance complements task playbooks; it does not replace them or require every task to pass through every stage. See [`skills/autopilot/SKILL.md`](skills/autopilot/SKILL.md) for stage routing.
+The lifecycle stage skills are `/stage-plan`, `/stage-design`, `/stage-build`, `/stage-test`, and `/stage-deploy`. Stage guidance complements task playbooks; it does not replace them or require every task to pass through every stage. See [`skills/autopilot/SKILL.md`](skills/autopilot/SKILL.md) for stage routing.
 
-Use the Harness native skill to activate Autopilot. Follow its matching playbook and relevant principles. Routing authorizes only the requested task; sustained autonomy and gated actions require explicit authorization under the applicable workflow.
+Use `/autopilot` to activate Autopilot. Follow its matching playbook and relevant principles. Routing authorizes only the requested task; sustained autonomy and gated actions require explicit authorization under the applicable workflow.
 
 ## Current inventory
 
-The inventory below lists shared invokable skills by capability area, then the Autopilot playbooks and principle skills used to route and constrain work. It reflects the repository files and should be updated when the inventory changes.
+The inventory below lists shared invokable skills by capability area, then Autopilot task playbooks and principle skills. Use `/skill-name` for a callable skill and label a workflow `Playbook: name`. The inventory reflects repository files and should be updated when they change.
 
 ### Skills
 
-- **Workflow and understanding:** `autopilot`, `plan`, `stage-plan`, `stage-design`, `stage-build`, `stage-test`, `stage-deploy`, `project-context`, `how`, `why`, `teach`, `figure-it-out`, `show-me-your-work`, `delegate`, `self-improvement`.
-- **Design, build, and verification:** `architect`, `arena`, `interrogate`, `tdd`, `language-best-practices`, `deslop`, `no-comments`, `create-verification-skill`, `swarm`, `blast-radius`, `benchmark-checklist`.
-- **Review and delivery:** `code-review`, `code-review-harsh`, `fix-issues`, `make-pr-easy-to-review`, `raise-pr`, `babysit`, `get-pr-comments`, `fix-merge-conflicts`, `fix-ci`, `github-ops`.
-- **Domain and content:** `frontend-design`, `content-writer`, `write-notes`, `write-report`, `research`, `diagnose-issues`, `gitops-ops`, `kubernetes-ops`, `nixos-ops`, `explain`.
-- **Principles:** `principle` index plus 26 focused skills listed below.
-- **Skill authoring:** `create-skill`.
+- **Workflow and understanding:** `/autopilot`, `/plan`, `/stage-plan`, `/stage-design`, `/stage-build`, `/stage-test`, `/stage-deploy`, `/project-context`, `/how`, `/why`, `/teach`, `/figure-it-out`, `/show-me-your-work`, `/delegate`, `/self-improvement`.
+- **Design, build, and verification:** `/architect`, `/arena`, `/interrogate`, `/tdd`, `/language-best-practices`, `/deslop`, `/no-comments`, `/create-verification-skill`, `/swarm`, `/blast-radius`, `/benchmark-checklist`.
+- **Review and delivery:** `/code-review`, `/code-review-harsh`, `/fix-issues`, `/make-pr-easy-to-review`, `/raise-pr`, `/babysit`, `/get-pr-comments`, `/fix-merge-conflicts`, `/fix-ci`, `/github-ops`.
+- **Domain and content:** `/frontend-design`, `/content-writer`, `/write-notes`, `/write-report`, `/research`, `/diagnose-issues`, `/gitops-ops`, `/kubernetes-ops`, `/nixos-ops`, `/explain`.
+- **Principles:** `/principle` index plus 26 focused skills listed below.
+- **Skill authoring:** `/create-skill`.
 
 ### Autopilot task playbooks
 
-`autopilot`, `babysit`, `bug-fix`, `delegate`, `diagnose-issues`, `feature-work`, `pause-safely`, `performance`, `plan`, `project-context`, `prototype`, `raise-pr`, `refactoring`, `research`, `session-pickup`, `visual-parity`, `worktree-cleanup`.
+- **Playbooks:** `Playbook: autopilot`, `Playbook: bug-fix`, `Playbook: feature-work`, `Playbook: pause-safely`, `Playbook: performance`, `Playbook: prototype`, `Playbook: refactoring`, `Playbook: session-pickup`, `Playbook: visual-parity`, `Playbook: worktree-cleanup`.
+- **Skills:** `/babysit`, `/delegate`, `/diagnose-issues`, `/plan`, `/project-context`, `/raise-pr`, `/research`.
 
 ### Autopilot lifecycle stage skills
 
-`Plan`, `Design`, `Build`, `Test`, and `Deploy` each have a discoverable skill: `stage-plan`, `stage-design`, `stage-build`, `stage-test`, and `stage-deploy`. `Maintain` is intentionally deferred.
+`Plan`, `Design`, `Build`, `Test`, and `Deploy` each have a discoverable skill: `/stage-plan`, `/stage-design`, `/stage-build`, `/stage-test`, and `/stage-deploy`. `Maintain` is intentionally deferred.
 
 ### Principle skills
 
-`principle-attack-the-premise`, `principle-build-the-lever`, `principle-context-boundaries`, `principle-encode-corrections`, `principle-explain-the-number`, `principle-foundational-thinking`, `principle-makefile-first`, `principle-make-operations-idempotent`, `principle-migrate-callers-then-delete-legacy-apis`, `principle-minimize-reader-load`, `principle-model-the-domain`, `principle-outcome-oriented-execution`, `principle-prove-it-works`, `principle-python-execution`, `principle-read-before-writing`, `principle-redesign-from-first-principles`, `principle-safe-concurrency`, `principle-scoped-attempts`, `principle-sequence-verifiable-units`, `principle-simplicity-first`, `principle-surgical-changes`, `principle-surface-conflicts`, `principle-temp-files`, `principle-test-behavior`, `principle-type-and-boundary-discipline`, `principle-web-search`.
+`/principle-attack-the-premise`, `/principle-build-the-lever`, `/principle-context-boundaries`, `/principle-encode-corrections`, `/principle-explain-the-number`, `/principle-foundational-thinking`, `/principle-makefile-first`, `/principle-make-operations-idempotent`, `/principle-migrate-callers-then-delete-legacy-apis`, `/principle-minimize-reader-load`, `/principle-model-the-domain`, `/principle-outcome-oriented-execution`, `/principle-prove-it-works`, `/principle-python-execution`, `/principle-read-before-writing`, `/principle-redesign-from-first-principles`, `/principle-safe-concurrency`, `/principle-scoped-attempts`, `/principle-sequence-verifiable-units`, `/principle-simplicity-first`, `/principle-surgical-changes`, `/principle-surface-conflicts`, `/principle-temp-files`, `/principle-test-behavior`, `/principle-type-and-boundary-discipline`, `/principle-web-search`.
 
 ## Principles
 
-Each focused principle is an independently discoverable `principle-*` skill, so task playbooks and delegated agents can load the guidance relevant to their own scope. Autopilot keeps universal router policy and a lightweight index in `skills/autopilot/references/principles/AGENTS.md`; that index points to canonical principle skill files and does not duplicate their full content. The optional `principle` index skill explains how to consult that index. Do not load every principle automatically. The applicable playbook or task brief should identify only the principles that materially affect the work.
+Each focused principle is an independently discoverable `/principle-*` skill, so task playbooks and delegated agents can load the guidance relevant to their own scope. Autopilot keeps universal router policy and a lightweight index in `skills/autopilot/references/principles/AGENTS.md`; that index points to canonical principle skill files and does not duplicate their full content. The optional `/principle` index skill explains how to consult that index. Do not load every principle automatically. The applicable playbook or task brief should identify only the principles that materially affect the work.
 
 ## Maintaining skills
 

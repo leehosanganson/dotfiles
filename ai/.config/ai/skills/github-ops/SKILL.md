@@ -2,7 +2,7 @@
 name: github-ops
 description: >-
   Manage GitHub issues and existing pull requests, including comments, reviews,
-  updates, and merges, using `gh` or available GitHub tools. Use raise-pr when
+  updates, and merges, using `gh` or available GitHub tools. Use /raise-pr when
   creating a pull request is the final delivery step. Do not use for local code
   changes or infrastructure operations; use the relevant skill instead.
 ---
@@ -33,7 +33,7 @@ Identify the issue or PR, prepare the comment, post it with `gh issue comment <n
 
 Check `gh pr checks <pr>`, confirm the merge strategy with the user, and merge only after confirmation. Report the merge commit and resulting state.
 
-The only exception to the general no-merge default is a sustained run where the user explicitly invokes the `autopilot` playbook and authorizes merging. That exception does not apply to the `self-improvement` workflow, which never merges. In all cases, merge only after required checks and reviews pass and no unresolved conflicts or blockers remain.
+The only exception to the general no-merge default is a sustained run where the user explicitly invokes `Playbook: autopilot` and authorizes merging. That exception does not apply to the `/self-improvement` workflow, which never merges. In all cases, merge only after required checks and reviews pass and no unresolved conflicts or blockers remain.
 
 ## Safety
 
