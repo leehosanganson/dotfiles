@@ -29,32 +29,32 @@ unrelated changes, weakening or bypassing checks, or destructive actions.
 
 ## Ownership model
 
-The main agent is a **router and coordinator**, not the default stage worker. It
+The main agent is the **Lead**: a router and coordinator, not a stage worker. It
 clarifies the user's goal and meaningful decisions, classifies the request,
-identifies the active lifecycle stage and matching playbook, selects only the
-stage skill and capabilities that stage needs, and delegates substantive stage
-execution to a capable subagent. The subagent owns the stage: it loads and
-applies the assigned playbook, assigned `stage-*` skill and selected skills,
-and returns concise exit evidence plus any handoff. The coordinator alone
-dispatches top-level lifecycle stage owners. A stage owner must never spawn or
-delegate to child agents; the owner performs applicable capability work inline
-or sequentially, or reports the limitation. For each dependent stage, dispatch
-a new owner after checking that the prior stage's exit evidence is present. Do
-not do stage work inline merely to avoid dispatch or because instructions say a
-capability is normally invoked "inline"; that refers to how the stage owner
-applies it.
+identifies the active lifecycle stage and matching playbook, and runs each
+active stage through `/delegate`. Per stage, the Lead dispatches leaf agents
+(`explorer` to read, `worker` to build a slice, `evaluator` to judge a slice).
+The leaf agents are the stage owners: they load the assigned playbook, `stage-*`
+skill and selected skills themselves and return a short verdict plus exit
+evidence. Leaf agents never spawn or delegate to other agents; they perform
+capability work inline or sequentially, or report the limitation. Only the Lead
+dispatches. For each dependent stage, dispatch new leaf agents after checking
+that the prior stage's exit evidence is present. Do not do stage work in the
+main thread merely to avoid dispatch.
 
-Keep the main context to the task summary, stage and owner, required user
-decisions, concise handoffs, and final integration/verification results. Do not
-load full stage skills into the main context when the stage is delegated; put
-their names and required instructions in the handoff.
+Keep the main context small enough to survive a long run without compaction: the
+task summary, active stage, required user decisions, and one line of exit
+evidence per finished stage. Record the goal, acceptance criteria, route, and
+exit evidence in the `/delegate` task list, and keep detail in scratch files that
+leaf agents write. Do not load stage skills into the main context; put their
+names in the brief. After compaction, resume from the task list.
 The main agent owns user-facing clarification and session-pickup coordination:
 rebuild the task from session evidence and live state, reconcile completed and
 pending work, blockers, and active processes, resolve conflicts using current
 evidence, and choose or confirm the next step. It remains responsible for the
 overall sequence, approval gates, reconciling stage results, and final
-integrated verification. It may inspect relevant diffs and run final checks,
-but should not redo delegated stage work. If subagents are unavailable, report
+integrated verification. It reads only the task list and `git diff --stat`;
+an `evaluator` runs the final checks. If subagents are unavailable, report
 that limitation and ask before replacing delegated substantive stage work with
 inline execution, unless the user has already authorized that fallback.
 
@@ -117,13 +117,15 @@ load the stage skill when delegating. Run stages in order; start partway through
 when earlier exit evidence already exists. A stage is complete only when its exit evidence is returned. Record inactive or already-complete stages with a brief reason when they would
 otherwise be expected for the selected route.
 
-| Stage | Stage skill | Invoke | Principles | Exit evidence |
-|---|---|---|---|---|
-| Plan | [`/stage-plan`](../stage-plan/SKILL.md) | `/project-context`, `/how`, `/why`, `/teach`, `/plan`, `/research`, `/figure-it-out`, `/show-me-your-work` | `/principle-read-before-writing`, `/principle-context-boundaries`, `/principle-outcome-oriented-execution` | Clear goal, relevant code understanding, constraints, and an actionable plan when needed. |
-| Design | [`/stage-design`](../stage-design/SKILL.md) | `/architect`, `/arena`, `/interrogate` | `/principle-foundational-thinking`, `/principle-model-the-domain`, `/principle-simplicity-first` | Chosen approach, data shape, and boundaries. |
-| Build | [`/stage-build`](../stage-build/SKILL.md) | `/tdd`, `/language-best-practices`, `/deslop`, `/no-comments` | `/principle-simplicity-first`, `/principle-surgical-changes`, `/principle-sequence-verifiable-units` | Scoped change with tests and a reviewable diff. |
-| Test | [`/stage-test`](../stage-test/SKILL.md) | `/code-review`, `/blast-radius`, `/interrogate`, `/benchmark-checklist`, `/create-verification-skill`, `/swarm` | `/principle-test-behavior`, `/principle-prove-it-works`, `/principle-explain-the-number` | Evidence the intended behavior works on the best available surface, plus limitations. |
-| Deploy | [`/stage-deploy`](../stage-deploy/SKILL.md) | `/make-pr-easy-to-review`, `/raise-pr`, `/babysit`, `/get-pr-comments`, `/fix-ci`, `/fix-merge-conflicts` | `/principle-make-operations-idempotent`, `/principle-prove-it-works` | Requested delivery prepared within publishing and merge gates. |
+| Stage | Leaf agents | Stage skill | Invoke | Principles | Exit evidence |
+|---|---|---|---|---|---|
+| Plan | `explorer` | [`/stage-plan`](../stage-plan/SKILL.md) | `/project-context`, `/how`, `/why`, `/teach`, `/plan`, `/research`, `/figure-it-out`, `/show-me-your-work` | `/principle-read-before-writing`, `/principle-context-boundaries`, `/principle-outcome-oriented-execution` | Clear goal, relevant code understanding, constraints, and an actionable plan when needed. |
+| Design | `explorer` | [`/stage-design`](../stage-design/SKILL.md) | `/architect`, `/arena`, `/interrogate` | `/principle-foundational-thinking`, `/principle-model-the-domain`, `/principle-simplicity-first` | Chosen approach, data shape, and boundaries. |
+| Build | `worker`, `evaluator` | [`/stage-build`](../stage-build/SKILL.md) | `/tdd`, `/language-best-practices`, `/deslop`, `/no-comments` | `/principle-simplicity-first`, `/principle-surgical-changes`, `/principle-sequence-verifiable-units` | Scoped change with tests and a reviewable diff. |
+| Test | `evaluator` | [`/stage-test`](../stage-test/SKILL.md) | `/code-review`, `/blast-radius`, `/interrogate`, `/benchmark-checklist`, `/create-verification-skill`, `/swarm` | `/principle-test-behavior`, `/principle-prove-it-works`, `/principle-explain-the-number` | Evidence the intended behavior works on the best available surface, plus limitations. |
+| Deploy | `worker` | [`/stage-deploy`](../stage-deploy/SKILL.md) | `/make-pr-easy-to-review`, `/raise-pr`, `/babysit`, `/get-pr-comments`, `/fix-ci`, `/fix-merge-conflicts` | `/principle-make-operations-idempotent`, `/principle-prove-it-works` | Requested delivery prepared within publishing and merge gates. |
+
+Dispatch leaf agents by the role in the Leaf agents column. Do not fall back to a generic default agent.
 
 Default routes:
 
