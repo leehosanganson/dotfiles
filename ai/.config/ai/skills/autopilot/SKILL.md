@@ -30,25 +30,33 @@ unrelated changes, weakening or bypassing checks, or destructive actions.
 ## Ownership model
 
 The main agent is a **router and coordinator**, not the default stage worker. It
-classifies the request, identifies the active lifecycle stage and matching
-playbook, selects only the stage skill and capabilities that stage needs, and delegates execution to a
-subagent. The subagent owns the stage: it loads and applies the assigned playbook,
-assigned `stage-*` skill and selected skills, and returns concise exit evidence
-plus any handoff. The coordinator alone dispatches top-level lifecycle stage owners. A stage owner must never spawn or delegate to child agents; the owner performs applicable capability work inline or sequentially, or reports the limitation. For each dependent stage, dispatch a new owner after checking that the
-prior stage's exit evidence is present. Do not do stage work inline merely to
-avoid dispatch or because instructions say a capability is normally invoked
-"inline"; that refers to how the stage owner applies it.
+clarifies the user's goal and meaningful decisions, classifies the request,
+identifies the active lifecycle stage and matching playbook, selects only the
+stage skill and capabilities that stage needs, and delegates substantive stage
+execution to a capable subagent. The subagent owns the stage: it loads and
+applies the assigned playbook, assigned `stage-*` skill and selected skills,
+and returns concise exit evidence plus any handoff. The coordinator alone
+dispatches top-level lifecycle stage owners. A stage owner must never spawn or
+delegate to child agents; the owner performs applicable capability work inline
+or sequentially, or reports the limitation. For each dependent stage, dispatch
+a new owner after checking that the prior stage's exit evidence is present. Do
+not do stage work inline merely to avoid dispatch or because instructions say a
+capability is normally invoked "inline"; that refers to how the stage owner
+applies it.
 
 Keep the main context to the task summary, stage and owner, required user
 decisions, concise handoffs, and final integration/verification results. Do not
 load full stage skills into the main context when the stage is delegated; put
 their names and required instructions in the handoff.
-The main agent remains responsible for the overall sequence, clarifications,
-approval gates, reconciling results, and final integrated verification. It may
-inspect relevant diffs and run final checks, but should not redo delegated stage
-work. If subagents are unavailable, report that limitation and ask before
-replacing the requested delegated workflow with inline execution, unless the user
-has already authorized that fallback.
+The main agent owns user-facing clarification and session-pickup coordination:
+rebuild the task from session evidence and live state, reconcile completed and
+pending work, blockers, and active processes, resolve conflicts using current
+evidence, and choose or confirm the next step. It remains responsible for the
+overall sequence, approval gates, reconciling stage results, and final
+integrated verification. It may inspect relevant diffs and run final checks,
+but should not redo delegated stage work. If subagents are unavailable, report
+that limitation and ask before replacing delegated substantive stage work with
+inline execution, unless the user has already authorized that fallback.
 
 1. **Classify the request.** Identify the desired outcome, scope, constraints,
    approval boundaries, and observable success criteria. Answer simple questions
@@ -79,14 +87,15 @@ has already authorized that fallback.
    questions and one-step tasks, skip this checklist when no workflow is selected.
 5. **Plan and delegate stage ownership.** For nontrivial work, establish the
    plan and acceptance criteria through the Plan stage owner before implementation.
-   Delegate every active stage, including Plan, Design, Build, Test, and Deploy
-   when selected. A stage may be skipped only when its documented exit evidence
-   already exists or the route says it is inapplicable; record why. Keep dependent
-   stages sequential and pass verified exit evidence forward. The coordinator
-   retains sequencing, unresolved user decisions, integration, and final
-   verification, but does not perform the delegated stage's substantive work.
-   For simple questions and one-step tasks with no lifecycle route, no stage
-   delegation is required.
+   Delegate substantive work for each active stage, including Plan, Design, Build,
+   Test, and Deploy when selected. The main agent retains user-facing clarification
+   and session-pickup coordination; this coordination is not reassigned as a stage
+   task. A stage may be skipped only when its documented exit evidence already
+   exists or the route says it is inapplicable; record why. Keep dependent stages
+   sequential and pass verified exit evidence forward. The coordinator retains
+   sequencing, unresolved user decisions, integration, and final verification,
+   but does not perform delegated substantive stage work. For simple questions and
+   one-step tasks with no lifecycle route, no stage delegation is required.
 6. **Coordinate and verify.** The stage owner follows the selected guidance and
    returns evidence, checks run or skipped, and limitations. The coordinator
    checks the evidence against exit criteria, resolves user decisions and

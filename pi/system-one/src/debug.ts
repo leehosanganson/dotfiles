@@ -142,6 +142,9 @@ export function observedProvider(
           () => {
             entry.attempted = true;
           },
+          (status) => {
+            entry.httpStatus = status;
+          },
         );
         if (provider.id === "typesafe" || provider.id === "configured")
           entry.attempted = true;
@@ -153,7 +156,7 @@ export function observedProvider(
         entry.failure =
           error instanceof PiNativeDiagnosticError
             ? error.category
-            : error instanceof SystemOneHttpError
+            : error instanceof SystemOneHttpError || entry.httpStatus !== undefined
               ? "HTTP error"
               : error instanceof SystemOneTimeoutError
                 ? "timeout"

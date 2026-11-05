@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { it } from "node:test";
 import { visibleWidth } from "@earendil-works/pi-tui";
 import { createSessionConfig } from "../src/config.ts";
@@ -131,6 +134,62 @@ it("shows POST target shape for custom 405 without retaining URL secrets", async
     );
   } finally {
     globalThis.fetch = originalFetch;
+  }
+});
+
+it("records declared-provider HTTP status without exposing request or provider data", async () => {
+  const originalFetch = globalThis.fetch;
+  const directory = mkdtempSync(join(tmpdir(), "so-debug-http-status-"));
+  const keyPath = join(directory, "key");
+  writeFileSync(keyPath, "secret-credential");
+  globalThis.fetch = (async () =>
+    new Response("provider response secret", {
+      status: 422,
+      headers: { "x-request-id": "private-request-id" },
+    })) as typeof fetch;
+  try {
+    const history = new DebugHistory();
+    const provider = observedProvider(
+      createSessionConfig({}, {
+        mode: "model",
+        default: { provider: "private-provider", model: "private-model-id" },
+        providers: {
+          "private-provider": {
+            baseUrl: "https://decision.example/v1",
+            apiKeyFile: keyPath,
+            models: [{ id: "private-model-id" }],
+          },
+        },
+      }),
+      {} as never,
+      history,
+    );
+    await assert.rejects(
+      provider.evaluate({
+        state: "private-state",
+        questions: { q: { type: "noul", instructions: "private-question" } },
+      }),
+      (error: Error) => {
+        assert.equal(
+          error.message,
+          "Configured System One model request failed; check provider configuration and availability.",
+        );
+        assert.doesNotMatch(error.message, /422|private|response secret/);
+        return true;
+      },
+    );
+    const entry = history.entries[0];
+    assert.equal(entry?.provider, "configured");
+    assert.equal(entry?.httpStatus, 422);
+    assert.equal(entry?.failure, "HTTP error");
+    const diagnostics = JSON.stringify(entry);
+    assert.doesNotMatch(
+      diagnostics,
+      /private-state|private-question|secret-credential|private-provider|private-model-id|private-request-id|provider response secret/,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+    rmSync(directory, { recursive: true, force: true });
   }
 });
 

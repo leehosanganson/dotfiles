@@ -4,6 +4,7 @@ import { homedir } from "node:os";
 import { isAbsolute, join } from "node:path";
 import {
   HttpSystemOneProvider,
+  SystemOneHttpError,
   type QuestionMap,
   type SystemOneCallOptions,
   type SystemOneProvider,
@@ -215,7 +216,10 @@ export type RouteObserver = (
     | "selected mode",
 ) => void;
 
-function resolveDeclaredModelProvider(session: SessionConfig): SystemOneProvider | undefined {
+function resolveDeclaredModelProvider(
+  session: SessionConfig,
+  onHttpStatus?: (status: number) => void,
+): SystemOneProvider | undefined {
   const declaration = session.decisionModel;
   if (!declaration) return undefined;
   const selection = declaration.default;
@@ -226,6 +230,7 @@ function resolveDeclaredModelProvider(session: SessionConfig): SystemOneProvider
     selection.model,
     provider,
     session.current.timeoutMs,
+    onHttpStatus,
   );
 }
 
@@ -240,14 +245,17 @@ class DeclaredModelProvider implements SystemOneProvider {
   private readonly model: string;
   private readonly provider: ConfiguredModelProvider;
   private readonly timeoutMs: number;
+  private readonly onHttpStatus?: (status: number) => void;
   constructor(
     model: string,
     provider: ConfiguredModelProvider,
     timeoutMs: number,
+    onHttpStatus?: (status: number) => void,
   ) {
     this.model = model;
     this.provider = provider;
     this.timeoutMs = timeoutMs;
+    this.onHttpStatus = onHttpStatus;
   }
 
   async evaluate<Q extends QuestionMap>(
@@ -277,7 +285,14 @@ class DeclaredModelProvider implements SystemOneProvider {
         fetch: (input, init) => fetch(input, { ...init, redirect: "error" }),
       });
       return await http.evaluate(request, { ...options, model: this.model });
-    } catch {
+    } catch (error) {
+      if (
+        error instanceof SystemOneHttpError &&
+        Number.isInteger(error.status) &&
+        error.status >= 100 &&
+        error.status <= 599
+      )
+        this.onHttpStatus?.(error.status);
       throw new Error(
         "Configured System One model request failed; check provider configuration and availability.",
       );
@@ -291,16 +306,19 @@ class AutoSystemOneProvider implements SystemOneProvider {
   private readonly ctx: ExtensionToolContext;
   private readonly onRoute?: RouteObserver;
   private readonly onDispatch?: () => void;
+  private readonly onHttpStatus?: (status: number) => void;
   constructor(
     session: SessionConfig,
     ctx: ExtensionToolContext,
     onRoute?: RouteObserver,
     onDispatch?: () => void,
+    onHttpStatus?: (status: number) => void,
   ) {
     this.session = session;
     this.ctx = ctx;
     this.onRoute = onRoute;
     this.onDispatch = onDispatch;
+    this.onHttpStatus = onHttpStatus;
   }
 
   async evaluate<Q extends QuestionMap>(
@@ -330,7 +348,7 @@ class AutoSystemOneProvider implements SystemOneProvider {
           : "native-incompatible input",
     );
     const http =
-      resolveDeclaredModelProvider(this.session) ??
+      resolveDeclaredModelProvider(this.session, this.onHttpStatus) ??
       (await resolvePiModelProvider(this.session, this.ctx));
     this.onDispatch?.();
     return http.evaluate(request, options);
@@ -391,16 +409,26 @@ export async function resolveSessionProvider(
   ctx: ExtensionToolContext,
   onRoute?: RouteObserver,
   onDispatch?: () => void,
+  onHttpStatus?: (status: number) => void,
 ): Promise<SystemOneProvider> {
   if (session.mode === "native") {
     onRoute?.("pi-native", "selected mode");
     return new PiNativeProvider(ctx, session.current.timeoutMs, onDispatch);
   }
   if (session.mode === "auto")
-    return new AutoSystemOneProvider(session, ctx, onRoute, onDispatch);
+    return new AutoSystemOneProvider(
+      session,
+      ctx,
+      onRoute,
+      onDispatch,
+      onHttpStatus,
+    );
   if (session.mode === "model") {
     onRoute?.("configured", "selected mode");
-    return resolveDeclaredModelProvider(session) ?? resolvePiModelProvider(session, ctx);
+    return (
+      resolveDeclaredModelProvider(session, onHttpStatus) ??
+      resolvePiModelProvider(session, ctx)
+    );
   }
   const config = session.current;
   if (!config.baseUrl)
