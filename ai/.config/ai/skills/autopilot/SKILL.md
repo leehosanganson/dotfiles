@@ -48,7 +48,7 @@ reviews contributions and accepts them only against the task's criteria.
 Keep the main context focused on the task, active stage, decisions, todos, and
 brief completion evidence. Track concrete work in the current harness's native
 todo mechanism, using items in this form:
-`- [ ] (Task Name) - Stage (Plan/Implement/Test/...): (Description)`. Keep each
+`(Task Name) - Stage (Plan/Implement/Test/...): (Description)`. Keep each
 todo focused on a useful, observable outcome; mark it complete only when its
 acceptance evidence exists. After compaction, resume from the task list and
 reconcile it with live state. The main agent also owns user-facing clarification
@@ -76,7 +76,7 @@ resolve conflicts using current evidence, and choose or confirm the next step.
    scopes. Do not preload later-stage guidance.
 4. **Track concrete work.** For each substantive task with a lifecycle, use the
    harness's native todo mechanism to record concrete work in this form:
-   `- [ ] (Task Name) - Stage (Plan/Implement/Test/...): (Description)`. Include
+   `(Task Name) - Stage (Plan/Implement/Test/...): (Description)`. Include
    the active stage's outcomes, acceptance criteria, and relevant dependencies;
    keep enough evidence to resume after compaction. Do not copy the entire
    playbook into the todo list. Mark an item complete only when its acceptance
