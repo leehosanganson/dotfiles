@@ -1,0 +1,15 @@
+{
+  "name": "dotfiles",
+  "private": true,
+  "devDependencies": {
+    "lint-staged": "^16.0.0",
+    "prettier": "^3.9.10"
+  },
+  "scripts": {
+    "hooks:install": "git config core.hooksPath .githooks"
+  },
+  "lint-staged": {
+    "*.md": "prettier --write --ignore-unknown --ignore-path .prettierignore",
+    "*.json": "prettier --write --ignore-unknown --ignore-path .prettierignore"
+  }
+}

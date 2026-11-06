@@ -1,0 +1,8 @@
+# Do not follow the tracked AGENTS.md symlink into the same content.
+pi/.pi/agent/AGENTS.md
+
+# Secrets are maintained in a separate submodule.
+secrets/
+
+# Lockfiles should not be reformatted by this hook.
+**/*lock.json
