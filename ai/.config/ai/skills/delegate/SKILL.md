@@ -1,38 +1,48 @@
 ---
 name: delegate
 description: >-
-  Use by default for any multi-step goal: split the work into independently
-  scoped agent slices, delegate them to sub-agents, reconcile their changes, and
-  verify the integrated result. Skip only for single-step tasks, planning-only
-  requests, or work too tightly coupled to split.
+  Use for multi-step goals when bounded contributor tasks can usefully reduce
+  effort or add independent evidence. The main agent retains lifecycle and stage
+  ownership, tracks concrete todos, integrates work, and verifies the result.
+  Skip delegation for single-step tasks, planning-only requests, or work too
+  tightly coupled to split.
 ---
 
-## Dispatch
+## When
 
-The coordinator uses the current runtime's native agent or task mechanism to delegate each top-level lifecycle stage. A delegated stage owner must never spawn child agents. Do not implement a slice in the caller and claim it was delegated. Decide whether and how to divide the work using Before dispatch below.
+Use for multi-step work when bounded contributor tasks can reduce effort or add independent evidence. Do not use delegation for planning-only work, single-step tasks, whole stages, or work too tightly coupled to split.
 
-- Use parallel dispatch only for independent slices; use sequential dispatch when a slice depends on an earlier result.
-- Assign implementation and independent review roles using the capabilities and agents available in the current runtime. Use a domain coordinator only when a slice itself needs that expertise.
-- If no subagent tool is available to the coordinator, state the limitation and report it. A delegated stage owner performs applicable capability work inline or sequentially, or reports the limitation.
+## Strict
 
-## Before dispatch
+The main agent owns the lifecycle and each active stage. Use the current runtime's native agent or task mechanism only for bounded, useful contributor tasks; never delegate a whole stage or its ownership. Contributors do not need to spawn or delegate to other contributors. The main agent tracks tasks, integrates contributions, and verifies outcomes. If contributor dispatch is unavailable or not useful, the main agent performs the stage work and records any material limitation.
 
-1. Read project instructions, relevant documentation, architecture, and conventions.
-2. Clarify ambiguities; state assumptions and measurable success criteria.
-3. Coordinator only: Draft plausible slices and identify dependencies, shared files/state, context-transfer cost, and task risk before judging delegation. Choose a proportionate strategy: lead-only, one bounded agent, parallel agents, or serial agents. Parallelize only when slices are independently useful and likely to save meaningful time. Delegate serial work only when it removes enough lead effort or improves the time/cost tradeoff. Keep the work with the lead when the estimate is equivocal, the slices are weakly bounded, or coordination cost outweighs the benefit.
-4. When the speed/cost tradeoff is genuinely uncertain and a bounded decision capability is available, consult it once with the evidence, batching: which strategy fits best; whether delegation is likely to reduce elapsed time versus lead-only; and whether it is likely to reduce total model cost versus lead-only. Include candidate slices, model assignments, and coordination overhead. Treat the answer as advice, not authorization. Skip it for obvious or mechanically determined choices.
-5. Split the scope into independently testable vertical slices with explicit interfaces, permitted files, exclusions, dependencies, risks, and verification steps. Include interfaces, implementation, and tests in each slice where applicable. Assign one owner per mutable file or state and serialize conflicting work.
-6. Coordinator only: Give each sub-agent a brief with the goal, context, exact scope and exclusions, dependencies, acceptance criteria, verification, permitted files, assumptions, and risks. Have each brief name the skill(s) for its assignment and any relevant `principle-*` skills, and direct the sub-agent to read and apply them itself rather than relying on copied summaries. Assign separate implementation and independent-review roles when appropriate. Select models using runtime configuration; keep stronger reasoning for ambiguous or high-risk work and final review.
-7. Hard boundaries stay deterministic regardless of any advisory output: no conflicting writes, no unapproved external or irreversible actions, and no worker outside its assigned scope.
+## Steps
 
-Do not delegate planning-only work or slices with unresolved dependencies. If top-level delegation is unavailable, say so; delegated stage owners perform applicable capability work inline or sequentially, or report the limitation.
+1. Read project instructions, relevant documentation, architecture, and conventions. Clarify ambiguities; state assumptions and measurable success criteria.
+2. Draft plausible bounded tasks. Identify dependencies, shared files/state, context-transfer cost, and task risk. Choose a proportionate strategy: main-agent-only, one bounded contributor, parallel contributors, or serial contributors. Parallelize only independent tasks likely to save meaningful time. Delegate serial work only when it removes enough effort or improves the time/cost tradeoff. Keep work with the main agent when tasks are weakly bounded or coordination cost outweighs the benefit.
+3. When the speed/cost tradeoff is genuinely uncertain and a bounded decision capability is available, consult it once with the evidence: which strategy fits, whether delegation is likely to reduce elapsed time, and whether it is likely to reduce total model cost. Include candidate tasks, model assignments, and coordination overhead. Treat the answer as advice, not authorization. Skip this step for obvious choices.
+4. Split only into independently testable tasks with explicit interfaces, permitted files/actions, exclusions, dependencies, risks, and verification. Include implementation and tests in a contribution where applicable. Assign one owner per mutable file or state; serialize conflicting work. Do not delegate tasks with unresolved dependencies.
+5. Give each contributor a brief with the goal, context, exact scope and exclusions, dependencies, acceptance criteria, verification, permitted files/actions, assumptions, and risks. Name the relevant playbook, skills, and `principle-*` skills; direct contributors to load and apply their own guidance rather than relying on copied summaries. Assign implementation and independent-review contributions when useful. Select models using runtime configuration; reserve stronger reasoning for ambiguous or high-risk work and final review.
+6. Keep hard boundaries deterministic regardless of advisory output: no conflicting writes, unapproved external or irreversible actions, or work outside the assigned scope.
+7. After each contribution or group completes, inspect the actual changes or evidence. Reconcile conflicts against the task scope and acceptance criteria, integrate in dependency order, and return incomplete or out-of-scope contributions for correction. Verify the integrated outcome: inspect scope and interfaces; run applicable formatting, lint, tests, build/type checks, and cross-task or failure-path checks; confirm documentation and security constraints.
+8. Report the delegation decision and rationale, bounded contributions, chosen model(s), observed usage/cost when available, changed areas, reconciled decisions, verification (including skipped checks), acceptance status, any speed/cost tradeoff, and remaining risks. Do not claim completion while required checks are blocked or failing.
 
-## Integrate and verify
+## Asks You?
 
-After each group completes:
+No extra approval is needed for bounded, in-scope local contributor tasks. Ask before an external, irreversible, or otherwise gated action unless already authorized.
 
-1. Read each report and inspect the actual diff.
-2. Reconcile conflicts against the agreed scope and acceptance criteria. Integrate in dependency order, making only necessary edits.
-3. Return incomplete or out-of-scope work for correction before accepting it.
-4. Verify the integrated result: inspect scope and interfaces; run applicable formatting, lint, tests, build/type checks, and cross-slice or failure-path checks; confirm documentation and security constraints.
-5. Report the decision and rationale, delegated slices, chosen model(s), observed usage/cost when available, changed areas, reconciled decisions, verification (including skipped checks), acceptance status, any speed/cost tradeoff, and remaining risks. Do not claim completion while required checks are blocked or failing.
+## Output
+
+A reconciled result verified against the task's acceptance criteria, with the delegation decision, contributions, checks and skipped checks, blockers, and remaining risks reported.
+
+## Best Size
+
+Use for work with independently useful and verifiable tasks. Keep the work with the main agent when slices are weakly bounded or coordination costs more than it saves.
+
+## Speed
+
+Use the smallest useful delegation plan. Do not parallelize dependent tasks or delegate merely to satisfy a checklist.
+
+## Edge
+
+If no contributor mechanism is available, continue with the main agent's stage work and report the limitation; do not ask to replace a stage owner because the main agent already owns it.
