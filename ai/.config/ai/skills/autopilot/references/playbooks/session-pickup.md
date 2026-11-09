@@ -8,3 +8,5 @@ The main agent owns session-pickup coordination, user-facing clarification, and 
 2. If the summary conflicts with live state, invoke `/principle-surface-conflicts` and resolve it with live evidence. Invoke `/principle-context-boundaries` to prefer local evidence over recalled context.
 3. Reconcile completed work, pending work, blockers, and active processes. If evidence is stale, verify immediately.
 4. Invoke `/principle-outcome-oriented-execution` to state the completion predicate, then choose or confirm the next bounded step. The main agent performs the active stage work, delegates bounded tasks only when useful, and does not repeat completed work.
+5. List worktrees and local branches left by earlier tasks. For each one whose PR is verified merged, run the cleanup in `/feature-worktree` step 7. Preserve anything dirty, active, or uncertain and report it.
+6. If the active branch is behind its target, follow "Sync with the target branch" in `/stage-deploy` before continuing.

@@ -26,9 +26,17 @@ The main agent owns the stage and its coordination. Load and follow the relevant
 
 Invoke `/raise-pr` for new PRs and `/babysit` for PRs that already exist when the stage starts. After PR creation for explicit Autopilot implementation, inspect and monitor required checks directly; use `/fix-ci` for safe, in-scope failures and recheck after authorized fixes. Do not request separate `/raise-pr`, `/babysit`, or `/fix-ci` commands or redundant approval for these authorized steps. `/make-pr-easy-to-review` prepares review material and never publishes. Invoke `/get-pr-comments` or `/fix-merge-conflicts` only for matching identified work. Use `/fix-issues` and repository provider operations for actions they already cover. Stop once required checks pass or a concrete blocker exists; report unavailable check status or no meaningful progress instead of polling indefinitely.
 
+### Sync with the target branch
+
+Before creating a PR and again at each handoff, run `git fetch` and check whether the task branch is behind the PR's target branch. If it is behind, bring the target in inside the task worktree, using the repository's merge or rebase convention. Use a merge when the branch is already pushed, because a rebase needs a force-push. Resolve conflicts with `/fix-merge-conflicts`, rerun relevant checks, then continue. Never switch, pull, or reset the user's main checkout.
+
+### Post-merge cleanup
+
+When provider state shows the PR is merged, run the cleanup in `/feature-worktree` step 7 for this task's local worktree and local branch. Do not delete the remote branch. If a safeguard fails, preserve the worktree and report why.
+
 ### Exit evidence
 
-The requested PR or delivery state is verified and linked when possible, or the exact blocker and safe next step are reported.
+The requested PR or delivery state is verified and linked when possible, or the exact blocker and safe next step are reported. For a merged PR, local cleanup is verified or the reason it was skipped is reported.
 
 ## Asks You?
 
