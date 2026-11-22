@@ -71,7 +71,7 @@ The inventory below lists shared invokable skills by capability area, then Autop
 - **Workflow and understanding:** `/autopilot`, `/plan`, `/stage-plan`, `/stage-design`, `/stage-build`, `/stage-test`, `/stage-deploy`, `/project-context`, `/how`, `/why`, `/teach`, `/figure-it-out`, `/show-me-your-work`, `/delegate`, `/self-improvement`.
 - **Design, build, and verification:** `/architect`, `/arena`, `/interrogate`, `/tdd`, `/language-best-practices`, `/deslop`, `/no-comments`, `/create-verification-skill`, `/swarm`, `/blast-radius`, `/benchmark-checklist`.
 - **Review and delivery:** `/code-review`, `/code-review-harsh`, `/fix-issues`, `/make-pr-easy-to-review`, `/raise-pr`, `/babysit`, `/get-pr-comments`, `/fix-merge-conflicts`, `/fix-ci`, `/github-ops`.
-- **Domain and content:** `/frontend-design`, `/content-writer`, `/write-notes`, `/write-report`, `/research`, `/diagnose-issues`, `/gitops-ops`, `/kubernetes-ops`, `/nixos-ops`, `/explain`.
+- **Domain and content:** `/frontend-design`, `/content-writer`, `/remember`, `/documentation`, `/ask-me-anything`, `/write-notes`, `/write-report`, `/research`, `/diagnose-issues`, `/gitops-ops`, `/kubernetes-ops`, `/nixos-ops`, `/explain`.
 - **Principles:** `/principle` index plus 26 focused skills listed below.
 - **Skill authoring:** `/create-skill`.
 
