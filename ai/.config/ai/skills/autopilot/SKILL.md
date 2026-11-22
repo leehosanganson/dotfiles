@@ -36,9 +36,13 @@ Use for substantive multi-step engineering work or when the user invokes autopil
 The main agent is the **Lead** and owns the lifecycle and active stage. It
 clarifies the user's goal and decisions, selects the playbook and current stage,
 and performs the stage work. The Lead retains sequencing, acceptance criteria,
-approval gates, integration and reconciliation, and final verification. Delegate
-only bounded, useful tasks when they reduce effort or add independent evidence.
-Contributors receive a clear brief with relevant playbook and skill names,
+approval gates, integration and reconciliation, and final verification. Actively look for bounded contributions that can
+proceed independently. When multiple safe, independently verifiable slices
+exist and parallel work is likely to improve elapsed time or evidence quality,
+prefer dispatching them in parallel rather than handling them serially or alone.
+Delegate only when the benefit is proportionate to coordination cost; do not
+split work merely to maximize agent count. Contributors receive a clear brief
+with relevant playbook and skill names,
 context, exact scope and exclusions, dependencies, acceptance criteria,
 verification, and permitted actions. They load applicable guidance, return
 concise findings or work with evidence, and do not need to spawn or delegate to
@@ -65,15 +69,18 @@ resolve conflicts using current evidence, and choose or confirm the next step.
    route safely. Select the playbook, stage guidance, and relevant capabilities
    and principles for the main agent's work. Do not read unrelated playbooks,
    stage skills, capabilities, tools, or files.
-3. **Own stage work; delegate bounded contributions.** The main agent loads
-   relevant guidance and performs each active stage. Delegate only bounded tasks
-   that are useful and proportionate to their coordination cost. Give each
-   contributor the relevant playbook and skill names, evidence, exact scope and
-   exclusions, dependencies, acceptance criteria, constraints, permitted actions,
-   and requested evidence; instruct them to load their own guidance. Do not hand
-   off an entire stage. Contributors do not need to delegate. Never parallelize
-   dependent stages; parallelize only independent contributions with separate
-   scopes. Do not preload later-stage guidance.
+3. **Own stage work; prefer parallel bounded contributions.** The main agent
+   loads relevant guidance and performs each active stage. Look for multiple
+   bounded, independently verifiable tasks; when they can safely proceed in
+   parallel and the expected time or evidence benefit justifies coordination,
+   prefer parallel contributors over serial handling. Give each contributor
+   the relevant playbook and skill names, evidence, exact scope and exclusions,
+   dependencies, acceptance criteria, constraints, permitted actions, and
+   requested evidence; instruct them to load their own guidance. Do not hand off
+   an entire stage. Contributors do not need to delegate. Never parallelize
+   dependent tasks, conflicting writes, or work with unresolved dependencies.
+   Keep tasks with the main agent when splitting adds more coordination than
+   value. Do not preload later-stage guidance.
 4. **Track concrete work.** For each substantive task with a lifecycle, use the
    harness's native todo mechanism to record concrete work in this form:
    `(Task Name) - Stage (Plan/Implement/Test/...): (Description)`. Include
@@ -210,7 +217,11 @@ Use for substantive multi-step engineering work with a lifecycle. Keep simple qu
 
 ## Speed
 
-Load only the routing and stage guidance needed now. Use bounded contributors only when they add useful independent work or evidence; avoid excess delegation and indefinite polling.
+Load only the routing and stage guidance needed now. Prefer parallel bounded
+contributors when useful independent work or evidence can be produced safely;
+keep work serial or with the main agent when it is coupled, risky to split, or
+coordination outweighs the benefit. Avoid excess delegation and indefinite
+polling.
 
 ## Edge
 

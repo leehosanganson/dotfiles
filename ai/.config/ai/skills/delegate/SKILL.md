@@ -10,7 +10,7 @@ description: >-
 
 ## When
 
-Use for multi-step work when bounded contributor tasks can reduce effort or add independent evidence. Do not use delegation for planning-only work, single-step tasks, whole stages, or work too tightly coupled to split.
+Use for multi-step work when bounded contributor tasks can reduce effort or add independent evidence. Prefer parallel contributors when multiple safe, independently verifiable tasks can proceed at once and the time or evidence benefit justifies coordination. Do not use delegation for planning-only work, single-step tasks, whole stages, or work too tightly coupled to split.
 
 ## Strict
 
@@ -19,7 +19,7 @@ The main agent owns the lifecycle and each active stage. Use the current runtime
 ## Steps
 
 1. Read project instructions, relevant documentation, architecture, and conventions. Clarify ambiguities; state assumptions and measurable success criteria.
-2. Draft plausible bounded tasks. Identify dependencies, shared files/state, context-transfer cost, and task risk. Choose a proportionate strategy: main-agent-only, one bounded contributor, parallel contributors, or serial contributors. Parallelize only independent tasks likely to save meaningful time. Delegate serial work only when it removes enough effort or improves the time/cost tradeoff. Keep work with the main agent when tasks are weakly bounded or coordination cost outweighs the benefit.
+2. Draft plausible bounded tasks. Identify dependencies, shared files/state, context-transfer cost, and task risk. Choose a proportionate strategy: main-agent-only, one bounded contributor, parallel contributors, or serial contributors. Prefer parallel contributors for independent tasks likely to save meaningful time or add independent evidence; do not default to serial handling when safe parallel slices are available. Delegate serial work only when it removes enough effort or improves the time/cost tradeoff. Keep work with the main agent when tasks are weakly bounded or coordination cost outweighs the benefit.
 3. When the speed/cost tradeoff is genuinely uncertain and a bounded decision capability is available, consult it once with the evidence: which strategy fits, whether delegation is likely to reduce elapsed time, and whether it is likely to reduce total model cost. Include candidate tasks, model assignments, and coordination overhead. Treat the answer as advice, not authorization. Skip this step for obvious choices.
 4. Split only into independently testable tasks with explicit interfaces, permitted files/actions, exclusions, dependencies, risks, and verification. Include implementation and tests in a contribution where applicable. Assign one owner per mutable file or state; serialize conflicting work. Do not delegate tasks with unresolved dependencies.
 5. Give each contributor a brief with the goal, context, exact scope and exclusions, dependencies, acceptance criteria, verification, permitted files/actions, assumptions, and risks. Name the relevant playbook, skills, and `principle-*` skills; direct contributors to load and apply their own guidance rather than relying on copied summaries. Assign implementation and independent-review contributions when useful. Select models using runtime configuration; reserve stronger reasoning for ambiguous or high-risk work and final review.
@@ -41,7 +41,7 @@ Use for work with independently useful and verifiable tasks. Keep the work with 
 
 ## Speed
 
-Use the smallest useful delegation plan. Do not parallelize dependent tasks or delegate merely to satisfy a checklist.
+Use the smallest useful delegation plan, but prefer useful parallel work over serial execution when tasks are independent and safe to split. Do not parallelize dependent tasks or delegate merely to satisfy a checklist.
 
 ## Edge
 
