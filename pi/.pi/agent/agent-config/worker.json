@@ -1,5 +1,5 @@
 {
   "mode": "subagent",
-  "model": "litellm/openrouter/gpt-6-luna",
+  "model": "litellm/chatgpt/gpt-6.2-sol",
   "steps": 70
 }

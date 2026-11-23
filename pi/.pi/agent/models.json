@@ -31,6 +31,23 @@
           "maxTokens": 16384
         },
         {
+          "id": "chatgpt/gpt-6-luna",
+          "name": "chatgpt/gpt-6-luna",
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "off": null,
+            "minimal": null,
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": null,
+            "max": null
+          },
+          "input": ["text"],
+          "contextWindow": 256000,
+          "maxTokens": 16384
+        },
+        {
           "id": "chatgpt/gpt-6.2-sol",
           "name": "chatgpt/gpt-6.2-sol",
           "reasoning": true,
