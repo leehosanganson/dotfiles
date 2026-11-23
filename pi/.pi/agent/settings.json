@@ -2,11 +2,13 @@
   "lastChangelogVersion": "1.3.0",
   "theme": "dark",
   "defaultProvider": "litellm",
-  "defaultModel": "openrouter/gpt-6-luna",
+  "defaultModel": "chatgpt/gpt-6.2-sol",
   "defaultProjectTrust": "true",
   "enabledModels": [
     "openrouter/deepseek-v4-flash",
     "openrouter/gpt-6-luna",
+    "chatgpt/gpt-6.2-sol",
+    "chatgpt/gpt-6.2-astra",
     "unsloth/qwen-3.8"
   ],
   "powerline": {
@@ -23,9 +25,6 @@
   ],
   "defaultThinkingLevel": "medium",
   "outputStyle": "eli5.md",
-  "defaultTools": [
-    "+codemode",
-    "+system_one"
-  ],
+  "defaultTools": ["+codemode", "+system_one"],
   "hideThinkingBlock": true
 }

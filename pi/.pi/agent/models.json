@@ -1,7 +1,7 @@
 {
   "providers": {
     "litellm": {
-      "baseUrl": "https://litellm.leehosanganson.dev/v1",
+      "baseUrl": "https://litellm.homelab.leehosanganson.dev/v1",
       "api": "openai-completions",
       "apiKey": "!tr -d '\\r\\n' < \"$HOME/.config/sops-nix/secrets/litellm-pi-api-key\"",
       "models": [
@@ -16,6 +16,40 @@
         {
           "id": "openrouter/gpt-6-luna",
           "name": "openrouter/gpt-6-luna",
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "off": null,
+            "minimal": null,
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": null,
+            "max": null
+          },
+          "input": ["text"],
+          "contextWindow": 256000,
+          "maxTokens": 16384
+        },
+        {
+          "id": "chatgpt/gpt-6.2-sol",
+          "name": "chatgpt/gpt-6.2-sol",
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "off": null,
+            "minimal": null,
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": null,
+            "max": null
+          },
+          "input": ["text"],
+          "contextWindow": 256000,
+          "maxTokens": 16384
+        },
+        {
+          "id": "chatgpt/gpt-6.2-astra",
+          "name": "chatgpt/gpt-6.2-astra",
           "reasoning": true,
           "thinkingLevelMap": {
             "off": null,
