@@ -38,7 +38,9 @@ meaningful documentation impact or for unrelated standalone writing tasks.
    dashboards, and related configuration when present.
 3. Decide which references are authoritative and actually impacted. Consider:
    - inventories and descriptions of components or features;
-   - operational docs or runbooks affected by changed behavior;
+   - operational docs or runbooks affected by changed behavior; use
+     /create-runbook to write or revise a procedure for a specific scenario
+     with ordered steps and a verifiable outcome, not for general topic docs;
    - architecture diagrams and their source files as well as generated output,
      when applicable;
    - dashboard entries when the change affects a component represented there;
