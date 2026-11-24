@@ -100,16 +100,20 @@ async function harness(sessionManager = SessionManager.inMemory()) {
     });
   };
   const command = (args) => goal.commands.get("goal").handler(args, ctx);
-  const update = (action, revision = 1, reason = "Checks passed") =>
-    goal.tools
-      .get("goal_update")
-      .definition.execute(
-        "test",
-        { goalId: 1, action, revision, reason },
-        ctx.signal,
-        undefined,
-        ctx,
-      );
+  const goalUpdate = goal.tools.get("goal_update").definition;
+  const update = (
+    action,
+    revision = 1,
+    reason = "Checks passed",
+    { goalId = 1, signal = ctx.signal } = {},
+  ) =>
+    goalUpdate.execute(
+      "test",
+      { goalId, action, revision, reason },
+      signal,
+      undefined,
+      ctx,
+    );
   const reply = async (text, source = "interactive") => {
     const message = {
       role: "user",
@@ -133,6 +137,7 @@ async function harness(sessionManager = SessionManager.inMemory()) {
     settle,
     compact,
     command,
+    goalUpdate,
     update,
     reply,
     context,
@@ -209,6 +214,107 @@ test("only explicit early revision reopens definition; stale calls cannot alter 
   assert.match(h.notices.at(-1), /Unit tests pass/);
   await h.command("stop");
   assert.equal(await h.settle(), undefined);
+});
+
+test("blocked guidance shows the blocker and explains when agent resume is allowed", async () => {
+  const h = await harness();
+  await h.command("Verify the build");
+  await h.update("define", 1, "The build exits zero");
+  await h.update("blocked", 1, "Build runner is offline");
+  const guidance = (await h.context()).messages.find(
+    (message) => message.customType === "goal-guidance",
+  ).content;
+  assert.match(guidance, /Build runner is offline/);
+  assert.match(guidance, /goal_update.*goalId 1, revision 1.*action "resume"/);
+  assert.match(guidance, /concrete evidence.*safe in-scope alternative/);
+  assert.match(guidance, /otherwise.*remain blocked/i);
+  assert.match(guidance, /resume.*not approval/i);
+});
+
+test("agent resume preserves the goal and restores continuation in the current run", async () => {
+  const h = await harness();
+  await h.command("Verify the build");
+  await h.update("define", 1, "The build exits zero");
+  await h.update("blocked", 1, "Build runner is offline");
+  assert.equal(await h.settle(), undefined);
+  await h.compact("manual");
+  await tick();
+  assert.equal(h.sent.length, 1);
+
+  h.ctx.isIdle = () => false;
+  await h.emit("before_agent_start");
+  const result = await h.update(
+    "resume",
+    1,
+    "The build runner is online again",
+  );
+  assert.equal(result.isError, false, result.content[0].text);
+  assert.ok(h.goalUpdate.parameters.properties.action.enum.includes("resume"));
+  assert.equal((await h.settle()).continue, true);
+  await h.command("");
+  assert.match(h.notices.at(-1), /active.*Verify the build/i);
+  assert.match(h.notices.at(-1), /Done criteria: The build exits zero/);
+  assert.doesNotMatch(h.notices.at(-1), /Build runner is offline/);
+  h.ctx.isIdle = () => true;
+  await tick();
+  assert.equal(h.sent.length, 1);
+  assert.equal((await h.update("complete", 1)).isError, true);
+  assert.equal((await h.update("complete", 2)).isError, false);
+});
+
+test("agent resume rejects invalid states and invalid blocked updates", async () => {
+  const h = await harness();
+  await h.command("Verify the build");
+  h.ctx.isIdle = () => false;
+  const reason = "The build runner is online again";
+  assert.equal((await h.update("resume", 1, reason)).isError, true, "pending");
+  await h.update("define", 1, "The build exits zero");
+  assert.equal((await h.update("resume", 1, reason)).isError, true, "active");
+  await h.update("blocked", 1, "Build runner is offline");
+
+  for (const [name, args] of [
+    ["stale revision", [0, reason]],
+    ["wrong goal", [1, reason, { goalId: 2 }]],
+    ["blank reason", [1, " \n "]],
+    ["cancelled tool", [1, reason, { signal: AbortSignal.abort() }]],
+  ]) {
+    assert.equal((await h.update("resume", ...args)).isError, true, name);
+  }
+  h.ctx.signal = AbortSignal.abort();
+  const cancelled = await h.update("resume", 1, reason, {
+    signal: new AbortController().signal,
+  });
+  assert.equal(cancelled.isError, true, "cancelled context");
+  h.ctx.signal = undefined;
+  h.ctx.isIdle = () => true;
+  assert.equal((await h.update("resume", 1, reason)).isError, true, "idle");
+  await h.command("");
+  assert.match(h.notices.at(-1), /blocked.*Verify the build/i);
+  assert.match(h.notices.at(-1), /Build runner is offline/);
+  assert.equal(await h.settle(), undefined);
+
+  h.ctx.isIdle = () => false;
+  assert.equal((await h.update("resume", 1, reason)).isError, false);
+  await h.update("complete", 2);
+  assert.equal(
+    (await h.update("resume", 2, reason)).isError,
+    true,
+    "completed",
+  );
+  assert.equal(await h.settle(), undefined);
+
+  const stopped = await harness();
+  await stopped.command("Verify the build");
+  await stopped.update("define", 1, "The build exits zero");
+  await stopped.update("blocked", 1, "Build runner is offline");
+  await stopped.command("stop");
+  stopped.ctx.isIdle = () => false;
+  assert.equal(
+    (await stopped.update("resume", 1, reason)).isError,
+    true,
+    "stopped",
+  );
+  assert.equal(await stopped.settle(), undefined);
 });
 
 test("threshold and overflow use the current run without an extra idle kick", async () => {

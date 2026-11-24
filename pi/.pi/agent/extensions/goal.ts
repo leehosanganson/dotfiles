@@ -49,17 +49,34 @@ function canRevise(ctx: ExtensionContext): boolean {
 
 const GoalUpdateParams = Type.Object({
   goalId: Type.Number({
-    description: "The ID of the active goal being updated",
+    description: "The ID of the goal being updated",
   }),
   revision: Type.Integer({
     description: "The current goal revision from the goal instructions",
   }),
-  action: StringEnum(["define", "complete", "blocked"] as const),
+  action: StringEnum(["define", "complete", "blocked", "resume"] as const),
   reason: Type.String({
     description:
-      "Verifiable done criteria (define), verification (complete), or blocker (blocked)",
+      "Verifiable done criteria (define), verification (complete), blocker (blocked), or concrete evidence that the blocker is resolved or a safe in-scope alternative exists (resume)",
   }),
 });
+
+function resumedGoal({
+  sessionId,
+  revision,
+  text,
+  criteria,
+}: Pick<GoalState, "sessionId" | "revision" | "text"> & {
+  criteria: string;
+}): GoalState {
+  return {
+    sessionId,
+    revision: revision + 1,
+    text,
+    criteria,
+    status: "active",
+  };
+}
 
 function compactedReplies(ctx: ExtensionContext, goal: GoalState): string[] {
   const kept = new Set(
@@ -112,6 +129,13 @@ function goalPrompt(goal: GoalState, replies: string[] = []): string {
         : []),
       `If clear, call goal_update with ${key}, action "define", and verifiable done criteria as reason. No extra confirmation is needed if the criteria follow from what the user asked.`,
       "If something important is unclear, ask focused clarification questions in your reply and wait. If the reply still leaves a gap, ask again and wait. Do not start goal work before definition.",
+    ].join("\n\n");
+  }
+  if (goal.status === "blocked") {
+    return [
+      `Blocked goal #${GOAL_ID} (revision ${goal.revision}): ${goal.text}\nDone criteria: ${goal.criteria}\nBlocker: ${goal.reason}`,
+      `In this already-running turn, only if concrete evidence shows the blocker is resolved or there is a safe in-scope alternative, call goal_update with ${key}, action "resume", and that evidence as reason. Otherwise, remain blocked and respond to the user's current message. Do not poll for changes or start a retry run.`,
+      "Goal resume is not approval. Respect the latest user instructions, and never bypass safety checks or authorization requirements.",
     ].join("\n\n");
   }
   if (goal.status !== "active") {
@@ -196,16 +220,9 @@ export default function (pi: ExtensionAPI) {
           ctx.ui.notify("No active or blocked goal to resume", "info");
           return;
         }
-        const { sessionId, revision, text, criteria } = goal;
         startGoalTurn(
           ctx,
-          {
-            sessionId,
-            revision: revision + 1,
-            text,
-            criteria,
-            status: "active",
-          },
+          resumedGoal(goal),
           "Resume the current goal without changing the done criteria.",
         );
         return;
@@ -258,7 +275,7 @@ export default function (pi: ExtensionAPI) {
     name: "goal_update",
     label: "Update goal",
     description:
-      "Define done criteria only for a pending goal, verify completion, or pause on a material blocker.",
+      "Define a pending goal, verify completion, pause on a blocker, or resume a blocked goal with concrete evidence in the current run. Resume does not grant approval.",
     parameters: GoalUpdateParams,
     async execute(_toolCallId, params, signal, _onUpdate, ctx) {
       const goal = readGoal(ctx);
@@ -282,7 +299,7 @@ export default function (pi: ExtensionAPI) {
       const reason = params.reason.trim();
       if (!reason)
         return result(
-          "Provide criteria, verification, or a blocker explanation.",
+          "Provide criteria, verification, a blocker explanation, or evidence to resume.",
           true,
         );
       if (params.action === "define") {
@@ -290,6 +307,18 @@ export default function (pi: ExtensionAPI) {
           return result("The goal is not open for definition.", true);
         save({ ...goal, criteria: reason, status: "active" });
         return result(`Goal #${GOAL_ID} defined. Done criteria: ${reason}`);
+      }
+      if (params.action === "resume") {
+        if (goal.status !== "blocked" || ctx.isIdle())
+          return result(
+            "Only a blocked goal can be resumed in a running turn.",
+            true,
+          );
+        const resumed = resumedGoal(goal);
+        save(resumed);
+        return result(
+          `Goal #${GOAL_ID} resumed at revision ${resumed.revision}.`,
+        );
       }
       if (goal.status !== "active")
         return result("The goal is not active; no state was changed.", true);
