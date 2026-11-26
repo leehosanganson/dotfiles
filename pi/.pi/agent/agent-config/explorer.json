@@ -1,5 +1,0 @@
-{
-  "mode": "subagent",
-  "model": "litellm/chatgpt/gpt-6-luna",
-  "steps": 50
-}

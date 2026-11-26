@@ -1,4 +1,5 @@
 ---
+name: worker
 description: Implements one delegated task item within the assigned scope and reports the completed work.
 ---
 

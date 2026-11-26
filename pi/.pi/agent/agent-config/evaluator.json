@@ -1,5 +1,0 @@
-{
-  "mode": "subagent",
-  "model": "litellm/chatgpt/gpt-6.2-sol",
-  "steps": 100
-}

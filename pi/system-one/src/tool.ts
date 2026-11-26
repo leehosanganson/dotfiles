@@ -1155,6 +1155,10 @@ export function buildSystemOneTool(deps: {
       "For system_one choice questions, the keys of criteria are the available choices - preserve user-specified labels and use null values when labels are self-explanatory; never add a separate options field.",
 
       "Use system_one when you need to make fast decisions in bulk",
+
+      "When the pi-subagents tool is available, each single-child launch is automatically scored by Jev; do not provide a worker model yourself. Keep ordinary launches as single children. For a task with risk at least 0.70, the router replaces the requested child with a planning-only handoff to litellm/chatgpt/gpt-6.2-astra. Read and assess that plan before deciding whether to implement it. Only then label a later implementation call exactly `plan reviewed`; this records the main session's review, not separate user approval. If Jev is unavailable or uncertain, no worker starts.",
+
+      "Do not use parallel task arrays, chains, or workflow scripts with subagent: Jev routing currently approves one child per call. To run workers in parallel, make separate single-child calls in the same assistant turn; each is scored and routed independently.",
     ],
 
     prepareArguments: (args) => prepareSystemOneArgs(args),

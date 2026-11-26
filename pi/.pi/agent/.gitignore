@@ -3,4 +3,5 @@ web-search-cache
 agents-active.json
 trust.json
 powerline-footer/
+pi-subagents/
 models-store.json

@@ -1,4 +1,5 @@
 ---
+name: explorer
 description: Read-only, focused exploration of repository files and documents for the caller.
 ---
 

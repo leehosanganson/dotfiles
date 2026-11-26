@@ -22,10 +22,43 @@
     "npm:pi-powerline-footer",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:pi-web-access",
+    "npm:pi-subagents@0.90.0",
     "../../dotfiles/pi/system-one"
   ],
   "defaultThinkingLevel": "medium",
   "outputStyle": "eli5.md",
   "defaultTools": ["+codemode", "+system_one"],
-  "hideThinkingBlock": true
+  "hideThinkingBlock": true,
+  "subagents": {
+    "maxSubagentDepth": 1,
+    "modelScope": {
+      "enforce": true,
+      "strict": true,
+      "allow": [
+        "litellm/openrouter/gpt-6-luna",
+        "litellm/openrouter/deepseek-v4-flash",
+        "litellm/chatgpt/gpt-6-luna",
+        "litellm/chatgpt/gpt-6.2-sol",
+        "litellm/chatgpt/gpt-6.2-astra",
+        "litellm/unsloth/qwen-3.8"
+      ]
+    },
+    "agentOverrides": {
+      "explorer": {
+        "tools": ["read", "ls"],
+        "subagentOnlyExtensions": [
+          "~/dotfiles/pi/system-one/src/evaluator-file-guard.ts"
+        ]
+      },
+      "evaluator": {
+        "tools": ["read", "ls"],
+        "subagentOnlyExtensions": [
+          "~/dotfiles/pi/system-one/src/evaluator-file-guard.ts"
+        ]
+      },
+      "coder": { "disabled": true },
+      "content": { "disabled": true },
+      "homelab": { "disabled": true }
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import type { ExtensionToolContext } from "@earendil-works/pi-coding-agent";
+import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { readFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { isAbsolute, join } from "node:path";
@@ -50,11 +50,11 @@ function nativeFailure(
 
 class PiNativeProvider implements SystemOneProvider {
   readonly id = "pi-native";
-  private readonly ctx: ExtensionToolContext;
+  private readonly ctx: ExtensionContext;
   private readonly timeoutMs: number;
   private readonly onDispatch?: () => void;
   constructor(
-    ctx: ExtensionToolContext,
+    ctx: ExtensionContext,
     timeoutMs: number,
     onDispatch?: () => void,
   ) {
@@ -132,7 +132,7 @@ class PiNativeProvider implements SystemOneProvider {
         ? request.state
         : { state: request.state };
     let result: Awaited<
-      ReturnType<ExtensionToolContext["modelRegistry"]["classify"]>
+      ReturnType<ExtensionContext["modelRegistry"]["classify"]>
     >;
     try {
       this.onDispatch?.();
@@ -303,13 +303,13 @@ class DeclaredModelProvider implements SystemOneProvider {
 class AutoSystemOneProvider implements SystemOneProvider {
   readonly id = "auto";
   private readonly session: SessionConfig;
-  private readonly ctx: ExtensionToolContext;
+  private readonly ctx: ExtensionContext;
   private readonly onRoute?: RouteObserver;
   private readonly onDispatch?: () => void;
   private readonly onHttpStatus?: (status: number) => void;
   constructor(
     session: SessionConfig,
-    ctx: ExtensionToolContext,
+    ctx: ExtensionContext,
     onRoute?: RouteObserver,
     onDispatch?: () => void,
     onHttpStatus?: (status: number) => void,
@@ -358,7 +358,7 @@ class AutoSystemOneProvider implements SystemOneProvider {
 /** Resolve active-model credentials and endpoint together at call time. */
 async function resolvePiModelProvider(
   session: SessionConfig,
-  ctx: ExtensionToolContext,
+  ctx: ExtensionContext,
 ): Promise<SystemOneProvider> {
   const model = ctx.model;
   if (!model?.baseUrl || !model.id)
@@ -406,7 +406,7 @@ async function resolvePiModelProvider(
 /** Resolve credentials at call time. Custom endpoints never inherit Pi credentials. */
 export async function resolveSessionProvider(
   session: SessionConfig,
-  ctx: ExtensionToolContext,
+  ctx: ExtensionContext,
   onRoute?: RouteObserver,
   onDispatch?: () => void,
   onHttpStatus?: (status: number) => void,

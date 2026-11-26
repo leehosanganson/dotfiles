@@ -28,6 +28,10 @@ PI_PACKAGE_DIR=/path/to/pi-package node --test pi/tests/goal.test.mjs
 
 These tests use Pi's extension loader and session manager. They do not call a model or run the interactive UI.
 
+## Background subagents
+
+Pi uses pinned `pi-subagents` workers with Jev risk and model routing. See [subagents.md](subagents.md) for the routing policy, planner handoff, and LiteLLM quota-fallback limits.
+
 ## Output styles
 
 The user-level `outputStyle` setting selects an optional markdown output style by
