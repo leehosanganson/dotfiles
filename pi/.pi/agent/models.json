@@ -27,7 +27,7 @@
             "max": null
           },
           "input": ["text"],
-          "contextWindow": 256000,
+          "contextWindow": 128000,
           "maxTokens": 16384
         },
         {
@@ -44,7 +44,7 @@
             "max": null
           },
           "input": ["text"],
-          "contextWindow": 256000,
+          "contextWindow": 128000,
           "maxTokens": 16384
         },
         {
@@ -61,7 +61,7 @@
             "max": null
           },
           "input": ["text"],
-          "contextWindow": 256000,
+          "contextWindow": 128000,
           "maxTokens": 16384
         },
         {
@@ -78,7 +78,7 @@
             "max": null
           },
           "input": ["text"],
-          "contextWindow": 256000,
+          "contextWindow": 128000,
           "maxTokens": 16384
         },
         {
