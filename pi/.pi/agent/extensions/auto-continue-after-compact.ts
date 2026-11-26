@@ -19,7 +19,6 @@
  */
 
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { readGoal } from "./goal.js";
 
 const CONTINUATION_PROMPT =
   "The conversation context was compacted to reclaim space. Before continuing, re-read any " +
@@ -43,7 +42,7 @@ export default function (pi: ExtensionAPI) {
 		continuationTimer = undefined;
 		const pending = pendingContinuation;
 		if (!pending) return;
-		if (!enabled || readGoal(pending.ctx)) {
+		if (!enabled) {
 			pendingContinuation = undefined;
 			return;
 		}
@@ -65,8 +64,7 @@ export default function (pi: ExtensionAPI) {
 	};
 
 	const maybeContinueAfterCompact = (reason: string, willRetry: boolean, ctx: ExtensionContext) => {
-		// Goal sessions own continuation, including when the goal is waiting or terminal.
-		if (!enabled || readGoal(ctx)) return;
+		if (!enabled) return;
 
 		// Overflow recovery already retries the aborted turn automatically.
 		if (willRetry) return;

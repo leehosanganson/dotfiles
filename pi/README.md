@@ -2,17 +2,15 @@
 
 ## Session goals
 
-- `/goal <request>` starts the session's one goal. Pi defines checkable done criteria from your request and asks if anything important is unclear. Reply in chat; Pi waits rather than continuing on its own until the goal is defined.
-- `/goal` shows the request, status, done criteria, and any completion or blocker note.
-- `/goal revise <request>` replaces the request and reopens definition on a pending or active goal, only before the first compaction since goal creation.
-- `/goal stop` stops a pending, active, or blocked goal. It prevents goal-driven continuation but does not interrupt a turn already in progress.
-- `/goal resume` restarts an active or blocked goal with the same done criteria. Use it after an interruption when you want Pi to continue. Stopped and completed goals cannot be restarted or replaced in the same session.
+- `/goal <text>` sets or replaces the session's focus.
+- `/goal` shows the current focus.
+- `/goal clear` removes the focus for future requests. It does not erase session history.
 
-The `/goal` commands that start, revise, or resume a goal require Pi to be idle with no queued messages. If the command is refused, retry when Pi is idle; it will not have changed the goal. An active goal continues between turns and after `/compact` unless interrupted or superseded by new input. `/auto-continue` controls only the generic continuation for sessions without a goal.
+The goal is background context for each model request. Your current request takes priority. Setting a goal does not send a message or start a turn. `/auto-continue` controls continuation after compaction independently of the goal.
 
-A blocked goal does not continue on its own. During an already-running turn, Pi can use `goal_update` with `resume` if it has concrete evidence that the blocker is resolved or a safe alternative within the original scope exists. The tool requires a nonempty reason, but the model judges whether the cited evidence is sufficient. That judgment is not an authorization check. This keeps the request and done criteria unchanged. If neither condition is met, the goal stays blocked. Resume does not grant approval or bypass safety checks, and Pi does not poll or start a retry while idle.
+Focus survives compaction and reopening a saved session. `/tree` does not roll it back, and a fork does not inherit it. Pi does not save a new session to disk until it has a chat message.
 
-Goals survive reopening the session. `/tree` does not roll back goal state; a fork is a new session with no goal. While defining a goal, Pi can recover verbatim text replies hidden by compaction from the current branch and goal revision. A summary alone is not authorization: if the original request and replies do not settle the scope, Pi should ask again.
+In an older session, Pi uses only the text of the latest legacy goal if it was pending, active, or blocked. If it was completed or stopped, Pi does not use it or look for an earlier goal.
 
 ### Run the goal tests
 

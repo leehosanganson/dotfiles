@@ -53,7 +53,6 @@ const extension = (name) =>
   fileURLToPath(new URL(`../.pi/agent/extensions/${name}.ts`, import.meta.url));
 
 async function harness(sessionManager = SessionManager.inMemory()) {
-  // Match the normal load order: the generic extension sees session_compact first.
   const { extensions, errors, runtime } = await loadExtensions(
     [extension("auto-continue-after-compact"), extension("goal")],
     process.cwd(),
@@ -64,7 +63,6 @@ async function harness(sessionManager = SessionManager.inMemory()) {
   const ctx = {
     sessionManager,
     hasUI: true,
-    signal: undefined,
     isIdle: () => true,
     hasPendingMessages: () => false,
     ui: { notify: (text) => notices.push(text) },
@@ -73,449 +71,188 @@ async function harness(sessionManager = SessionManager.inMemory()) {
     sessionManager.appendCustomEntry(type, data);
   runtime.sendUserMessage = (text) => sent.push(text);
   runtime.sendMessage = (message) => sent.push(message.content);
-  const [, goal] = extensions;
-  const emit = async (name, event = {}) => {
+  runtime.getActiveTools = () => [];
+  const [generic, goal] = extensions;
+  const command = (args) => goal.commands.get("goal").handler(args, ctx);
+  const emit = async (ext, name, event) => {
     let result;
-    for (const ext of extensions) {
-      for (const handler of ext.handlers.get(name) ?? []) {
-        result = (await handler({ type: name, ...event }, ctx)) ?? result;
-      }
+    for (const handler of ext.handlers.get(name) ?? []) {
+      result = (await handler({ type: name, ...event }, ctx)) ?? result;
     }
     return result;
   };
-  const settle = (overrides = {}) =>
-    emit("agent_before_settle", {
-      outcome: "completed",
-      entries: [],
-      continue: false,
-      context: { pendingMessages: [], canContinue: false },
-      ...overrides,
-    });
-  const compact = (reason, willRetry = false, summary = "summary") => {
-    const id = sessionManager.appendCompaction(summary, null, 1000);
-    return emit("session_compact", {
-      reason,
-      willRetry,
-      compactionEntry: sessionManager.getEntry(id),
-    });
-  };
-  const command = (args) => goal.commands.get("goal").handler(args, ctx);
-  const goalUpdate = goal.tools.get("goal_update").definition;
-  const update = (
-    action,
-    revision = 1,
-    reason = "Checks passed",
-    { goalId = 1, signal = ctx.signal } = {},
-  ) =>
-    goalUpdate.execute(
-      "test",
-      { goalId, action, revision, reason },
-      signal,
-      undefined,
-      ctx,
-    );
-  const reply = async (text, source = "interactive") => {
-    const message = {
-      role: "user",
-      content: [{ type: "text", text }],
-      timestamp: Date.now(),
-    };
-    await emit("input", { text, source });
-    const result = await emit("message_end", { message });
-    return sessionManager.appendMessage(result?.message ?? message);
-  };
-  const context = () =>
-    emit("context", {
-      messages: sessionManager.buildSessionProjection().messages,
-    });
-  await emit("session_start");
   return {
     ctx,
     sent,
-    notices,
-    emit,
-    settle,
-    compact,
     command,
-    goalUpdate,
-    update,
-    reply,
-    context,
+    show: async () => {
+      await command("");
+      return notices.at(-1);
+    },
+    toggle: (args) => generic.commands.get("auto-continue").handler(args, ctx),
+    context: async (
+      messages = sessionManager.buildSessionProjection().messages,
+    ) => (await emit(goal, "context", { messages }))?.messages ?? messages,
+    goalTools: goal.tools,
+    settle: () =>
+      emit(goal, "agent_before_settle", {
+        outcome: "completed",
+        entries: [],
+        continue: false,
+        context: { pendingMessages: [], canContinue: false },
+      }),
+    compact: async (reason, willRetry = false) => {
+      const id = sessionManager.appendCompaction(
+        "Earlier chat summary",
+        null,
+        1000,
+      );
+      const event = {
+        reason,
+        willRetry,
+        compactionEntry: sessionManager.getEntry(id),
+      };
+      await emit(generic, "session_compact", event);
+      await emit(goal, "session_compact", event);
+    },
   };
 }
 
 const tick = () => delay(20);
+const user = (content) => ({ role: "user", content, timestamp: Date.now() });
 
-test("a completed goal cannot be replaced or resurrected on an older /tree branch or reload", async () => {
+async function assertFocus(h, text) {
+  assert.match(await h.show(), new RegExp(text));
+  const messages = h.ctx.sessionManager.buildSessionProjection().messages;
+  const context = await h.context(messages);
+  const focus = context.filter((message) => message.role === "custom");
+  assert.equal(focus.length, 1);
+  assert.match(focus[0].content, new RegExp(text));
+  assert.match(focus[0].content, /background.*current request/i);
+  assert.equal(focus[0].display, false);
+  assert.deepEqual(context.slice(1), messages);
+}
+
+async function assertNoFocus(h) {
+  assert.match(await h.show(), /no goal/i);
+  const messages = h.ctx.sessionManager.buildSessionProjection().messages;
+  assert.deepEqual(await h.context(messages), messages);
+}
+
+test("goal commands set, replace, show and clear without sending a message", async () => {
   const h = await harness();
-  const sm = h.ctx.sessionManager;
-  const beforeGoal = sm.appendMessage({
-    role: "user",
-    content: "Prior chat",
-    timestamp: 1,
-  });
-  await h.command("Verify the build");
-  assert.ok(!(await h.update("define", 1, "The build exits zero")).isError);
-  assert.ok(!(await h.update("complete")).isError);
-  sm.branch(beforeGoal);
-  await h.emit("session_tree");
-  const reloaded = await harness(sm);
-  await reloaded.command("");
-  assert.match(reloaded.notices.at(-1), /completed.*Verify the build/i);
-  await reloaded.command("Another goal");
-  assert.deepEqual(reloaded.sent, []);
-  assert.equal(await reloaded.settle(), undefined);
-  assert.equal((await reloaded.update("complete")).isError, true);
-});
-
-test("clarification waits across compaction and ordinary replies can clarify repeatedly before definition", async () => {
-  const h = await harness();
-  await h.command("Fix it");
-  assert.equal((await h.update("complete")).isError, true);
-  assert.equal(await h.settle(), undefined);
-  await h.compact("manual");
-  await tick();
-  assert.equal(h.sent.length, 1);
-  await h.command("revise Something different");
-  assert.equal(h.sent.length, 1);
-  for (const text of ["The build", "Make npm test pass"]) {
-    const message = { role: "user", content: text, timestamp: Date.now() };
-    await h.emit("input", { text, source: "interactive" });
-    const projection = await h.emit("context", { messages: [message] });
-    assert.ok(projection.messages.includes(message));
-    assert.match(JSON.stringify(projection.messages), /clarif/i);
-    assert.equal(await h.settle(), undefined);
-  }
-  assert.ok(!(await h.update("define", 1, "npm test exits zero")).isError);
-  assert.equal(
-    (await h.update("define", 1, "A different criterion")).isError,
-    true,
-  );
-  assert.equal((await h.settle()).continue, true);
-});
-
-test("only explicit early revision reopens definition; stale calls cannot alter the revised goal", async () => {
-  const h = await harness();
-  await h.command("Build the package");
-  await h.update("define", 1, "Build succeeds");
-  await h.command("revise Run tests instead");
-  assert.equal((await h.update("define", 1, "Build succeeds")).isError, true);
-  assert.equal((await h.update("complete", 1)).isError, true);
-  assert.ok(!(await h.update("define", 2, "Unit tests pass")).isError);
-  assert.ok(!(await h.update("blocked", 2, "Human approval needed")).isError);
-  assert.equal(await h.settle(), undefined);
-  await h.compact("manual");
-  await tick();
-  assert.equal(h.sent.length, 2);
-  await h.command("resume");
-  assert.equal(h.sent.length, 3);
-  assert.equal((await h.update("define", 3, "Changed criteria")).isError, true);
-  await h.command("");
-  assert.match(h.notices.at(-1), /Unit tests pass/);
-  await h.command("stop");
-  assert.equal(await h.settle(), undefined);
-});
-
-test("blocked guidance shows the blocker and explains when agent resume is allowed", async () => {
-  const h = await harness();
-  await h.command("Verify the build");
-  await h.update("define", 1, "The build exits zero");
-  await h.update("blocked", 1, "Build runner is offline");
-  const guidance = (await h.context()).messages.find(
-    (message) => message.customType === "goal-guidance",
-  ).content;
-  assert.match(guidance, /Build runner is offline/);
-  assert.match(guidance, /goal_update.*goalId 1, revision 1.*action "resume"/);
-  assert.match(guidance, /concrete evidence.*safe in-scope alternative/);
-  assert.match(guidance, /otherwise.*remain blocked/i);
-  assert.match(guidance, /resume.*not approval/i);
-});
-
-test("agent resume preserves the goal and restores continuation in the current run", async () => {
-  const h = await harness();
-  await h.command("Verify the build");
-  await h.update("define", 1, "The build exits zero");
-  await h.update("blocked", 1, "Build runner is offline");
-  assert.equal(await h.settle(), undefined);
-  await h.compact("manual");
-  await tick();
-  assert.equal(h.sent.length, 1);
-
+  await assertNoFocus(h);
   h.ctx.isIdle = () => false;
-  await h.emit("before_agent_start");
-  const result = await h.update(
-    "resume",
-    1,
-    "The build runner is online again",
-  );
-  assert.equal(result.isError, false, result.content[0].text);
-  assert.ok(h.goalUpdate.parameters.properties.action.enum.includes("resume"));
-  assert.equal((await h.settle()).continue, true);
-  await h.command("");
-  assert.match(h.notices.at(-1), /active.*Verify the build/i);
-  assert.match(h.notices.at(-1), /Done criteria: The build exits zero/);
-  assert.doesNotMatch(h.notices.at(-1), /Build runner is offline/);
+  h.ctx.hasPendingMessages = () => true;
+  const request = user("Answer this current question");
+  h.ctx.sessionManager.appendMessage(request);
+  await h.command("  Review the build  ");
+  assert.deepEqual(h.sent, []);
+  await assertFocus(h, "Review the build");
+  await h.command("Review the tests");
+  await assertFocus(h, "Review the tests");
+  assert.equal(h.goalTools.size, 0);
   h.ctx.isIdle = () => true;
-  await tick();
-  assert.equal(h.sent.length, 1);
-  assert.equal((await h.update("complete", 1)).isError, true);
-  assert.equal((await h.update("complete", 2)).isError, false);
-});
-
-test("agent resume rejects invalid states and invalid blocked updates", async () => {
-  const h = await harness();
-  await h.command("Verify the build");
-  h.ctx.isIdle = () => false;
-  const reason = "The build runner is online again";
-  assert.equal((await h.update("resume", 1, reason)).isError, true, "pending");
-  await h.update("define", 1, "The build exits zero");
-  assert.equal((await h.update("resume", 1, reason)).isError, true, "active");
-  await h.update("blocked", 1, "Build runner is offline");
-
-  for (const [name, args] of [
-    ["stale revision", [0, reason]],
-    ["wrong goal", [1, reason, { goalId: 2 }]],
-    ["blank reason", [1, " \n "]],
-    ["cancelled tool", [1, reason, { signal: AbortSignal.abort() }]],
-  ]) {
-    assert.equal((await h.update("resume", ...args)).isError, true, name);
-  }
-  h.ctx.signal = AbortSignal.abort();
-  const cancelled = await h.update("resume", 1, reason, {
-    signal: new AbortController().signal,
-  });
-  assert.equal(cancelled.isError, true, "cancelled context");
-  h.ctx.signal = undefined;
-  h.ctx.isIdle = () => true;
-  assert.equal((await h.update("resume", 1, reason)).isError, true, "idle");
-  await h.command("");
-  assert.match(h.notices.at(-1), /blocked.*Verify the build/i);
-  assert.match(h.notices.at(-1), /Build runner is offline/);
+  h.ctx.hasPendingMessages = () => false;
   assert.equal(await h.settle(), undefined);
-
-  h.ctx.isIdle = () => false;
-  assert.equal((await h.update("resume", 1, reason)).isError, false);
-  await h.update("complete", 2);
-  assert.equal(
-    (await h.update("resume", 2, reason)).isError,
-    true,
-    "completed",
-  );
-  assert.equal(await h.settle(), undefined);
-
-  const stopped = await harness();
-  await stopped.command("Verify the build");
-  await stopped.update("define", 1, "The build exits zero");
-  await stopped.update("blocked", 1, "Build runner is offline");
-  await stopped.command("stop");
-  stopped.ctx.isIdle = () => false;
-  assert.equal(
-    (await stopped.update("resume", 1, reason)).isError,
-    true,
-    "stopped",
-  );
-  assert.equal(await stopped.settle(), undefined);
+  await h.command("clear");
+  await assertNoFocus(h);
+  assert.deepEqual(h.ctx.sessionManager.buildSessionProjection().messages, [
+    request,
+  ]);
+  assert.deepEqual(h.sent, []);
 });
 
-test("threshold and overflow use the current run without an extra idle kick", async () => {
-  for (const [reason, willRetry] of [
-    ["threshold", false],
-    ["overflow", true],
-    ["overflow", false],
-  ]) {
-    const h = await harness();
-    await h.command("Verify the build");
-    await h.update("define", 1);
-    h.ctx.isIdle = () => false;
-    await h.compact(reason, willRetry);
-    assert.equal((await h.settle()).continue, true);
-    await h.command("revise A new request");
-    assert.equal(h.sent.length, 1);
-    h.ctx.isIdle = () => true;
-    await tick();
-    assert.equal(h.sent.length, 1);
-    assert.equal(
-      await h.settle({ context: { pendingMessages: [{}] } }),
-      undefined,
-    );
-    h.ctx.hasPendingMessages = () => true;
-    assert.equal(await h.settle(), undefined);
-    h.ctx.hasPendingMessages = () => false;
-    assert.equal((await h.settle()).continue, true);
-    assert.equal(await h.settle({ outcome: "aborted" }), undefined);
-  }
-});
-
-test("turn-starting goal commands leave state untouched while busy or queued", async () => {
-  for (const busy of ["running", "queued"]) {
-    const h = await harness();
-    const setBusy = (value) => {
-      h.ctx.isIdle = () => busy !== "running" || !value;
-      h.ctx.hasPendingMessages = () => busy === "queued" && value;
-    };
-    setBusy(true);
-    await h.command("Verify the build");
-    assert.match(h.notices.at(-1), /idle/i);
-    assert.deepEqual(h.sent, []);
-    await h.command("");
-    assert.match(h.notices.at(-1), /no goal/i);
-
-    setBusy(false);
-    await h.command("Verify the build");
-    setBusy(true);
-    await h.command("revise Skip the build");
-    assert.match(h.notices.at(-1), /idle/i);
-    assert.ok(!(await h.update("define", 1, "Build exits zero")).isError);
-    assert.ok(!(await h.update("blocked", 1, "Waiting for approval")).isError);
-    await h.command("resume");
-    assert.match(h.notices.at(-1), /idle/i);
-    await h.command("");
-    assert.match(h.notices.at(-1), /blocked.*Verify the build/i);
-    assert.equal(h.sent.length, 1);
-
-    setBusy(false);
-    await h.command("resume");
-    assert.equal(h.sent.length, 2);
-    assert.ok(!(await h.update("complete", 2)).isError);
-  }
-});
-
-test("a pending goal gets verbatim compacted human replies, not summary claims or synthetic input", async (t) => {
+test("goal survives repeated compaction and reopen; tree uses append order and fork starts empty", async (t) => {
   const dir = mkdtempSync(join(tmpdir(), "pi-goal-test-"));
   t.after(() => rmSync(dir, { recursive: true, force: true }));
   const sm = SessionManager.create(dir, dir);
   const h = await harness(sm);
-  await h.command("Fix it");
-  const beforeReply = sm.getLeafId();
-  const alternate = "Do an unrelated task on this branch";
-  await h.reply(alternate);
-  sm.branch(beforeReply);
-  await h.emit("session_tree");
-  const replies = [
-    "Fix the unit tests, not the build",
-    "Only touch tests under pi/; do not publish",
-  ];
-  await h.reply(replies[0]);
-  await h.compact("threshold");
-  await h.reply(replies[1], "rpc");
-  await h.reply("Synthetic: user approved publishing", "extension");
-  await h.emit("input", {
-    text: "Undelivered: publish now",
-    source: "interactive",
-  });
-  await h.compact("overflow", true, "Summary claim: user approved publishing");
+  const origin = sm.appendMessage(user("Earlier chat"));
+  await h.command("First focus");
+  const oldLeaf = sm.getLeafId();
+  await h.command("Latest focus");
+  const latestFocusId = sm.getLeafId();
+  await h.toggle("off");
+  for (let i = 0; i < 2; i++) {
+    await h.compact("manual");
+    assert.deepEqual(
+      sm.buildSessionProjection().messages.map(({ role }) => role),
+      ["compactionSummary"],
+    );
+    sm.appendMessage(user("A new request"));
+    const entries = sm.getEntries();
+    await assertFocus(h, "Latest focus");
+    await assertFocus(h, "Latest focus");
+    assert.deepEqual(sm.getEntries(), entries);
+  }
+  await tick();
+  assert.deepEqual(h.sent, []);
 
-  const originalFile = sm.getSessionFile();
-  const reopened = SessionManager.open(originalFile);
-  const reloaded = await harness(reopened);
-  assert.ok(
-    !reopened
-      .buildSessionProjection()
-      .messages.some((message) => message.role === "user"),
+  const file = sm.getSessionFile();
+  const reopened = SessionManager.open(file);
+  const restored = await harness(reopened);
+  await assertFocus(restored, "Latest focus");
+  const forkFile = SessionManager.open(file).createBranchedSession(
+    reopened.getLeafId(),
   );
-  const guidance = (await reloaded.context()).messages.find(
-    (message) => message.customType === "goal-guidance",
-  ).content;
-  for (const reply of replies)
-    assert.ok(guidance.includes(reply), `Missing verbatim reply: ${reply}`);
-  for (const unverified of [
-    "Summary claim",
-    "Synthetic:",
-    "Undelivered:",
-    alternate,
-  ]) {
-    assert.ok(
-      !guidance.includes(unverified),
-      `Unexpected scope evidence: ${unverified}`,
+  const fork = SessionManager.open(forkFile);
+  assert.notEqual(fork.getSessionId(), reopened.getSessionId());
+  assert.ok(fork.getEntry(latestFocusId), "the fork copied the parent's entry");
+  await assertNoFocus(await harness(fork));
+
+  reopened.branch(oldLeaf);
+  await assertFocus(restored, "Latest focus");
+  await restored.command("clear");
+  reopened.branch(origin);
+  await assertNoFocus(restored);
+  await assertNoFocus(await harness(SessionManager.open(file)));
+});
+
+test("only the latest legacy goal counts, and only its text becomes focus", async () => {
+  const sm = SessionManager.inMemory();
+  const h = await harness(sm);
+  const sessionId = sm.getSessionId();
+  const legacy = (status) =>
+    sm.appendCustomEntry("goal-state", {
+      sessionId,
+      status,
+      text: `Legacy ${status} request`,
+      revision: 1,
+      criteria: "Old criteria",
+      reason: "Old reason",
+    });
+  for (const status of ["pending", "active", "blocked"]) {
+    legacy(status);
+    await assertFocus(h, `Legacy ${status} request`);
+    assert.doesNotMatch(
+      (await h.context())[0].content,
+      /Old criteria|Old reason/,
     );
   }
-  assert.match(guidance, /(?:do not|never).*summary/i);
-
-  const parent = SessionManager.open(originalFile);
-  const forkFile = parent.createBranchedSession(parent.getLeafId());
-  const fork = await harness(SessionManager.open(forkFile));
-  await fork.command("");
-  assert.match(fork.notices.at(-1), /No goal/);
-  await fork.command("A separate goal");
-  const forkGuidance = (await fork.context()).messages.find(
-    (message) => message.customType === "goal-guidance",
-  ).content;
-  for (const reply of replies) assert.ok(!forkGuidance.includes(reply));
-  assert.ok(
-    !(
-      await reloaded.update(
-        "define",
-        1,
-        "Unit tests under pi/ pass without publishing",
-      )
-    ).isError,
-  );
-  const original = await harness(SessionManager.open(originalFile));
-  await original.command("");
-  assert.match(original.notices.at(-1), /active.*Fix it/i);
+  for (const status of ["completed", "stopped"]) {
+    legacy("active");
+    legacy(status);
+    await assertNoFocus(h);
+  }
+  legacy("pending");
+  await h.command("clear");
+  await assertNoFocus(await harness(sm));
 });
 
-test("manual compaction waits past its first timer and resumes once when idle", async () => {
+test("generic continuation follows its own toggle with a goal present", async () => {
   const h = await harness();
-  await h.command("Verify the build");
-  await h.update("define");
-  h.ctx.isIdle = () => false;
-  await h.compact("manual");
+  await h.command("Passive focus");
+  await assertFocus(h, "Passive focus");
+  await h.toggle("off");
+  await h.compact("threshold");
+  await tick();
+  assert.deepEqual(h.sent, []);
+  await h.toggle("on");
+  await h.compact("threshold");
   await tick();
   assert.equal(h.sent.length, 1);
-  h.ctx.isIdle = () => true;
-  await delay(250);
-  assert.equal(h.sent.length, 2);
-});
-
-test("manual compaction respects cancellation while waiting for idle", async () => {
-  const cancellations = {
-    input: (h) =>
-      h.emit("input", { source: "interactive", text: "New instructions" }),
-    queue: async (h) => {
-      h.ctx.hasPendingMessages = () => true;
-      await delay(150);
-      h.ctx.hasPendingMessages = () => false;
-    },
-    tree: (h) => h.emit("session_tree"),
-    switch: (h) => h.emit("session_before_switch"),
-    fork: (h) => h.emit("session_before_fork"),
-    shutdown: (h) => h.emit("session_shutdown", { reason: "switch" }),
-    stop: (h) => h.command("stop"),
-    aborted: (h) => h.emit("agent_settled", { aborted: true }),
-  };
-  await Promise.all(
-    Object.entries(cancellations).map(async ([name, cancel]) => {
-      const h = await harness();
-      await h.command("Verify the build");
-      await h.update("define");
-      h.ctx.isIdle = () => false;
-      await h.compact("manual");
-      await tick();
-      await cancel(h);
-      h.ctx.isIdle = () => true;
-      await delay(150);
-      assert.equal(h.sent.length, 1, name);
-    }),
-  );
-});
-
-test("manual compaction does not schedule a turn with queued input or after an error or abort", async () => {
-  for (const interruption of ["queue", "aborted", "error"]) {
-    const h = await harness();
-    await h.command("Verify the build");
-    await h.update("define", 1);
-    if (interruption === "error") await h.settle({ outcome: "error" });
-    if (interruption === "aborted")
-      await h.emit("agent_settled", { aborted: true });
-    h.ctx.isIdle = () => false;
-    h.ctx.hasPendingMessages = () => interruption === "queue";
-    await h.compact("manual");
-    h.ctx.hasPendingMessages = () => false;
-    h.ctx.isIdle = () => true;
-    await tick();
-    assert.equal(h.sent.length, 1, interruption);
-  }
+  assert.match(h.sent[0], /context was compacted/);
 });
 
 test("non-goal sessions still use generic continuation and skip overflow retries", async () => {

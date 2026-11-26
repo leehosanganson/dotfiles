@@ -4,7 +4,6 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { discoverAgents } from "../extensions/subagent/agents.ts";
-import registerAgentSelector from "../extensions/agents.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const agentDir = resolve(here, "..");
@@ -33,25 +32,6 @@ test("tracked Pi agent discovery link resolves to shared vendor-neutral prompt f
     return withoutFrontmatter.startsWith("# ");
   }));
   assert.ok(agents.every(({ prompt }) => !prompt.includes("permission:") && !prompt.includes("model:")));
-});
-
-test("primary-agent extension discovers only configured primary prompts", async () => {
-  const priorChildFlag = process.env.PI_SUBAGENT_CHILD;
-  delete process.env.PI_SUBAGENT_CHILD;
-  let command;
-  try {
-    await registerAgentSelector({
-      on: () => {},
-      registerCommand: (name, config) => { command = { name, config }; },
-    });
-  } finally {
-    if (priorChildFlag === undefined) delete process.env.PI_SUBAGENT_CHILD;
-    else process.env.PI_SUBAGENT_CHILD = priorChildFlag;
-  }
-  assert.equal(command.name, "agent");
-  assert.deepEqual(command.config.getArgumentCompletions("").map(({ value }) => value).sort(), [
-    "clear", "coder", "content", "homelab",
-  ]);
 });
 
 test("subagent discovery loads configured user subagents from the nested extension", async () => {
