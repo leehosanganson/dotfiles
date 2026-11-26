@@ -2,9 +2,9 @@
 name: autopilot
 description: >-
   Route nontrivial engineering work (bug fix, feature, refactor, performance,
-  plan, research, PR, worktree cleanup, session pickup) to the matching
-  playbook and skills, then coordinate execution and verification. Use
-  when the user asks for multi-step engineering work or invokes autopilot.
+  plan, research, PR, self-improvement, worktree cleanup, session pickup) to
+  the matching playbook and skills, then coordinate execution and verification.
+  Use when the user asks for multi-step engineering work or invokes autopilot.
   Not for simple questions, single-line edits, or non-engineering tasks
   covered by other skills.
 ---
@@ -18,14 +18,10 @@ rather than restating them. Invoking autopilot for a bounded engineering task
 means the user wants that task carried through its applicable stages to a
 reviewable PR-ready result. It authorizes scoped local commits and, when PR
 creation is the requested or agreed delivery, pushing the task branch and
-creating that PR without asking again. After PR creation, inspect its required
-checks and monitor them until all pass or a concrete blocker exists. For safe,
-in-scope CI failures, invoke `/fix-ci`, push authorized task-scoped fixes, and
-recheck the updated PR without asking for separate `/fix-ci`, `/babysit`, or
-`/raise-pr` commands or redundant approval. If check status is unavailable or
-monitoring makes no meaningful progress, report the current status and stop;
-do not poll indefinitely. This does not authorize merging, deployment,
-unrelated changes, weakening or bypassing checks, or destructive actions.
+creating that PR without asking again. Use `/stage-deploy` to follow through
+on every new or resumed Autopilot PR to its requested outcome or a concrete
+blocker. This does not itself authorize merging, deployment, unrelated changes,
+weakening or bypassing checks, or destructive actions.
 
 ## When
 
@@ -135,22 +131,16 @@ Default routes:
 - Read-only how/why questions: Plan, then stop without editing.
 - Bug fixes and features: Plan, Design if data shape or interfaces change, Build,
   Test. For explicit autopilot implementation requests, continue through Deploy
-  to a reviewable PR: prepare and commit only the scoped change, then push and
-  create its PR without asking again for authorization. Inspect and monitor
-  required PR checks after creation; invoke `/fix-ci` for safe, in-scope failures,
-  push authorized task-scoped fixes, and recheck. Do not ask for separate
-  delivery/CI commands or redundant approval. Finish when all required checks
-  pass or a concrete blocker exists; report unavailable status or no meaningful
-  progress and stop rather than polling indefinitely. Never weaken or bypass
-  checks. Stop before merge or deployment.
+  using `/stage-deploy` for scoped publication and PR follow-through.
 - Refactors: Plan, Build, behavior-preserving Test. Add Design if structure
   choices are material. For explicit autopilot implementation requests, continue
-  through Deploy and create a PR for the verified scoped refactor.
+  through Deploy using `/stage-deploy` for scoped PR publication and follow-through.
 - Performance: set target and baseline in Plan, then Build and comparable Test
   measurements. For explicit autopilot implementation requests, continue through
-  Deploy and create a PR for the verified scoped change.
-- Existing PR, CI, comment, or conflict requests: start in Deploy. Do Build and
-  Test first if code changes are needed.
+  Deploy using `/stage-deploy` for scoped PR publication and follow-through.
+- Existing PR, CI, comment, or conflict requests: start in Deploy. For resumed
+  Autopilot PRs, reconcile live state and resume `/stage-deploy` on the existing
+  PR. Do Build and Test before publishing code changes.
 - Plan-only, design-only, and verify-only requests stop at their requested stage.
 - One-step tasks skip the lifecycle; say so.
 
@@ -162,6 +152,11 @@ relevant playbook, selected skills and principles, scope, acceptance criteria,
 constraints, and requested evidence, and direct contributors to load their own
 guidance. If contributor dispatch is unavailable or not useful, continue stage
 work directly and record any material limitation.
+
+Ordinary bounded Autopilot stops at verified review readiness, before merge.
+For work within a sustained run, follow the parent playbook's delivery policy
+and merge gate, even for a bounded implementation unit. Deploy-stage routing does
+not authorize deployment.
 
 Maintain is deferred. For an explicitly invoked autopilot implementation task,
 scoped local commits and creating the task's PR are authorized delivery steps;
@@ -178,9 +173,11 @@ cycle, or continued work beyond the immediate bounded task, also follow
 `references/playbooks/autopilot.md`. Confirm its goal, scope, completion
 criteria, and stopping conditions. An ordinary explicit autopilot invocation for
 a bounded implementation already authorizes scoped commits and PR creation as
-the delivery outcome. Sustained-autonomy authorization does not authorize
-unrelated publishing, merging, destructive actions, or other gated operations
-unless authorized by the user under the applicable playbook.
+the delivery outcome. An explicit self-improvement start or resume is the
+exception for in-scope merges during the active session, unless the user says
+PR-only. Follow the playbook's delivery policy and merge gate. Other sustained
+runs still require explicit scoped merge authorization. This does not authorize
+unrelated publishing, deployment, destructive actions, or other gated operations.
 
 ### Playbooks
 
@@ -196,10 +193,11 @@ unless authorized by the user under the applicable playbook.
 - `/plan` ([skill](../plan/SKILL.md)) — The user asks for a plan, or a nontrivial implementation needs an analysis phase before work begins.
 - `/project-context` ([skill](../project-context/SKILL.md)) — Before substantive implementation or planning when repository conventions, architecture, branch/PR state, or verification commands are unfamiliar.
 - Playbook: `prototype` ([playbook](references/playbooks/prototype.md)) — An uncertainty can be settled faster by observation (behavior, layout, performance, output, or a design fork) than by analysis or source reading.
-- `/raise-pr` ([skill](../raise-pr/SKILL.md)) — Create the reviewable PR for autopilot implementation tasks after verification; do not ask again for commit/push/PR authorization when autopilot was explicitly invoked for that task.
+- `/raise-pr` ([skill](../raise-pr/SKILL.md)) — Open a PR after verification; for Autopilot implementation, use it within `/stage-deploy` and do not ask again for commit/push/PR authorization.
 - Playbook: `refactoring` ([playbook](references/playbooks/refactoring.md)) — Changing code structure while intending to preserve externally observable behavior.
 - `/research` ([skill](../research/SKILL.md)) — A question needs investigation across multiple local or external sources, comparison, or evidence-backed synthesis.
-- Playbook: `session-pickup` ([playbook](references/playbooks/session-pickup.md)) — Resuming substantive in-flight work from an earlier session, handoff, or compaction.
+- `/self-improvement` ([skill](../self-improvement/SKILL.md)) — An explicit request to start or resume sustained project improvements. Follow [Playbook: autopilot](references/playbooks/autopilot.md) and check outstanding PRs before choosing new work. Use the playbook's merge-by-default policy unless the user says PR-only.
+- Playbook: `session-pickup` ([playbook](references/playbooks/session-pickup.md)) — Resuming substantive in-flight work from an earlier session, handoff, or compaction. After reconciliation, return outstanding Autopilot PRs to `/stage-deploy`; for sustained work, also follow the sustained playbook's resume instructions.
 - Playbook: `visual-parity` ([playbook](references/playbooks/visual-parity.md)) — Matching an implementation to an authoritative screenshot or visual reference.
 - Playbook: `worktree-cleanup` ([playbook](references/playbooks/worktree-cleanup.md)) — The user asks to reclaim disk or remove Git worktrees and related stale development artifacts.
 

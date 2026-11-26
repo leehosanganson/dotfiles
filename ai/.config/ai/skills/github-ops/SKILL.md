@@ -7,11 +7,19 @@ description: >-
   changes or infrastructure operations; use the relevant skill instead.
 ---
 
-## Before acting
+## When
 
-Confirm the repository, relevant branch or issue/PR, authentication, and whether the user wants direct action or a draft. Check `gh auth status` or available `github_*` tools. If repository context is unclear, inspect `.git/config` or run `gh repo view`. Ask before proceeding if required tools are unauthenticated.
+Use for GitHub issues and existing PR operations, not local fixes or new PR creation. For Autopilot PRs, `/stage-deploy` owns follow-through; this skill supplies GitHub-specific operations.
 
-## Workflows
+## Strict
+
+- Never force-push, delete branches or tags, or close issues or PRs without explicit confirmation.
+- Never merge without explicit authorization and current passing required checks and reviews, with no unresolved conflicts or blockers. For sustained Autopilot, accept only an authorized handoff from the playbook's merge gate, including its self-improvement policy. Authorization does not count as review or bypass policy.
+- Draft edits and show them to the user before applying.
+
+## Steps
+
+Confirm the repository, relevant branch or issue/PR, authentication, and whether the user wants direct action or a draft. For a sustained-run merge handoff, use the verified authorization and target from the merge gate. Check `gh auth status` or available `github_*` tools. If repository context is unclear, inspect `.git/config` or run `gh repo view`.
 
 ### Create an issue
 
@@ -31,13 +39,28 @@ Identify the issue or PR, prepare the comment, post it with `gh issue comment <n
 
 ### Merge a PR
 
-Check `gh pr checks <pr>`, confirm the merge strategy with the user, and merge only after confirmation. Report the merge commit and resulting state.
+During sustained Autopilot, including `/self-improvement`, perform only the GitHub operation handed off by the active merge gate, using the authorized base and strategy and exact verified head. Use the expected-head guard (`gh pr merge --match-head-commit` or equivalent) when supported. Do not request confirmation already covered by the active session's scoped authorization. Ordinary Autopilot does not authorize merging.
 
-The only exception to the general no-merge default is a sustained run where the user explicitly invokes `Playbook: autopilot` and authorizes merging. That exception does not apply to the `/self-improvement` workflow, which never merges. In all cases, merge only after required checks and reviews pass and no unresolved conflicts or blockers remain.
+Before issuing a sustained-run merge command, verify it will merge immediately without enabling auto-merge or adding the PR to a merge queue. On queue-protected branches, `gh pr merge` can enable auto-merge or enqueue by default, even without `--auto`. If immediate merge is unavailable or uncertain, report the policy blocker to the caller without issuing the command or using `--admin` to bypass policy.
 
-## Safety
+For a standalone merge request, confirm the target and merge strategy with the user. Inspect current checks (for example, `gh pr checks <pr>`) and reviews, and merge only after confirmation and verification of the gates in **Strict**. Verify the resulting state.
 
-- Never force-push, delete branches or tags, or close issues or PRs without explicit confirmation.
-- Never merge without passing checks. User authorization may permit a merge action, but does not bypass required checks or reviews.
-- Draft edits and show them to the user before applying.
-- Keep `gh` commands single-purpose; do not chain unrelated operations.
+## Asks You?
+
+Ask if required tools are unauthenticated or the target or action is unclear. Follow the approval gates for the selected operation.
+
+## Output
+
+Report the operation and its verified result, including a link, merge commit, or blocker as applicable.
+
+## Best Size
+
+One GitHub operation on an identified issue or PR.
+
+## Speed
+
+Keep `gh` commands single-purpose; do not chain unrelated operations.
+
+## Edge
+
+If provider state is unavailable or an operation's result is uncertain, report the uncertainty and verify state before retrying.

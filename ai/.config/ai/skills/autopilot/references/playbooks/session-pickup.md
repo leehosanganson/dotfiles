@@ -8,5 +8,5 @@ The main agent owns session-pickup coordination, user-facing clarification, and 
 2. If the summary conflicts with live state, invoke `/principle-surface-conflicts` and resolve it with live evidence. Invoke `/principle-context-boundaries` to prefer local evidence over recalled context.
 3. Reconcile completed work, pending work, blockers, and active processes. If evidence is stale, verify immediately.
 4. Invoke `/principle-outcome-oriented-execution` to state the completion predicate, then choose or confirm the next bounded step. The main agent performs the active stage work, delegates bounded tasks only when useful, and does not repeat completed work.
-5. List worktrees and local branches left by earlier tasks. For each one whose PR is verified merged, run the cleanup in `/feature-worktree` step 7. Preserve anything dirty, active, or uncertain and report it.
-6. If the active branch is behind its target, follow "Sync with the target branch" in `/stage-deploy` before continuing.
+5. Return outstanding Autopilot delivery work to `/stage-deploy` to reconcile live PR state and intended task work before syncing or cleaning up, including when the PR is already merged. For other worktrees and local branches left by earlier tasks, use `/feature-worktree` step 7 when the PR is verified merged. Preserve anything dirty, active, or uncertain and report it.
+6. For other active branches behind their target, follow "Sync with the target branch" in `/stage-deploy` before continuing only when the update is authorized.
