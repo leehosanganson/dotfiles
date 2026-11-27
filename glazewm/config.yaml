@@ -180,6 +180,10 @@ keybindings:
   - commands: ['resize --height -2%']
     bindings: ['alt+i']
 
+  # Resize the focused window and its siblings to equal sizes.
+  - commands: ['shell-exec --hide-window powershell -NoProfile -ExecutionPolicy Bypass -File %USERPROFILE%/.glzr/glazewm/balance.ps1']
+    bindings: ['alt+e']
+
   # As an alternative to the resize keybindings above, resize mode enables
   # resizing via arrow keys or HJKL. The binding mode is defined above with
   # the name 'resize'.
