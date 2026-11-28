@@ -5,6 +5,8 @@
 - `/goal <text>` sets or replaces the session's focus.
 - `/goal` shows the current focus.
 - `/goal clear` removes the focus for future requests. It does not erase session history.
+- If the session has no goal and `/goal clear` was not used, the plugin asks the current model to summarize the first user request as a concise goal and saves it for the session. If this completion fails, the request continues without a goal.
+- The current goal is always shown in the statusline. `/goal clear` keeps automatic generation disabled for that session.
 
 The goal is background context for each model request. Your current request takes priority. Setting a goal does not send a message or start a turn. `/auto-continue` controls continuation after compaction independently of the goal.
 

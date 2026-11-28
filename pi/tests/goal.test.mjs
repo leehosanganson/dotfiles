@@ -60,12 +60,27 @@ async function harness(sessionManager = SessionManager.inMemory()) {
   assert.deepEqual(errors, []);
   const sent = [];
   const notices = [];
+  const statuses = new Map();
+  const completions = [];
   const ctx = {
     sessionManager,
+    model: { id: "test-model" },
+    modelRegistry: {
+      complete: async (model, context, options) => {
+        completions.push({ model, context, options });
+        return {
+          stopReason: "stop",
+          content: [{ type: "text", text: "Complete the requested work" }],
+        };
+      },
+    },
     hasUI: true,
     isIdle: () => true,
     hasPendingMessages: () => false,
-    ui: { notify: (text) => notices.push(text) },
+    ui: {
+      notify: (text) => notices.push(text),
+      setStatus: (key, text) => statuses.set(key, text),
+    },
   };
   runtime.appendEntry = (type, data) =>
     sessionManager.appendCustomEntry(type, data);
@@ -94,6 +109,12 @@ async function harness(sessionManager = SessionManager.inMemory()) {
       messages = sessionManager.buildSessionProjection().messages,
     ) => (await emit(goal, "context", { messages }))?.messages ?? messages,
     goalTools: goal.tools,
+    statuses,
+    completions,
+    input: (text, source = "interactive") =>
+      emit(goal, "input", { text, source }),
+    start: () => emit(goal, "session_start", {}),
+    tree: () => emit(goal, "session_tree", {}),
     settle: () =>
       emit(goal, "agent_before_settle", {
         outcome: "completed",
@@ -138,6 +159,96 @@ async function assertNoFocus(h) {
   const messages = h.ctx.sessionManager.buildSessionProjection().messages;
   assert.deepEqual(await h.context(messages), messages);
 }
+
+test("the goal status is always shown and follows set, clear, and session navigation", async () => {
+  const h = await harness();
+  await h.start();
+  assert.equal(h.statuses.get("goal-focus"), "Goal: none");
+
+  await h.command("Review the build");
+  assert.equal(h.statuses.get("goal-focus"), "Goal: Review the build");
+  await h.tree();
+  assert.equal(h.statuses.get("goal-focus"), "Goal: Review the build");
+  await h.command("clear");
+  assert.equal(h.statuses.get("goal-focus"), "Goal: none");
+});
+
+test("a missing goal is generated from the first user request and persisted", async () => {
+  const h = await harness();
+  await h.input("Please review this build and report any risks");
+
+  assert.equal(h.completions.length, 1);
+  assert.match(
+    JSON.stringify(h.completions[0].context.messages),
+    /Please review this build and report any risks/,
+  );
+  await assertFocus(h, "Complete the requested work");
+  assert.equal(
+    h.statuses.get("goal-focus"),
+    "Goal: Complete the requested work",
+  );
+  await h.input("A follow-up request");
+  assert.equal(h.completions.length, 1);
+  assert.deepEqual(h.sent, []);
+});
+
+test("overlapping requests share one goal completion based on the first request", async () => {
+  const h = await harness();
+  let finish;
+  h.ctx.modelRegistry.complete = async (_model, context) => {
+    h.completions.push(context);
+    await new Promise((resolve) => {
+      finish = resolve;
+    });
+    return {
+      stopReason: "stop",
+      content: [{ type: "text", text: "Goal from the first request" }],
+    };
+  };
+
+  const first = h.input("First request sets the session goal");
+  await Promise.resolve();
+  const second = h.input("Second request should not replace it");
+  finish();
+  await Promise.all([first, second]);
+
+  assert.equal(h.completions.length, 1);
+  assert.match(
+    JSON.stringify(h.completions[0].messages),
+    /First request sets the session goal/,
+  );
+  await assertFocus(h, "Goal from the first request");
+});
+
+test("clearing a goal disables automatic generation for later requests", async () => {
+  const h = await harness();
+  await h.command("clear");
+  await h.input("Please do this work");
+
+  assert.equal(h.completions.length, 0);
+  await assertNoFocus(h);
+  assert.equal(h.statuses.get("goal-focus"), "Goal: none");
+});
+
+test("failed goal generation does not block the user request", async () => {
+  const h = await harness();
+  h.ctx.modelRegistry.complete = async () => {
+    throw new Error("completion unavailable");
+  };
+
+  assert.equal(await h.input("Please review this change"), undefined);
+  await assertNoFocus(h);
+});
+
+test("an existing goal and non-user input do not trigger automatic generation", async () => {
+  const h = await harness();
+  await h.command("Keep my manually selected goal");
+  await h.input("Do something else");
+  await h.input("Extension-generated text", "extension");
+
+  assert.equal(h.completions.length, 0);
+  await assertFocus(h, "Keep my manually selected goal");
+});
 
 test("goal commands set, replace, show and clear without sending a message", async () => {
   const h = await harness();
